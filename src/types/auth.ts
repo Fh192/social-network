@@ -14,3 +14,9 @@ export interface IAuthLogin extends ServerData {
   rememberMe: boolean;
   captcha?: string;
 }
+
+export interface IUserData {
+  id: number | null;
+  email: string;
+  login: string;
+}

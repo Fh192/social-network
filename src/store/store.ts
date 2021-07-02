@@ -14,6 +14,6 @@ const store = createStore(
 );
 
 export type RootState = ReturnType<typeof rootReducer>;
-export type Action<T> = T extends { [key: string]: infer U } ? U : never;
+export type Actions<T> = T extends { [key: string]: infer U } ? U : never;
 
 export default store;
