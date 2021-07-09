@@ -8,7 +8,7 @@ export interface IAuthMe extends ServerData {
   };
 }
 
-export interface IAuthLogin extends ServerData {
+export interface IAuthLogin {
   email: string;
   password: string;
   rememberMe: boolean;

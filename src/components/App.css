@@ -1,0 +1,14 @@
+.App {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 100vh;
+  background-size: 100%;
+}
+
+.container {
+  display: grid;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+ 

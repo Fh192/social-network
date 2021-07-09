@@ -1,0 +1,121 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 300px;
+}
+
+.inner {
+  position: relative;
+  padding: 10px 0 0 0;
+}
+
+.error {
+  position: absolute;
+  top: 0;
+  left: 10px;
+  background-color: #2148c0;
+  padding: 0 3px;
+  color: rgb(255, 0, 0);
+}
+
+.field {
+  display: flex;
+  align-items: center;
+}
+
+.field input {
+  color: #fff;
+  padding: 2px;
+  caret-color: #fff;
+}
+
+.field input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 300;
+}
+
+.field input:-webkit-autofill {
+  box-shadow: 0 0 0 1000px #2148c0 inset;
+}
+
+.field input:-webkit-autofill::first-line {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  color: rgb(255, 255, 255);
+}
+
+.email,
+.password,
+.captcha input {
+  border: 1px solid #ffffff;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.email svg,
+.password svg {
+  padding-right: 5px;
+}
+
+.email input,
+.password input {
+  padding-right: 5px;
+  flex: 1;
+}
+
+.checkbox {
+  padding: 0;
+  border: none;
+}
+
+.checkbox input {
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+.checkbox label {
+  cursor: pointer;
+}
+
+.captcha {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.captcha img {
+  margin: 10px;
+}
+
+.loginBtn {
+  transition: all 0.2s ease;
+  background-color: #fff;
+  font-weight: 600;
+  font-size: 20px;
+  padding: 10px;
+  color: #2148c0;
+  cursor: pointer;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+}
+
+.loginBtn:active {
+  transform: scale(0.95);
+  box-shadow: none;
+}
+
+.templateAccount {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 10px;
+}
+
+.templateAccount span {
+  font-weight: 300;
+  cursor: pointer;
+  padding: 2px 0;
+  border-bottom: 1px solid #fff;
+}
+
+.errorColor {
+  color: rgb(255, 0, 0);
+}
