@@ -1,0 +1,24 @@
+.sideMenu {
+  display: flex;
+  flex: 1;
+  height: 100vh;
+  padding: 20px;
+  background-color: rgb(231, 231, 231);
+  grid-area: sideMenu;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.item span {
+  padding-left: 10px;
+}
