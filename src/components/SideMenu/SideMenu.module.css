@@ -1,7 +1,7 @@
 .sideMenu {
   display: flex;
-  flex: 1;
-  height: 100vh;
+  flex-direction: column;
+  justify-content: space-between;
   padding: 20px;
   background-color: rgb(231, 231, 231);
   grid-area: sideMenu;
@@ -21,4 +21,24 @@
 
 .item span {
   padding-left: 10px;
+}
+
+.bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.username {
+  padding: 0 5px;
+}
+
+.logout {
+  cursor: pointer;
 }

@@ -21,9 +21,6 @@ const App: React.FC<Props> = ({ isAuth, getUserAuthData }) => {
       ) : (
         <>
           <div className='container'>
-            <header style={{ background: 'rgba(0,0,0,0.3)' }} id='header'>
-              header
-            </header>
             <SideMenu />
             <main
               style={{ background: 'rgba(0,0,0,0.5)', padding: '30px' }}

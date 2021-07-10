@@ -10,19 +10,11 @@
   display: grid;
   max-width: 1200px;
   width: 100%;
-  /* gap: 10px; */
+  height: 100vh;
   margin: 0 auto;
-  grid-template-areas:
-    'header header '
-    'sideMenu main';
-  grid-template-rows: 50px 1fr;
+  grid-template-areas: 'sideMenu main';
+  grid-template-rows: 1fr;
   grid-template-columns: 200px 1fr;
-}
-
-#header {
-  grid-area: header;
-  display: flex;
-  align-items: center;
 }
 
 #main {
