@@ -5,6 +5,8 @@ import { RootState } from '../store/store';
 import { getUserAuthData } from '../store/reducers/authReducer';
 import Login from './Login/Login';
 import SideMenu from './SideMenu/SideMenu';
+import Profile from './Profile/Profile';
+import { Route, Switch } from 'react-router-dom';
 
 interface Props {
   isAuth: boolean;
@@ -26,7 +28,10 @@ const App: React.FC<Props> = ({ isAuth, getUserAuthData }) => {
               style={{ background: 'rgba(0,0,0,0.5)', padding: '30px' }}
               id='main'
             >
-              content
+              <Switch>
+                {/* @ts-ignore */}
+                <Route path='/profile/:userId' component={() => <Profile />} />
+              </Switch>
             </main>
           </div>
         </>

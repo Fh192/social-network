@@ -24,7 +24,7 @@ const SideMenu: React.FC<Props> = ({ username, userId, logout }) => {
   return (
     <nav className={styles.sideMenu}>
       <ul className={styles.list}>
-        <NavLink className={styles.link} to='/profile/:userId'>
+        <NavLink className={styles.link} to={`/profile/${userId}`}>
           <li className={styles.item}>
             <ProfileIcon size='25px' />
             <span>Profile</span>
