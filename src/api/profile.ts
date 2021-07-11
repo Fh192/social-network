@@ -33,8 +33,10 @@ const profile = {
     return response.data;
   },
 
-  updateProfile: async (profile: IProfileFormData) => {
-    const response = await instance.put<ServerData>('/profile', { profile });
+  updateProfile: async (profileFormData: IProfileFormData) => {
+    const response = await instance.put<ServerData>('/profile', {
+      ...profileFormData,
+    });
 
     return response.data;
   },
