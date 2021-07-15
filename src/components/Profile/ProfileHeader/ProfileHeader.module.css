@@ -1,0 +1,89 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  background-color: #ffffff;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+.moreInfo {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.LFJ {
+  display: flex;
+  align-items: center;
+}
+
+.isLFJ {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.isLFJCursor {
+  cursor: pointer;
+}
+
+.LFJ span {
+  padding: 0 5px;
+}
+
+.arrow {
+  cursor: pointer;
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.button {
+  width: 110px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  padding: 3px 5px;
+  cursor: pointer;
+}
+
+.follow {
+  opacity: 1;
+  transition: all 0.2s ease;
+  background: linear-gradient(315deg, #65c2c2 0%, #86d1d1 100%);
+}
+
+.unfollow:hover {
+  background: linear-gradient(135deg, #ff5263 0%, #ff3347 100%);
+}
+
+.unfollow {
+  background: linear-gradient(315deg, #65c2c2 0%, #86d1d1 100%);
+}
+
+.message {
+  background: linear-gradient(135deg, #70b2ff 0%, #5c9ce6 100%);
+}
+
+.editProfile {
+  background: linear-gradient(135deg, #937ff5 0%, #735ce6 100%);
+}

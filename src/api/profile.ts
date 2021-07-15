@@ -3,14 +3,14 @@ import { IPhotos, IProfile, IProfileFormData } from '../types/profile';
 import instance from './instance';
 
 const profile = {
-  getUserProfile: async (userId: number) => {
+  getUserProfile: async (userId: number | null) => {
     const response = await instance.get<IProfile>(`profile/${userId}`);
 
     return response.data;
   },
 
   getStatus: async (userId: number) => {
-    const response = await instance.get<string>(` /profile/status/${userId}`);
+    const response = await instance.get<string>(`/profile/status/${userId}`);
 
     return response.data;
   },
@@ -23,20 +23,28 @@ const profile = {
     return response.data;
   },
 
-  updatePhoto: async (image: FormData) => {
+  updatePhoto: async (image: File) => {
     interface Response extends ServerData {
       data: IPhotos;
     }
 
-    const response = await instance.put<Response>('/profile/photo', { image });
+    const fr = new FormData();
+    fr.append('image', image);
+
+    const response = await instance.put<Response>('/profile/photo', fr, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+
+    debugger;
 
     return response.data;
   },
 
   updateProfile: async (profileFormData: IProfileFormData) => {
-    const response = await instance.put<ServerData>('/profile', {
-      ...profileFormData,
-    });
+    const response = await instance.put<ServerData>(
+      '/profile',
+      profileFormData
+    );
 
     return response.data;
   },

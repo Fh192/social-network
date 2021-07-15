@@ -1,21 +1,31 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { withRouter, RouteComponentProps } from 'react-router';
-import { RootState } from '../../store/store';
 import styles from './Profile.module.css';
+import ProfileHeader from './ProfileHeader/ProfileHeader';
+import { ProfileProps } from './ProfileContainer';
 
-interface MapStateProps {}
-interface MapDispatchProps {}
-
-type Props = MapStateProps &
-  MapDispatchProps &
-  RouteComponentProps<{ userId: string }>;
-
-const Profile: React.FC<Props> = props => {
-  console.log(props.match.params);
-  return <div className={styles.profile}></div>;
+const Profile: React.FC<ProfileProps> = ({
+  profile,
+  userId,
+  username,
+  photos,
+  isOwner,
+  updateProfile,
+  updatePhoto,
+  ...props
+}) => {
+  return (
+    <div className={styles.profile}>
+      <ProfileHeader
+        isOwner={isOwner}
+        userId={userId}
+        username={username}
+        photos={photos}
+        profile={profile}
+        updateProfile={updateProfile}
+        updatePhoto={updatePhoto}
+      />
+    </div>
+  );
 };
 
-const mapStateToProps = (state: RootState): MapStateProps => ({});
-
-export default withRouter(connect(mapStateToProps, {})(Profile));
+export default Profile;

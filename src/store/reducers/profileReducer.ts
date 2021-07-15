@@ -2,7 +2,12 @@ import { RootState } from '../store';
 import { Actions } from '../store';
 import * as actions from '../actions/profile';
 import { ThunkAction } from 'redux-thunk';
-import { IContacts, IPhotos, IProfileFormData } from '../../types/profile';
+import {
+  IContacts,
+  IPhotos,
+  IProfile,
+  IProfileFormData,
+} from '../../types/profile';
 import profile from '../../api/profile';
 
 type ProfileActions = ReturnType<Actions<typeof actions>>;
@@ -16,6 +21,7 @@ type ProfileThunk = ThunkAction<
 type Nullable<T> = T | null;
 
 const initialState = {
+  aboutMe: '' as Nullable<string>,
   userId: null as Nullable<number>,
   lookingForAJob: false as boolean,
   lookingForAJobDescription: null as Nullable<string>,
@@ -57,7 +63,7 @@ const profileReducer = (
 };
 
 export const getUserProfile =
-  (userId: number): ProfileThunk =>
+  (userId: number | null): ProfileThunk =>
   async dispatch => {
     const data = await profile.getUserProfile(userId);
 
@@ -83,23 +89,24 @@ export const updateStatus =
   };
 
 export const updatePhoto =
-  (image: FormData): ProfileThunk =>
+  (image: File, userId: number): ProfileThunk =>
   async dispatch => {
     const data = await profile.updatePhoto(image);
 
     if (data.resultCode === 0) {
       const photos = data.data;
       dispatch(actions.updatePhoto(photos));
+      dispatch(getUserProfile(userId));
     }
   };
 
 export const updateProfile =
-  (profileFormData: IProfileFormData): ProfileThunk =>
+  (profileFormData: IProfileFormData, userId: Nullable<number>): ProfileThunk =>
   async dispatch => {
     const data = await profile.updateProfile(profileFormData);
 
     if (data.resultCode === 0) {
-      dispatch(getUserProfile(profileFormData.userId));
+      dispatch(getUserProfile(userId));
     }
   };
 

@@ -1,9 +1,5 @@
-export interface IProfile {
-  userId: number;
-  lookingForAJob: boolean;
-  lookingForAJobDescription: string;
-  fullName: string;
-  contacts: IContacts;
+export interface IProfile extends IProfileFormData {
+  userId: number | null;
   photos: IPhotos;
 }
 
@@ -13,20 +9,20 @@ export interface IPhotos {
 }
 
 export interface IContacts {
-  github: string;
-  vk: string;
-  facebook: string;
-  instagram: string;
-  twitter: string;
-  website: string;
-  youtube: string;
-  mainLink: string;
+  github: string | null;
+  vk: string | null;
+  facebook: string | null;
+  instagram: string | null;
+  twitter: string | null;
+  website: string | null;
+  youtube: string | null;
+  mainLink: string | null;
 }
 
 export interface IProfileFormData {
-  userId: number;
-  lookingForAJob: boolean;
-  lookingForAJobDescription: string;
-  fullName: string;
+  aboutMe: string | null;
   contacts: IContacts;
+  lookingForAJob: boolean;
+  lookingForAJobDescription: string | null;
+  fullName: string;
 }

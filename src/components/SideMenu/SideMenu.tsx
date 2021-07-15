@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import styles from './SideMenu.module.css';
 import UsersIcon from '../../svg/UsersIcon';
-import MessagesIcon from '../../svg/MessagesIcon';
+import MessageIcon from '../../svg/MessageIcon';
 import ProfileIcon from '../../svg/ProfileIcon';
 import LogoutIcon from '../../svg/LogoutIcon';
 import { connect } from 'react-redux';
@@ -38,7 +38,7 @@ const SideMenu: React.FC<Props> = ({ username, userId, logout }) => {
         </NavLink>
         <NavLink className={styles.link} to='/messages'>
           <li className={styles.item}>
-            <MessagesIcon size='25px' />
+            <MessageIcon size='25px' fill='#99A2AD' />
             <span>Messages</span>
           </li>
         </NavLink>
