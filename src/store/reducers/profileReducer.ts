@@ -1,5 +1,5 @@
-import { RootState } from '../store';
-import { Actions } from '../store';
+import { Actions, RootState } from '../store';
+import { Nullable } from '../../types/common';
 import * as actions from '../actions/profile';
 import { ThunkAction } from 'redux-thunk';
 import {
@@ -18,7 +18,6 @@ type ProfileThunk = ThunkAction<
   unknown,
   ProfileActions
 >;
-type Nullable<T> = T | null;
 
 const initialState = {
   aboutMe: '' as Nullable<string>,

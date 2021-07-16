@@ -4,3 +4,5 @@ export interface ServerData {
   resultCode: ResultCodes;
   messages: Array<string>;
 }
+
+export type Nullable<T> = null | T;

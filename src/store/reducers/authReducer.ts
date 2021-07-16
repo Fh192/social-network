@@ -4,13 +4,14 @@ import security from '../../api/security';
 import { IAuthLogin } from '../../types/auth';
 import * as actions from '../actions/auth';
 import { Actions, RootState } from '../store';
+import { Nullable } from '../../types/common';
 
 type AuthState = typeof initialState;
 type AuthActions = ReturnType<Actions<typeof actions>>;
 type AuthThunk = ThunkAction<Promise<void>, RootState, unknown, AuthActions>;
 
 const initialState = {
-  id: null as number | null,
+  id: null as Nullable<number>,
   email: '' as string,
   login: '' as string,
   captcha: '' as string,

@@ -13,6 +13,7 @@ const store = createStore(
   composeEnhancers(applyMiddleware(thunk))
 );
 
+ 
 export type RootState = ReturnType<typeof rootReducer>;
 export type Actions<T> = T extends { [key: string]: infer U } ? U : never;
 
