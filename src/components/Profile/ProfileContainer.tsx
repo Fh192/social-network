@@ -18,6 +18,7 @@ interface MapStateProps {
   username: string;
   photos: IPhotos;
   isOwner: boolean;
+  email: string;
 }
 
 interface MapDispatchProps {
@@ -67,6 +68,7 @@ const mapStateToProps = (state: RootState): MapStateProps => ({
   username: state.profile.fullName,
   photos: state.profile.photos,
   isOwner: state.profile.userId === state.auth.id,
+  email: state.auth.email,
 });
 
 export default withRouter(

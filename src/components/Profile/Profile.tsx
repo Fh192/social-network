@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './Profile.module.css';
 import ProfileHeader from './ProfileHeader/ProfileHeader';
 import { ProfileProps } from './ProfileContainer';
+import About from './About/About';
 
 const Profile: React.FC<ProfileProps> = ({
   profile,
@@ -9,6 +10,7 @@ const Profile: React.FC<ProfileProps> = ({
   username,
   photos,
   isOwner,
+  email,
   updateProfile,
   updatePhoto,
   ...props
@@ -24,6 +26,13 @@ const Profile: React.FC<ProfileProps> = ({
         updateProfile={updateProfile}
         updatePhoto={updatePhoto}
       />
+      <div className={styles.main}>
+        <About
+          aboutMe={profile.aboutMe}
+          email={email}
+          contacts={profile.contacts}
+        />
+      </div>
     </div>
   );
 };
