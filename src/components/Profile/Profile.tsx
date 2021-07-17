@@ -3,6 +3,7 @@ import styles from './Profile.module.css';
 import ProfileHeader from './ProfileHeader/ProfileHeader';
 import { ProfileProps } from './ProfileContainer';
 import About from './About/About';
+import Posts from './Posts/Posts';
 
 const Profile: React.FC<ProfileProps> = ({
   profile,
@@ -32,6 +33,7 @@ const Profile: React.FC<ProfileProps> = ({
           email={email}
           contacts={profile.contacts}
         />
+        <Posts username={username} userAvatar={photos.large} />
       </div>
     </div>
   );

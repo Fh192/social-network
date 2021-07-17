@@ -78,6 +78,5 @@ export default withRouter(
     updateStatus,
     updatePhoto,
     updateProfile,
-    //@ts-ignore
   })(ProfileContainer)
 );

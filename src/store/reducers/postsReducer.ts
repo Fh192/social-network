@@ -1,14 +1,16 @@
+import { ThunkAction } from 'redux-thunk';
 import { IPost } from './../../types/posts';
-import { Actions } from './../store';
+import { Actions, RootState } from './../store';
 import { Nullable } from '../../types/common';
 import * as actions from '../actions/posts';
 
 type PostsState = typeof initialState;
 type PostsActions = ReturnType<Actions<typeof actions>>;
+type PostsThunk = ThunkAction<void, RootState, unknown, PostsActions>;
 
-const initialState = {
-  posts: JSON.parse(localStorage.getItem('post') || '[]') as Array<IPost>,
-};
+const initialState = JSON.parse(
+  localStorage.getItem('posts') || '[]'
+) as Array<IPost>;
 
 const postsReducer = (
   state = initialState,
@@ -16,17 +18,39 @@ const postsReducer = (
 ): PostsState => {
   switch (action.type) {
     case 'actions/posts/ADD_POST':
-      return { ...state, posts: [...state.posts, action.payload] };
+      localStorage.setItem('posts', JSON.stringify([...state, action.payload]));
+      return [...state, action.payload];
 
     case 'actions/posts/DELETE_POST':
-      return {
-        ...state,
-        posts: state.posts.filter(post => post.postId !== action.payload),
-      };
+      localStorage.setItem(
+        'posts',
+        JSON.stringify(state.filter(post => post.postId !== action.payload))
+      );
+      return state.filter(post => post.postId !== action.payload);
+
+    case 'actions/posts/DELETE_ALL_POSTS':
+      localStorage.removeItem('posts');
+      return [];
 
     default:
       return state;
   }
+};
+
+export const addPost =
+  (post: IPost): PostsThunk =>
+  dispatch => {
+    dispatch(actions.addPost(post));
+  };
+
+export const deletePost =
+  (postId: number): PostsThunk =>
+  dispatch => {
+    dispatch(actions.deletePost(postId));
+  };
+
+export const deleteAllPosts = (): PostsThunk => dispatch => {
+  dispatch(actions.deleteAllPosts());
 };
 
 export default postsReducer;
