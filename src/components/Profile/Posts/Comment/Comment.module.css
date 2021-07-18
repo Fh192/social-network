@@ -1,0 +1,49 @@
+.comment {
+  display: flex;
+  justify-content: space-between;
+}
+
+.commentBorder {
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.authorAvatar {
+  align-self: flex-start;
+  padding-right: 10px;
+}
+
+.authorAvatar img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  justify-content: center;
+  gap: 3px;
+}
+
+.username {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.addDate {
+  font-weight: 300;
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0.025em;
+  color: #66676b;
+  white-space: nowrap;
+}

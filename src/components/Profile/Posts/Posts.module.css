@@ -44,13 +44,69 @@
 }
 
 .title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin: 20px 0;
   font-size: 20px;
   font-weight: 500;
 }
 
+.sortWrap {
+  display: flex;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.sort {
+  position: relative;
+  display: flex;
+  font-weight: normal;
+  font-size: 16px;
+}
+
+.sortPopup {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  block-size: fit-content;
+  top: 30px;
+  left: -30px;
+  padding: 10px 20px;
+  background-color: #ffffff;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  z-index: 10;
+  gap: 5px;
+}
+
+.sortType {
+  padding: 7px 15px;
+  background: rgba(0, 0, 255, 0.1);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.selectedSortType {
+  background: rgba(0, 255, 0, 0.1);
+}
+
 .posts {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+.noPosts {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   padding: 20px;
+  color: rgba(0, 0, 0, 0.5);
+  font-weight: 300;
+  font-size: 20px;
   background-color: #ffffff;
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
   border-radius: 8px;

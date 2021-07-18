@@ -12,6 +12,7 @@ const Profile: React.FC<ProfileProps> = ({
   photos,
   isOwner,
   email,
+  posts,
   updateProfile,
   updatePhoto,
   ...props
@@ -30,10 +31,15 @@ const Profile: React.FC<ProfileProps> = ({
       <div className={styles.main}>
         <About
           aboutMe={profile.aboutMe}
-          email={email}
+          isOwner={isOwner}
           contacts={profile.contacts}
+          posts={posts}
         />
-        <Posts username={username} userAvatar={photos.large} />
+        <Posts
+          username={username}
+          userAvatar={photos.large}
+          isOwner={isOwner}
+        />
       </div>
     </div>
   );

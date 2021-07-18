@@ -1,11 +1,14 @@
+import { DateLocale } from 'yup/lib/locale';
+
 export interface IPost {
   postId: number;
-  addDate: Date;
+  addDate: string;
   author: IPostAuthor;
   text: string;
   imageSrc: string;
   comments: Array<IComment>;
   likes: number;
+  whoLiked: Array<number>;
 }
 
 export interface IPostAuthor {

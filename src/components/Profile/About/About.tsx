@@ -14,16 +14,18 @@ import { IContacts } from '../../../types/profile';
 import styles from './About.module.css';
 import classNames from 'classnames/bind';
 import NoDataIcon from '../../../svg/NoDataIcon';
+import { IPost } from '../../../types/posts';
 
 interface Props {
   aboutMe: string | null;
-  email: string;
   contacts: IContacts;
+  posts: Array<IPost>;
+  isOwner: boolean;
 }
 
 type Icons = { [key: string]: JSX.Element };
 
-const About: React.FC<Props> = ({ aboutMe, email, contacts }) => {
+const About: React.FC<Props> = ({ aboutMe, isOwner, contacts, posts }) => {
   const cx = classNames.bind(styles);
   const contactsArr = Object.entries(contacts);
 
@@ -40,8 +42,12 @@ const About: React.FC<Props> = ({ aboutMe, email, contacts }) => {
   };
 
   return (
-    <div className={styles.about}>
-      <div className={styles.title}>About</div>
+    <div
+      className={cx({ about: true, boxSizing: posts.length > 0 && isOwner })}
+    >
+      <div className={styles.title}>
+        <span>About</span>
+      </div>
       {isEmpty && (
         <div className={styles.noData}>
           <NoDataIcon size='50px' />
@@ -50,19 +56,20 @@ const About: React.FC<Props> = ({ aboutMe, email, contacts }) => {
       )}
 
       {!isEmpty && (
-        <ul className={styles.column}>
-          <li className={styles.item}>
-            <div
-              className={cx({
-                icon: true,
-                infoIcon: true,
-              })}
-            >
-              <InfoIcon size='20px' />
-            </div>
-            <span>{aboutMe}</span>
-          </li>
-
+        <>
+          <ul className={styles.column}>
+            <li className={styles.item}>
+              <div
+                className={cx({
+                  icon: true,
+                  infoIcon: true,
+                })}
+              >
+                <InfoIcon size='20px' />
+              </div>
+              <span>{aboutMe}</span>
+            </li>
+          </ul>
           <ul
             className={cx({
               contacts: contactsArr.some(contact => contact[1]),
@@ -94,7 +101,7 @@ const About: React.FC<Props> = ({ aboutMe, email, contacts }) => {
               }
             })}
           </ul>
-        </ul>
+        </>
       )}
     </div>
   );

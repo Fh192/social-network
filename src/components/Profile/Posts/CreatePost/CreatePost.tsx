@@ -30,6 +30,8 @@ const CreatePost: React.FC<Props> = ({
       const file = e.target.files[0];
       const fr = new FileReader();
 
+      console.log(file.size);
+
       fr.onload = () => {
         if (typeof fr.result === 'string') setImageSrc(fr.result);
       };
@@ -88,12 +90,13 @@ const CreatePost: React.FC<Props> = ({
               onClick={() => {
                 addPost({
                   postId: posts.length,
-                  addDate: new Date(),
+                  addDate: new Date().toISOString(),
                   author: { username, avatar: userAvatar },
                   text: newPostText,
                   imageSrc: imageSrc,
                   comments: [],
                   likes: 0,
+                  whoLiked: [],
                 });
                 setCreatePostMode(false);
               }}

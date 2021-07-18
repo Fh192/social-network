@@ -1,0 +1,145 @@
+.post {
+  width: 100%;
+  background-color: #ffffff;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 10px 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 15px 5px;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  padding-left: 10px;
+}
+
+.dots {
+  position: relative;
+  cursor: pointer;
+}
+
+.delete {
+  position: absolute;
+  display: flex;
+  width: 150px;
+}
+
+.delete span {
+  padding: 5px 10px;
+  background: rgb(206, 206, 206);
+}
+
+.authorAvatar img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.username {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.postDate {
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 16px;
+  letter-spacing: 0.025em;
+  color: #66676b;
+}
+
+.postText {
+  padding: 5px 15px;
+  letter-spacing: -0.02em;
+}
+
+.image {
+  padding: 5px 0;
+}
+
+.image img {
+  width: 100%;
+  height: auto;
+}
+
+.rate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 10px 0;
+}
+
+.like,
+.comment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 1s ease;
+}
+
+.like:active svg {
+  transition: all 0.2s ease;
+  transform: scale(1.2);
+}
+
+.comments {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 15px;
+}
+
+.writeComment {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 0;
+}
+
+.commentAuthorAvatar img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.writeCommentInput {
+  display: flex;
+  align-items: center;
+  flex: 1 1;
+  background: #f1f2f5;
+  border-radius: 100px;
+  margin-left: 10px;
+  padding: 10px 15px;
+}
+
+.writeCommentInput input {
+  flex: 1 1;
+}
+
+.writeCommentInput button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.commentsList {
+  /* border-top: 1px solid rgba(0, 0, 0, 0.151); */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px 30px;
+}

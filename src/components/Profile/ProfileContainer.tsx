@@ -11,6 +11,7 @@ import {
 } from '../../store/reducers/profileReducer';
 import { IPhotos, IProfile, IProfileFormData } from '../../types/profile';
 import Profile from './Profile';
+import { IPost } from '../../types/posts';
 
 interface MapStateProps {
   profile: IProfile;
@@ -19,6 +20,7 @@ interface MapStateProps {
   photos: IPhotos;
   isOwner: boolean;
   email: string;
+  posts: Array<IPost>;
 }
 
 interface MapDispatchProps {
@@ -69,6 +71,7 @@ const mapStateToProps = (state: RootState): MapStateProps => ({
   photos: state.profile.photos,
   isOwner: state.profile.userId === state.auth.id,
   email: state.auth.email,
+  posts: state.posts,
 });
 
 export default withRouter(
