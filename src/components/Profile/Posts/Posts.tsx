@@ -7,7 +7,6 @@ import classNames from 'classnames/bind';
 import {
   addPost,
   deletePost,
-  deleteAllPosts,
   likePost,
   addComment,
 } from '../../../store/reducers/postsReducer';
@@ -24,7 +23,6 @@ interface MapStateProps {
 interface MapDispatchProps {
   addPost: (post: IPost) => void;
   deletePost: (postId: number) => void;
-  deleteAllPosts: () => void;
   likePost: (postId: number, userId: number | null) => void;
   addComment: (comment: IComment, postId: number) => void;
 }
@@ -43,7 +41,6 @@ const Posts: React.FC<Props> = ({
   isOwner,
   addPost,
   deletePost,
-  deleteAllPosts,
   likePost,
   addComment,
 }) => {
@@ -193,7 +190,6 @@ const mapStateToProps = (state: RootState): MapStateProps => ({
 export default connect(mapStateToProps, {
   addPost,
   deletePost,
-  deleteAllPosts,
   likePost,
   addComment,
 })(Posts);

@@ -12,112 +12,71 @@ const initialState = JSON.parse(
   localStorage.getItem('posts') || '[]'
 ) as Array<IPost>;
 
-//!!! REFACTOR !!!
-// DUPLICATE CODE IN CASES
-//!!! REFACTOR !!!
-// DUPLICATE CODE IN CASES
-//!!! REFACTOR !!!
-// DUPLICATE CODE IN CASES
-
 const postsReducer = (
   state = initialState,
   action: PostsActions
 ): PostsState => {
   switch (action.type) {
     case 'actions/posts/ADD_POST':
-      localStorage.setItem('posts', JSON.stringify([action.payload, ...state]));
-      return [action.payload, ...state];
+      const stateWithNewPost = [action.payload, ...state];
+      localStorage.setItem('posts', JSON.stringify(stateWithNewPost));
+
+      return stateWithNewPost;
 
     case 'actions/posts/DELETE_POST':
-      localStorage.setItem(
-        'posts',
-        JSON.stringify(state.filter(post => post.postId !== action.payload))
-      );
-      return state.filter(post => post.postId !== action.payload);
+      const deletePost = () => {
+        return state.filter(post => post.postId !== action.payload);
+      };
 
-    case 'actions/posts/DELETE_ALL_POSTS':
-      localStorage.removeItem('posts');
-      return [];
+      localStorage.setItem('posts', JSON.stringify(deletePost()));
+      return deletePost();
 
     case 'actions/posts/LIKE_POST':
-      localStorage.setItem(
-        'posts',
-        JSON.stringify(
-          state.map(post => {
-            if (
-              post.postId === action.payload.postId &&
-              action.payload.userId
-            ) {
-              if (post.whoLiked.some(id => id === action.payload.userId)) {
-                return {
-                  ...post,
-                  likes: post.likes - 1,
-                  whoLiked: post.whoLiked.filter(
-                    userId => userId !== action.payload.userId
-                  ),
-                };
-              } else {
-                return {
-                  ...post,
-                  likes: post.likes + 1,
-                  whoLiked: [...post.whoLiked, action.payload.userId],
-                };
-              }
-            } else return post;
-          })
-        )
-      );
-      return state.map(post => {
-        if (post.postId === action.payload.postId && action.payload.userId) {
-          if (post.whoLiked.some(id => id === action.payload.userId)) {
-            return {
-              ...post,
-              likes: post.likes - 1,
-              whoLiked: post.whoLiked.filter(
-                userId => userId !== action.payload.userId
-              ),
-            };
-          } else {
-            return {
-              ...post,
-              likes: post.likes + 1,
-              whoLiked: [...post.whoLiked, action.payload.userId],
-            };
-          }
-        } else return post;
-      });
-
-    case 'actions/posts/ADD_COMMENT':
-      localStorage.setItem(
-        'posts',
-        JSON.stringify(
-          state.map(post => {
-            if (post.postId === action.payload.postId) {
+      const likePost = () => {
+        return state.map(post => {
+          if (post.postId === action.payload.postId && action.payload.userId) {
+            if (post.whoLiked.some(id => id === action.payload.userId)) {
               return {
                 ...post,
-                comments: [action.payload.comment, ...post.comments],
+                likes: post.likes - 1,
+                whoLiked: post.whoLiked.filter(
+                  userId => userId !== action.payload.userId
+                ),
               };
-            } else return post;
-          })
-        )
-      );
-      return state.map(post => {
-        if (post.postId === action.payload.postId) {
-          return {
-            ...post,
-            comments: [action.payload.comment, ...post.comments],
-          };
-        } else return post;
-      });
+            } else {
+              return {
+                ...post,
+                likes: post.likes + 1,
+                whoLiked: [...post.whoLiked, action.payload.userId],
+              };
+            }
+          } else return post;
+        });
+      };
+
+      localStorage.setItem('posts', JSON.stringify(likePost()));
+      return likePost();
+
+    case 'actions/posts/ADD_COMMENT':
+      const addComment = () => {
+        return state.map(post => {
+          if (post.postId === action.payload.postId) {
+            return {
+              ...post,
+              comments: [action.payload.comment, ...post.comments],
+            };
+          } else return post;
+        });
+      };
+
+      localStorage.setItem('posts', JSON.stringify(addComment()));
+      return addComment();
 
     default:
       return state;
   }
 };
-//!!! REFACTOR !!!
-// DUPLICATE CODE IN CASES
-//!!! REFACTOR !!!
-// DUPLICATE CODE IN CASES
+
 
 export const addPost =
   (post: IPost): PostsThunk =>
@@ -130,10 +89,6 @@ export const deletePost =
   dispatch => {
     dispatch(actions.deletePost(postId));
   };
-
-export const deleteAllPosts = (): PostsThunk => dispatch => {
-  dispatch(actions.deleteAllPosts());
-};
 
 export const likePost =
   (postId: number, userId: number | null): PostsThunk =>
