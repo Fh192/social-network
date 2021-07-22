@@ -46,28 +46,33 @@ const Posts: React.FC<Props> = ({
 }) => {
   const cx = classNames.bind(styles);
 
+  type SortTypes = 'New' | 'Old' | 'Most liked' | 'Most commented';
+
+  const sortTypesArr: Array<SortTypes> = [
+    'New',
+    'Old',
+    'Most liked',
+    'Most commented',
+  ];
+
   const [createPostMode, setCreatePostMode] = useState(false);
   const [arrowType, setArrowType] = useState<'up' | 'down'>('down');
-  const [selectedSortType, setSelectedSortType] = useState<
-    'new' | 'old' | 'mostLiked' | 'mostCommented'
-  >('new');
+  const [selectedSortType, setSelectedSortType] = useState<SortTypes>('New');
 
-  const sortPosts = (
-    sortType: 'new' | 'old' | 'mostLiked' | 'mostCommented'
-  ) => {
-    if (sortType === 'new') {
+  const sortPosts = (sortType: SortTypes) => {
+    if (sortType === 'New') {
       posts.sort((a, b) => Date.parse(b.addDate) - Date.parse(a.addDate));
     }
 
-    if (sortType === 'old') {
+    if (sortType === 'Old') {
       posts.sort((a, b) => Date.parse(a.addDate) - Date.parse(b.addDate));
     }
 
-    if (sortType === 'mostLiked') {
+    if (sortType === 'Most liked') {
       posts.sort((a, b) => b.likes - a.likes);
     }
 
-    if (sortType === 'mostCommented') {
+    if (sortType === 'Most commented') {
       posts.sort((a, b) => b.comments.length - a.comments.length);
     }
 
@@ -117,42 +122,17 @@ const Posts: React.FC<Props> = ({
 
               {arrowType === 'up' && (
                 <ul className={styles.sortPopup}>
-                  <li
-                    className={cx({
-                      sortType: true,
-                      selectedSortType: selectedSortType === 'new',
-                    })}
-                    onClick={() => sortPosts('new')}
-                  >
-                    Newest
-                  </li>
-                  <li
-                    className={cx({
-                      sortType: true,
-                      selectedSortType: selectedSortType === 'old',
-                    })}
-                    onClick={() => sortPosts('old')}
-                  >
-                    Oldest
-                  </li>
-                  <li
-                    className={cx({
-                      sortType: true,
-                      selectedSortType: selectedSortType === 'mostLiked',
-                    })}
-                    onClick={() => sortPosts('mostLiked')}
-                  >
-                    Most liked
-                  </li>
-                  <li
-                    className={cx({
-                      sortType: true,
-                      selectedSortType: selectedSortType === 'mostCommented',
-                    })}
-                    onClick={() => sortPosts('mostCommented')}
-                  >
-                    Most commented
-                  </li>
+                  {sortTypesArr.map(sortType => (
+                    <li
+                      className={cx({
+                        sortType: true,
+                        selectedSortType: selectedSortType === sortType,
+                      })}
+                      onClick={() => sortPosts(sortType)}
+                    >
+                      {sortType}
+                    </li>
+                  ))}
                 </ul>
               )}
             </div>
