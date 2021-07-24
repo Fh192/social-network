@@ -1,8 +1,8 @@
-import { ServerData } from './../types/common';
+import { ServerData } from '../types/common';
 import { IPhotos, IProfile, IProfileForUpdate } from '../types/profile';
 import instance from './instance';
 
-const profile = {
+const profileAPI = {
   getUserProfile: async (userId: number | null) => {
     const response = await instance.get<IProfile>(`profile/${userId}`);
 
@@ -50,4 +50,4 @@ const profile = {
   },
 };
 
-export default profile;
+export default profileAPI;

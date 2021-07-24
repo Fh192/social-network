@@ -1,6 +1,6 @@
 import { ThunkAction } from 'redux-thunk';
-import auth from '../../api/auth';
-import security from '../../api/security';
+import authAPI from '../../api/authAPI';
+import securityAPI from '../../api/securityAPI';
 import { IAuthLogin } from '../../types/auth';
 import * as actions from '../actions/auth';
 import { Actions, RootState } from '../store';
@@ -41,7 +41,7 @@ const authReducer = (state = initialState, action: AuthActions): AuthState => {
 
 export const getUserAuthData = (): AuthThunk => async dispatch => {
   try {
-    const data = await auth.me();
+    const data = await authAPI.me();
     const userData = data.data;
 
     if (data.resultCode === 0) {
@@ -58,12 +58,12 @@ export const login =
   (loginFormData: IAuthLogin): AuthThunk =>
   async dispatch => {
     try {
-      const data = await auth.login(loginFormData);
+      const data = await authAPI.login(loginFormData);
 
       if (data.resultCode === 0) {
         dispatch(getUserAuthData());
       } else if (data.resultCode === 10) {
-        const captcha = await security.captcha();
+        const captcha = await securityAPI.captcha();
 
         dispatch(actions.setAuthErrors(data.messages));
         dispatch(actions.setCaptcha(captcha));
@@ -78,7 +78,7 @@ export const login =
 
 export const logout = (): AuthThunk => async dispatch => {
   try {
-    await auth.logout();
+    await authAPI.logout();
 
     dispatch(actions.logoutSuccess({ id: null, email: '', login: '' }));
   } catch (e) {

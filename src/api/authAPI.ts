@@ -2,7 +2,7 @@ import { IAuthLogin, IAuthMe } from '../types/auth';
 import { ServerData } from '../types/common';
 import instance from './instance';
 
-const auth = {
+const authAPI = {
   me: async () => {
     const response = await instance.get<IAuthMe>('auth/me');
 
@@ -23,4 +23,4 @@ const auth = {
   },
 };
 
-export default auth;
+export default authAPI;

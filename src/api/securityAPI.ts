@@ -1,6 +1,6 @@
 import instance from './instance';
 
-const security = {
+const securityAPI = {
   captcha: async () => {
     const response = await instance.get<{ url: string }>(
       'security/get-captcha-url'
@@ -10,4 +10,4 @@ const security = {
   },
 };
 
-export default security;
+export default securityAPI;

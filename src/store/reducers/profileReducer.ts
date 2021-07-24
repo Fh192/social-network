@@ -8,7 +8,7 @@ import {
   IProfile,
   IProfileForUpdate,
 } from '../../types/profile';
-import profile from '../../api/profile';
+import profileAPI from '../../api/profileAPI';
 
 type ProfileActions = ReturnType<Actions<typeof actions>>;
 type ProfileState = typeof initialState;
@@ -64,7 +64,7 @@ const profileReducer = (
 export const getUserProfile =
   (userId: number | null): ProfileThunk =>
   async dispatch => {
-    const data = await profile.getUserProfile(userId);
+    const data = await profileAPI.getUserProfile(userId);
 
     dispatch(actions.setUserProfile(data));
   };
@@ -72,7 +72,7 @@ export const getUserProfile =
 export const getUserStatus =
   (userId: number): ProfileThunk =>
   async dispatch => {
-    const status = await profile.getStatus(userId);
+    const status = await profileAPI.getStatus(userId);
 
     dispatch(actions.setUserStatus(status));
   };
@@ -80,7 +80,7 @@ export const getUserStatus =
 export const updateStatus =
   (status: string): ProfileThunk =>
   async dispatch => {
-    const data = await profile.updateStatus(status);
+    const data = await profileAPI.updateStatus(status);
 
     if (data.resultCode === 0) {
       dispatch(actions.setUserStatus(status));
@@ -90,7 +90,7 @@ export const updateStatus =
 export const updatePhoto =
   (image: File, userId: number): ProfileThunk =>
   async dispatch => {
-    const data = await profile.updatePhoto(image);
+    const data = await profileAPI.updatePhoto(image);
 
     if (data.resultCode === 0) {
       const photos = data.data;
@@ -105,7 +105,7 @@ export const updateProfile =
     userId: Nullable<number>
   ): ProfileThunk =>
   async dispatch => {
-    const data = await profile.updateProfile(profileFormData);
+    const data = await profileAPI.updateProfile(profileFormData);
 
     if (data.resultCode === 0) {
       dispatch(getUserProfile(userId));
