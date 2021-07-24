@@ -4,7 +4,7 @@ import FollowIcon from '../../../svg/FollowIcon';
 import UnfollowIcon from '../../../svg/UnfollowIcon';
 import MessageIcon from '../../../svg/MessageIcon';
 import { NavLink } from 'react-router-dom';
-import { IPhotos, IProfile, IProfileForUpdate } from '../../../types/profile';
+import { IProfile, IProfileForUpdate } from '../../../types/profile';
 import UserPhoto from './UserPhoto/UserPhoto';
 import EditTextIcon from '../../../svg/EditTextIcon';
 import EditIcon from '../../../svg/EditIcon';
@@ -12,6 +12,7 @@ import CheckMark from '../../../svg/CheckMark';
 import Arrow, { ArrowType } from '../../../svg/Arrow';
 import LookingForAJob from './LookingForAJob/LookingForAJob';
 import Username from './Username/Username';
+import { IPhotos } from '../../../types/common';
 
 type Props = {
   profile: IProfile;

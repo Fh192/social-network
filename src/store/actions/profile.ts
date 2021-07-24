@@ -1,4 +1,5 @@
-import { IPhotos, IProfile } from '../../types/profile';
+import { IPhotos } from '../../types/common';
+import { IProfile } from '../../types/profile';
 
 const SET_USER_PROFILE = 'actions/profile/SET_USER_PROFILE';
 const SET_USER_STATUS = 'actions/profile/SET_USER_STATUS';
@@ -12,4 +13,3 @@ export const setUserStatus = (status: string) =>
 
 export const updatePhoto = (photos: IPhotos) =>
   ({ type: UPDATE_PHOTO, payload: photos } as const);
-

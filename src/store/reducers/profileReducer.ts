@@ -1,13 +1,8 @@
 import { Actions, RootState } from '../store';
-import { Nullable } from '../../types/common';
+import { IPhotos, Nullable } from '../../types/common';
 import * as actions from '../actions/profile';
 import { ThunkAction } from 'redux-thunk';
-import {
-  IContacts,
-  IPhotos,
-  IProfile,
-  IProfileForUpdate,
-} from '../../types/profile';
+import { IContacts, IProfile, IProfileForUpdate } from '../../types/profile';
 import profileAPI from '../../api/profileAPI';
 
 type ProfileActions = ReturnType<Actions<typeof actions>>;

@@ -10,7 +10,7 @@ import {
   updateProfile,
 } from '../../store/reducers/profileReducer';
 import { getIsOwner, getProfile } from '../../selectors/profileSelectors';
-import { IPhotos, IProfile, IProfileForUpdate } from '../../types/profile';
+import { IProfile, IProfileForUpdate } from '../../types/profile';
 import Profile from './Profile';
 import { IPost } from '../../types/posts';
 

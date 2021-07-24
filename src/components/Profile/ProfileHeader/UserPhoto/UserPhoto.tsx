@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styles from './UserPhoto.module.css';
 import userPhoto from '../../../../images/userPhoto.png';
-import { IPhotos } from '../../../../types/profile';
 import PhotoEditMode from './PhotoEditMode';
+import { IPhotos } from '../../../../types/common';
 
 interface Props {
   userId: number | null;

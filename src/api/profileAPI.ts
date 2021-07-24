@@ -1,5 +1,5 @@
-import { ServerData } from '../types/common';
-import { IPhotos, IProfile, IProfileForUpdate } from '../types/profile';
+import { IPhotos, ServerData } from '../types/common';
+import { IProfile, IProfileForUpdate } from '../types/profile';
 import instance from './instance';
 
 const profileAPI = {
