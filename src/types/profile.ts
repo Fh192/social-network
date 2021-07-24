@@ -1,11 +1,8 @@
+import { IPhotos } from './common';
+
 export interface IProfile extends IProfileForUpdate {
   userId: number | null;
   photos: IPhotos;
-}
-
-export interface IPhotos {
-  small: string;
-  large: string;
 }
 
 export interface IContacts {

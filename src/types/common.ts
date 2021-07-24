@@ -5,4 +5,9 @@ export interface ServerData {
   messages: Array<string>;
 }
 
+export interface IPhotos {
+  small: string;
+  large: string;
+}
+
 export type Nullable<T> = null | T;
