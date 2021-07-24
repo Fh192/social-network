@@ -21,7 +21,6 @@ const Comment: React.FC<Props> = ({
   });
 
   const cx = classNames.bind(styles);
-  console.log(commentId, commentsLength);
 
   return (
     <div

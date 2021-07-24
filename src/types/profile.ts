@@ -1,4 +1,4 @@
-export interface IProfile extends IProfileFormData {
+export interface IProfile extends IProfileForUpdate {
   userId: number | null;
   photos: IPhotos;
 }
@@ -19,7 +19,7 @@ export interface IContacts {
   mainLink: string | null;
 }
 
-export interface IProfileFormData {
+export interface IProfileForUpdate {
   aboutMe: string | null;
   contacts: IContacts;
   lookingForAJob: boolean;

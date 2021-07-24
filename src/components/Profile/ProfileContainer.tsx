@@ -9,16 +9,15 @@ import {
   updatePhoto,
   updateProfile,
 } from '../../store/reducers/profileReducer';
-import { IPhotos, IProfile, IProfileFormData } from '../../types/profile';
+import { getIsOwner, getProfile } from '../../selectors/profileSelectors';
+import { IPhotos, IProfile, IProfileForUpdate } from '../../types/profile';
 import Profile from './Profile';
 import { IPost } from '../../types/posts';
 
 interface MapStateProps {
   profile: IProfile;
-  userId: number | null;
-  username: string;
-  photos: IPhotos;
   isOwner: boolean;
+  ownerId: number | null;
   email: string;
   posts: Array<IPost>;
 }
@@ -29,7 +28,7 @@ interface MapDispatchProps {
   updateStatus: (status: string) => void;
   updatePhoto: (image: File, userId: number) => void;
   updateProfile: (
-    profileFormData: IProfileFormData,
+    profileFormData: IProfileForUpdate,
     userId: number | null
   ) => void;
 }
@@ -44,16 +43,16 @@ const ProfileContainer: React.FC<ProfileProps> = ({
   ...props
 }) => {
   useEffect(() => {
-    getUserProfile(+props.match.params.userId);
+    if (props.match.url === '/profile/edit' && props.ownerId) {
+      getUserProfile(props.ownerId);
+    } else getUserProfile(+props.match.params.userId);
   }, [props.match.params.userId]);
 
   useEffect(() => {
-    getUserStatus(+props.match.params.userId);
+    if (props.match.url === '/profile/edit' && props.ownerId) {
+      getUserStatus(props.ownerId);
+    } else getUserStatus(+props.match.params.userId);
   }, [props.match.params.userId]);
-
-  const [isLoading, setIsLoading] = useState(false);
-
-  if (isLoading) return <div>Loading...</div>;
 
   return (
     <Profile
@@ -65,11 +64,9 @@ const ProfileContainer: React.FC<ProfileProps> = ({
 };
 
 const mapStateToProps = (state: RootState): MapStateProps => ({
-  profile: state.profile,
-  userId: state.profile.userId,
-  username: state.profile.fullName,
-  photos: state.profile.photos,
-  isOwner: state.profile.userId === state.auth.id,
+  profile: getProfile(state),
+  isOwner: getIsOwner(state),
+  ownerId: state.auth.id,
   email: state.auth.email,
   posts: state.posts,
 });

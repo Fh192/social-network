@@ -1,9 +1,8 @@
 import React from 'react';
 
-const Arrow: React.FC<{ size: string; type: 'up' | 'down' }> = ({
-  size,
-  type,
-}) => {
+export type ArrowType = 'up' | 'down'
+
+const Arrow: React.FC<{ size: string; type: ArrowType }> = ({ size, type }) => {
   let styles = { transition: 'all 0.2s ease', transform: 'rotateX(0deg)' };
 
   if (type === 'up') {

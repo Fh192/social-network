@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import EditTextIcon from '../../../../svg/EditTextIcon';
-import { IProfile, IProfileFormData } from '../../../../types/profile';
+import { IProfile, IProfileForUpdate } from '../../../../types/profile';
 import styles from './Username.module.css';
 
 interface Props {
@@ -9,7 +9,7 @@ interface Props {
   username: string;
   isOwner: boolean;
   updateProfile: (
-    profileFormData: IProfileFormData,
+    profileFormData: IProfileForUpdate,
     userId: number | null
   ) => void;
 }
@@ -28,12 +28,19 @@ const Username: React.FC<Props> = ({
 
   useEffect(() => setNewUsername(username), [username]);
 
-  function onUsernameUpdate(e: React.KeyboardEvent<HTMLInputElement>) {
+  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewUsername(e.target.value);
+  };
+
+  const onUsernameUpdate = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       updateProfile({ ...profile, fullName: newUsername }, userId);
       setUsernameEditMode(false);
     }
-  }
+  };
+
+  const onInputBlur = () => setUsernameEditMode(false);
+
   return (
     <div
       className={`${styles.username} ${isOwner && styles.usernameCursor}`}
@@ -49,11 +56,10 @@ const Username: React.FC<Props> = ({
             className={styles.usernameEditInput}
             type='text'
             value={newUsername}
-            onChange={e => setNewUsername(e.target.value)}
-            onKeyDown={e => {
-              onUsernameUpdate(e);
-            }}
-            autoFocus
+            onChange={onInputChange}
+            onKeyDown={onUsernameUpdate}
+            onBlur={onInputBlur}
+            autoFocus={true}
             placeholder='username'
           />
         </>

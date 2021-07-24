@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import EditTextIcon from '../../../../svg/EditTextIcon';
-import { IProfile, IProfileFormData } from '../../../../types/profile';
+import { IProfile, IProfileForUpdate } from '../../../../types/profile';
 import styles from './LookingForAJob.module.css';
 
 interface Props {
@@ -8,7 +8,7 @@ interface Props {
   userId: number | null;
   profile: IProfile;
   updateProfile: (
-    profileFormData: IProfileFormData,
+    profileFormData: IProfileForUpdate,
     userId: number | null
   ) => void;
   setArrowType: React.Dispatch<React.SetStateAction<'down' | 'up'>>;
@@ -55,7 +55,7 @@ const LookingForAJob: React.FC<Props> = ({
   };
 
   return (
-    <div className={styles.popup}>
+    <div className={styles.popup} onBlurCapture={() => setLFJEditMode(false)}>
       <div className={styles.LFJDesc}>
         {LFJEditMode ? (
           <div className={styles.editMode}>

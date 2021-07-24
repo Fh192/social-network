@@ -12,7 +12,7 @@ import {
 } from '../../../store/reducers/postsReducer';
 import { connect } from 'react-redux';
 import Post from './Post/Post';
-import Arrow from '../../../svg/Arrow';
+import Arrow, { ArrowType } from '../../../svg/Arrow';
 import NoDataIcon from '../../../svg/NoDataIcon';
 
 interface MapStateProps {
@@ -56,7 +56,7 @@ const Posts: React.FC<Props> = ({
   ];
 
   const [createPostMode, setCreatePostMode] = useState(false);
-  const [arrowType, setArrowType] = useState<'up' | 'down'>('down');
+  const [arrowType, setArrowType] = useState<ArrowType>('down');
   const [selectedSortType, setSelectedSortType] = useState<SortTypes>('New');
 
   const sortPosts = (sortType: SortTypes) => {

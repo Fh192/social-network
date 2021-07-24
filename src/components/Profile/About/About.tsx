@@ -79,7 +79,6 @@ const About: React.FC<Props> = ({ aboutMe, isOwner, contacts, posts }) => {
               if (contact[0] === 'mainLink') return null;
 
               if (contact[1]) {
-                const icon: string = String(contact[0]);
                 let link: string = contact[1].replaceAll(' ', '');
 
                 if (!link.includes('https://') && !link.includes('http://')) {
@@ -94,7 +93,7 @@ const About: React.FC<Props> = ({ aboutMe, isOwner, contacts, posts }) => {
                       rel='noopener noreferrer'
                       className={styles.icon}
                     >
-                      {icons[icon]}
+                      {icons[contact[0]]}
                     </a>
                   </li>
                 );

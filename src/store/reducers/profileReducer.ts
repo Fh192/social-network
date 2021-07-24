@@ -6,7 +6,7 @@ import {
   IContacts,
   IPhotos,
   IProfile,
-  IProfileFormData,
+  IProfileForUpdate,
 } from '../../types/profile';
 import profile from '../../api/profile';
 
@@ -100,7 +100,10 @@ export const updatePhoto =
   };
 
 export const updateProfile =
-  (profileFormData: IProfileFormData, userId: Nullable<number>): ProfileThunk =>
+  (
+    profileFormData: IProfileForUpdate,
+    userId: Nullable<number>
+  ): ProfileThunk =>
   async dispatch => {
     const data = await profile.updateProfile(profileFormData);
 

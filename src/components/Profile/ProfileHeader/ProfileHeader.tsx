@@ -4,12 +4,12 @@ import FollowIcon from '../../../svg/FollowIcon';
 import UnfollowIcon from '../../../svg/UnfollowIcon';
 import MessageIcon from '../../../svg/MessageIcon';
 import { NavLink } from 'react-router-dom';
-import { IPhotos, IProfile, IProfileFormData } from '../../../types/profile';
+import { IPhotos, IProfile, IProfileForUpdate } from '../../../types/profile';
 import UserPhoto from './UserPhoto/UserPhoto';
 import EditTextIcon from '../../../svg/EditTextIcon';
 import EditIcon from '../../../svg/EditIcon';
 import CheckMark from '../../../svg/CheckMark';
-import Arrow from '../../../svg/Arrow';
+import Arrow, { ArrowType } from '../../../svg/Arrow';
 import LookingForAJob from './LookingForAJob/LookingForAJob';
 import Username from './Username/Username';
 
@@ -20,7 +20,7 @@ type Props = {
   photos: IPhotos;
   isOwner: boolean;
   updateProfile: (
-    profileFormData: IProfileFormData,
+    profileFormData: IProfileForUpdate,
     userId: number | null
   ) => void;
   updatePhoto: (image: File, userId: number) => void;
@@ -35,7 +35,7 @@ const ProfileHeader: React.FC<Props> = ({
   updateProfile,
   updatePhoto,
 }) => {
-  const [arrowType, setArrowType] = useState<'down' | 'up'>('down');
+  const [arrowType, setArrowType] = useState<ArrowType>('down');
 
   const onArrowClick = () => {
     setArrowType(type => {

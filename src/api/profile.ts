@@ -1,5 +1,5 @@
 import { ServerData } from './../types/common';
-import { IPhotos, IProfile, IProfileFormData } from '../types/profile';
+import { IPhotos, IProfile, IProfileForUpdate } from '../types/profile';
 import instance from './instance';
 
 const profile = {
@@ -40,7 +40,7 @@ const profile = {
     return response.data;
   },
 
-  updateProfile: async (profileFormData: IProfileFormData) => {
+  updateProfile: async (profileFormData: IProfileForUpdate) => {
     const response = await instance.put<ServerData>(
       '/profile',
       profileFormData
