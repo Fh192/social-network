@@ -8,9 +8,13 @@ const usersAPI = {
     term?: string,
     friend?: boolean
   ) => {
-    const response = await instance.get<IUsersResponse>(
-      `users?friend=${friend}&term=${term}&page=${page}&count=${count}`
-    );
+    let url = 'users?';
+    if (friend) url += `&friend=${friend}`;
+    if (term) url += `&term=${term}`;
+    if (page) url += `&page=${page}`;
+    if (count) url += `&count=${count}`;
+
+    const response = await instance.get<IUsersResponse>(url);
     return response.data;
   },
 };
