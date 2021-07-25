@@ -8,13 +8,21 @@ const usersAPI = {
     term?: string,
     friend?: boolean
   ) => {
+    const props = { count, page, term, friend };
     let url = 'users?';
-    if (friend) url += `&friend=${friend}`;
-    if (term) url += `&term=${term}`;
-    if (page) url += `&page=${page}`;
-    if (count) url += `&count=${count}`;
+
+    Object.entries(props).forEach(prop => {
+      if (prop[1] !== undefined) {
+        url = `${url}&${prop[0]}=${prop[1]}`;
+      }
+    });
+
+    if (url[url.indexOf('?') + 1] === '&') {
+      url = url.replace(url[url.indexOf('?') + 1], '');
+    }
 
     const response = await instance.get<IUsersResponse>(url);
+
     return response.data;
   },
 };
