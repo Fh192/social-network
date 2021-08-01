@@ -1,0 +1,40 @@
+.user {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  width: 150px;
+  gap: 5px;
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.userPhoto img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+}
+
+.username {
+  font-weight: 500;
+}
+
+.follow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 10px;
+  background-color: rgba(0, 4, 255, 0.548);
+  cursor: pointer;
+}
+
+.follow button {
+  color: #fff;
+  font-size: 13px;
+}

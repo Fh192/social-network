@@ -7,6 +7,7 @@ import Login from './Login/Login';
 import SideMenu from './SideMenu/SideMenu';
 import ProfileContainer from './Profile/ProfileContainer';
 import { Route, Switch } from 'react-router-dom';
+import Users from './Users/Users';
 
 interface Props {
   isAuth: boolean;
@@ -26,11 +27,11 @@ const App: React.FC<Props> = ({ isAuth, getUserAuthData }) => {
             <SideMenu />
             <main className='main'>
               <Switch>
-                {/* @ts-ignore */}
                 <Route
                   path='/profile/:userId'
                   component={() => <ProfileContainer />}
                 />
+                <Route path='/users' component={() => <Users />} />
               </Switch>
             </main>
           </div>

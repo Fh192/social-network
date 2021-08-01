@@ -1,14 +1,6 @@
 import { useState, useEffect } from 'react';
 
 export default function useFetchOnScroll(defaultValue: boolean) {
-  useEffect(() => {
-    document.addEventListener('scroll', scrollListener);
-    return () => {
-      document.removeEventListener('scroll', scrollListener);
-      console.log(123);
-    };
-  }, []);
-
   const [fetching, setFetching] = useState(defaultValue);
 
   const scrollListener: EventListener = (e: Event) => {
@@ -18,9 +10,15 @@ export default function useFetchOnScroll(defaultValue: boolean) {
     const scrollTop = target.documentElement.scrollTop;
 
     if (scrollHeight - (scrollTop + innerHeight) < 100) {
-      setFetching(fetching => !fetching);
+      setFetching(true);
     }
   };
+
+  useEffect(() => {
+    document.addEventListener('scroll', scrollListener);
+
+    return () => document.removeEventListener('scroll', scrollListener);
+  }, []);
 
   return { fetching, setFetching };
 }
