@@ -13,6 +13,7 @@ type UsersThunk = ThunkAction<Promise<void>, RootState, unknown, UsersActions>;
 const initialState = {
   users: [] as Array<IUser>,
   totalCount: null as Nullable<number>,
+  currentPage: 1 as number,
 };
 
 const usersReducer = (
@@ -41,6 +42,8 @@ const usersReducer = (
         ],
       };
 
+    case 'actions/users/SET_CURRENT_PAGE':
+      return { ...state, currentPage: action.payload };
     default:
       return state;
   }
