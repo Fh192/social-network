@@ -1,20 +1,10 @@
-import { applyMiddleware, compose, createStore } from 'redux';
-import thunk from 'redux-thunk';
+import { configureStore } from '@reduxjs/toolkit';
 import rootReducer from './reducers/rootReducer';
 
-let composeEnhancers = compose;
-if (process.env.NODE_ENV !== 'production') {
-  //@ts-ignore
-  composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-}
+const store = configureStore({ reducer: rootReducer });
 
-const store = createStore(
-  rootReducer,
-  composeEnhancers(applyMiddleware(thunk))
-);
-
- 
-export type RootState = ReturnType<typeof rootReducer>;
+export type RootState = ReturnType<typeof store.getState>;
+export type RootDispatch = typeof store.dispatch;
 export type Actions<T> = T extends { [key: string]: infer U } ? U : never;
 
 export default store;
