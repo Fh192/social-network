@@ -39,7 +39,7 @@ const LoginForm: React.FC<Props> = ({ captcha, serverErrors, login }) => {
 
   if (serverErrors.length > 0) {
     setTimeout(() => {
-      dispatch(actions.setAuthErrors([]));
+      // dispatch(actions.setAuthErrors([]));
       console.log(serverErrors);
     }, 3000);
   }

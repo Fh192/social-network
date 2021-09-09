@@ -1,3 +1,4 @@
+import { createReducer } from '@reduxjs/toolkit';
 import { ThunkAction } from 'redux-thunk';
 import authAPI from '../../api/authAPI';
 import securityAPI from '../../api/securityAPI';
@@ -6,9 +7,14 @@ import * as actions from '../actions/auth';
 import { Actions, RootState } from '../store';
 import { Nullable } from '../../types/common';
 
-type AuthState = typeof initialState;
-type AuthActions = ReturnType<Actions<typeof actions>>;
-type AuthThunk = ThunkAction<Promise<void>, RootState, unknown, AuthActions>;
+export type AuthState = typeof initialState;
+export type AuthActions = ReturnType<Actions<typeof actions>>;
+export type AuthThunk = ThunkAction<
+  Promise<void>,
+  RootState,
+  unknown,
+  AuthActions
+>;
 
 const initialState = {
   id: null as Nullable<number>,
@@ -19,25 +25,28 @@ const initialState = {
   errors: [] as Array<string>,
 };
 
-const authReducer = (state = initialState, action: AuthActions): AuthState => {
-  switch (action.type) {
-    case 'actions/auth/SET_USER_AUTH_DATA':
-      return { ...state, ...action.payload, isAuth: true };
+const {
+  setUserAuthDataSuccess,
+  setUserAuthDataFailure,
+  setCaptchaSuccess,
+  logoutSuccess,
+} = actions;
 
-    case 'actions/auth/SET_CAPTCHA':
-      return { ...state, captcha: action.payload };
+const authReducer = createReducer(initialState, b => {
+  b.addCase(setUserAuthDataSuccess, (state, action) => {
+    return { ...state, ...action.payload, isAuth: true };
+  });
 
-    case 'actions/auth/LOGOUT_SUCCESS':
-      return { ...state, ...action.payload, isAuth: false };
+  b.addCase(setUserAuthDataFailure, (state, action) => {
+    state.errors.push(action.payload.error);
+  });
 
-    case 'actions/auth/SET_AUTH_ERRORS': {
-      return { ...state, errors: action.payload };
-    }
+  b.addCase(setCaptchaSuccess, (state, action) => {
+    state.captcha = action.payload.captcha;
+  });
 
-    default:
-      return state;
-  }
-};
+  b.addCase(logoutSuccess, () => initialState);
+});
 
 export const getUserAuthData = (): AuthThunk => async dispatch => {
   try {
@@ -45,12 +54,14 @@ export const getUserAuthData = (): AuthThunk => async dispatch => {
     const userData = data.data;
 
     if (data.resultCode === 0) {
-      dispatch(actions.setUserAuthData(userData));
+      dispatch(setUserAuthDataSuccess(userData));
     } else {
       throw new Error(...data.messages);
     }
   } catch (e) {
-    console.error(e);
+    if (typeof e === 'string') {
+      dispatch(setUserAuthDataFailure(e));
+    }
   }
 };
 
@@ -59,20 +70,21 @@ export const login =
   async dispatch => {
     try {
       const data = await authAPI.login(loginFormData);
+      const resultCode = data.resultCode;
 
-      if (data.resultCode === 0) {
+      if (resultCode === 0) {
         dispatch(getUserAuthData());
-      } else if (data.resultCode === 10) {
+      } else if (resultCode === 10) {
         const captcha = await securityAPI.captcha();
 
-        dispatch(actions.setAuthErrors(data.messages));
-        dispatch(actions.setCaptcha(captcha));
+        dispatch(setCaptchaSuccess(captcha));
       } else {
-        dispatch(actions.setAuthErrors(data.messages));
         throw Error(...data.messages);
       }
     } catch (e) {
-      console.error(e);
+      if (typeof e === 'string') {
+        dispatch(setUserAuthDataFailure(e));
+      }
     }
   };
 
@@ -80,7 +92,7 @@ export const logout = (): AuthThunk => async dispatch => {
   try {
     await authAPI.logout();
 
-    dispatch(actions.logoutSuccess({ id: null, email: '', login: '' }));
+    dispatch(logoutSuccess());
   } catch (e) {
     console.error(e);
   }
