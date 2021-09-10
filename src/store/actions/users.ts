@@ -1,14 +1,24 @@
+import { createAction } from '@reduxjs/toolkit';
 import { IUser } from '../../types/users';
 
-const SET_USERS = 'actions/users/SET_USERS';
-const TOGGLE_FOLLOW = 'actions/users/TOGGLE_FOLLOW';
-const SET_CURRENT_PAGE = 'actions/users/SET_CURRENT_PAGE';
+export const setUsers = createAction(
+  'users/SET_USERS',
+  (users: Array<IUser>, totalCount: number) => ({
+    payload: { users, totalCount },
+  })
+);
 
-export const setUsers = (users: Array<IUser>, totalCount: number) =>
-  ({ type: SET_USERS, payload: { users, totalCount } } as const);
+export const toggleFollow = createAction(
+  'users/TOGGLE_FOLLOW',
+  (userId: number) => ({ payload: { userId } })
+);
 
-export const toggleFollow = (userId: number, isFollowed: boolean) =>
-  ({ type: TOGGLE_FOLLOW, payload: { userId, isFollowed } } as const);
+export const setCurrentPage = createAction(
+  'users/SET_CURRENT_PAGE',
+  (page: number) => ({ payload: { page } })
+);
 
-export const setCurrentPage = (page: number) =>
-  ({ type: SET_CURRENT_PAGE, payload: page } as const);
+export const addUserToFollowProgress = createAction(
+  'users/ADD_USER_TO_FOLLOW_PROGRESS',
+  (id: number) => ({ payload: { id } })
+);

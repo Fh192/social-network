@@ -1,3 +1,4 @@
+import { createReducer } from '@reduxjs/toolkit';
 import usersAPI from './../../api/usersAPI';
 import { Nullable } from './../../types/common';
 import { ThunkAction } from 'redux-thunk';
@@ -6,48 +7,45 @@ import * as actions from '../actions/users';
 import { Actions, RootState } from '../store';
 import followAPI from '../../api/followAPI';
 
-type UsersState = typeof initialState;
-type UsersActions = ReturnType<Actions<typeof actions>>;
-type UsersThunk = ThunkAction<Promise<void>, RootState, unknown, UsersActions>;
+export type UsersState = typeof initialState;
+export type UsersActions = ReturnType<Actions<typeof actions>>;
+export type UsersThunk = ThunkAction<
+  Promise<void>,
+  RootState,
+  unknown,
+  UsersActions
+>;
 
 const initialState = {
   users: [] as Array<IUser>,
   totalCount: null as Nullable<number>,
   currentPage: 1 as number,
+  inFollowProgress: [] as number[],
 };
 
-const usersReducer = (
-  state = initialState,
-  action: UsersActions
-): UsersState => {
-  switch (action.type) {
-    case 'actions/users/SET_USERS':
-      return {
-        ...state,
-        users: [...state.users, ...action.payload.users],
-        totalCount: action.payload.totalCount,
-      };
+const usersReducer = createReducer(initialState, b => {
+  b.addCase(actions.setUsers, (state, action) => {
+    state.users.push(...action.payload.users);
+    state.totalCount = action.payload.totalCount;
+  });
 
-    case 'actions/users/TOGGLE_FOLLOW':
-      return {
-        ...state,
-        users: [
-          ...state.users.map(user => {
-            if (user.id === action.payload.userId) {
-              user.followed = action.payload.isFollowed;
-            }
+  b.addCase(actions.toggleFollow, (state, action) => {
+    state.users = state.users.map(user => {
+      if (user.id === action.payload.userId) {
+        user.followed = !user.followed;
+      }
+      return user;
+    });
 
-            return user;
-          }),
-        ],
-      };
+    state.inFollowProgress = state.inFollowProgress.filter(
+      id => id !== action.payload.userId
+    );
+  });
 
-    case 'actions/users/SET_CURRENT_PAGE':
-      return { ...state, currentPage: action.payload };
-    default:
-      return state;
-  }
-};
+  b.addCase(actions.addUserToFollowProgress, (state, action) => {
+    state.inFollowProgress.push(action.payload.id);
+  });
+});
 
 export const getUsers =
   (
@@ -66,15 +64,17 @@ export const getUsers =
 export const toggleFollow =
   (userId: number): UsersThunk =>
   async dispatch => {
+    dispatch(actions.addUserToFollowProgress(userId));
+
     const isFollowed = await followAPI.getFollowed(userId);
 
     if (isFollowed) {
       await followAPI.unfollow(userId);
-      dispatch(actions.toggleFollow(userId, false));
     } else {
       await followAPI.follow(userId);
-      dispatch(actions.toggleFollow(userId, true));
     }
+
+    dispatch(actions.toggleFollow(userId));
   };
 
 export default usersReducer;
