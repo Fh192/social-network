@@ -31,7 +31,7 @@ const App: React.FC<Props> = ({ isAuth, getUserAuthData }) => {
                   path='/profile/:userId'
                   component={() => <ProfileContainer />}
                 />
-                <Route path='/users' component={() => <Users />} />
+                <Route path='/users' component={Users} />
               </Switch>
             </main>
           </div>

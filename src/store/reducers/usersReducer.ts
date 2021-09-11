@@ -19,7 +19,6 @@ export type UsersThunk = ThunkAction<
 const initialState = {
   users: [] as Array<IUser>,
   totalCount: null as Nullable<number>,
-  currentPage: 1 as number,
   inFollowProgress: [] as number[],
 };
 

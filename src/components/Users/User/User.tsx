@@ -1,36 +1,51 @@
 import React from 'react';
 import { IUser } from '../../../types/users';
 import styles from './User.module.css';
-import userPhotoPlaceholder from '../../../images/userPhoto.png';
-import { NavLink } from 'react-router-dom';
+import photoPlaceholder from '../../../images/userPhoto.png';
+import { toggleFollow } from '../../../store/reducers/usersReducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUsersState } from '../../../selectors/usersSelector';
+import classNames from 'classnames/bind';
+import Preloader from '../../Preloader/Preloader';
 
-interface Props extends IUser {
-  toggleFollow: (userId: number) => Promise<void>;
-}
+const User: React.FC<IUser> = ({ name, photos, followed, id }) => {
+  const cx = classNames.bind(styles);
+  const dispatch = useDispatch();
 
-const User: React.FC<Props> = ({
-  followed,
-  id,
-  name,
-  photos,
-  toggleFollow,
-}) => {
+  const { inFollowProgress } = useSelector(selectUsersState);
   const photo = photos.large;
+  const isBtnDisabled = inFollowProgress.some(i => i === id);
+
+  const onToggleFollow = () => {
+    dispatch(toggleFollow(id));
+  };
 
   return (
     <li className={styles.user}>
-      <NavLink to={`profile/${id}`}>
-        <div className={styles.inner}>
-          <div className={styles.userPhoto}>
-            <img src={photo || userPhotoPlaceholder} alt='user photo' />
-          </div>
-          <div className={styles.username}>
-            <span>{name}</span>
-          </div>
+      <div className={styles.photo}>
+        <img src={photo || photoPlaceholder} alt='User photo' />
+      </div>
+      <div className={styles.col}>
+        <div className={styles.name}>
+          <span>{name}</span>
         </div>
-      </NavLink>
-      <div className={styles.follow} onClick={() => toggleFollow(id)}>
-        {followed ? <button>unfollow</button> : <button>follow</button>}
+        <div
+          className={cx({
+            followBtn: true,
+            followed: followed,
+            disabled: isBtnDisabled,
+          })}
+        >
+          <button disabled={isBtnDisabled} onClick={onToggleFollow}>
+            {isBtnDisabled ? (
+              <Preloader size='15' color={followed ? '#000' : '#fff'} />
+            ) : followed ? (
+              'Unfollow'
+            ) : (
+              'Follow'
+            )}
+          </button>
+        </div>
       </div>
     </li>
   );
