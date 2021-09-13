@@ -31,7 +31,7 @@ const User: React.FC<IUser> = ({ name, photos, followed, id }) => {
       <div className={styles.col}>
         <div className={styles.name}>
           <NavLink to={`/profile/${id}`}>
-            <span>{name}</span>
+            <span title={name}>{name}</span>
           </NavLink>
         </div>
         <div
