@@ -22,3 +22,5 @@ export const addUserToFollowProgress = createAction(
   'users/ADD_USER_TO_FOLLOW_PROGRESS',
   (id: number) => ({ payload: { id } })
 );
+
+export const setInitialState = createAction('users/SET_INITIAL_STATE');
