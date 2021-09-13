@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import styles from './SideMenu.module.css';
 import UsersIcon from '../../svg/UsersIcon';
@@ -8,6 +8,7 @@ import LogoutIcon from '../../svg/LogoutIcon';
 import { connect } from 'react-redux';
 import { RootState } from '../../store/store';
 import { logout } from '../../store/reducers/authReducer';
+import profileAPI from '../../api/profileAPI';
 
 interface MapStateProps {
   username: string;
@@ -21,6 +22,17 @@ interface MapDispatchProps {
 type Props = MapStateProps & MapDispatchProps;
 
 const SideMenu: React.FC<Props> = ({ username, userId, logout }) => {
+  const [photo, setPhoto] = useState('');
+
+  useEffect(() => {
+    const fetchPhoto = async () => {
+      const data = await profileAPI.getUserProfile(userId);
+      setPhoto(data.photos.large);
+    };
+
+    fetchPhoto();
+  }, []);
+
   return (
     <nav className={styles.sideMenu}>
       <ul className={styles.list}>
@@ -47,7 +59,7 @@ const SideMenu: React.FC<Props> = ({ username, userId, logout }) => {
         <NavLink to={`/profile/${userId}`}>
           <div className={styles.user}>
             <div className={styles.avatar}>
-              <ProfileIcon size='40px' />
+              <img src={photo} alt={'user'} />
             </div>
             <div className={styles.username}>{username}</div>
           </div>
@@ -64,7 +76,6 @@ const SideMenu: React.FC<Props> = ({ username, userId, logout }) => {
 const mapStateToProps = (state: RootState): MapStateProps => ({
   username: state.auth.login,
   userId: state.auth.id,
-  //userAvatar
 });
 
 export default connect(mapStateToProps, { logout })(SideMenu);

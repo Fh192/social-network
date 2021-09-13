@@ -37,10 +37,14 @@
   display: flex;
   align-items: center;
   cursor: pointer;
+  gap: 10px;
 }
 
-.username {
-  padding: 0 5px;
+.avatar img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .logout {
