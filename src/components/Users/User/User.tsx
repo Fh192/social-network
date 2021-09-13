@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectUsersState } from '../../../selectors/usersSelector';
 import classNames from 'classnames/bind';
 import Preloader from '../../Preloader/Preloader';
+import { NavLink } from 'react-router-dom';
 
 const User: React.FC<IUser> = ({ name, photos, followed, id }) => {
   const cx = classNames.bind(styles);
@@ -23,11 +24,15 @@ const User: React.FC<IUser> = ({ name, photos, followed, id }) => {
   return (
     <li className={styles.user}>
       <div className={styles.photo}>
-        <img src={photo || photoPlaceholder} alt='User photo' />
+        <NavLink to={`/profile/${id}`}>
+          <img src={photo || photoPlaceholder} alt='User photo' />
+        </NavLink>
       </div>
       <div className={styles.col}>
         <div className={styles.name}>
-          <span>{name}</span>
+          <NavLink to={`/profile/${id}`}>
+            <span>{name}</span>
+          </NavLink>
         </div>
         <div
           className={cx({

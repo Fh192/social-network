@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUsersState } from '../../selectors/usersSelector';
+import { setInitialState } from '../../store/actions/users';
 import { getUsers } from '../../store/reducers/usersReducer';
 import Arrow from '../../svg/Arrow';
+import FilterUsers from './FilterUsers/FilterUsers';
 import User from './User/User';
 import styles from './Users.module.css';
 
@@ -12,6 +14,10 @@ const Users: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [fetching, setFetching] = useState(false);
   const [arrowType, setArrowType] = useState<'down' | 'up'>('down');
+  const [searchValue, setSearchValue] = useState<undefined | string>(undefined);
+  const [isFriend, setIsFriend] = useState<undefined | boolean>(undefined);
+  const [onlyFriends, setOnlyFriends] = useState(false);
+  const [hideFriends, setHideFriends] = useState(false);
   const { users, totalCount } = useSelector(selectUsersState);
 
   const onArrowTypeChange = () => {
@@ -21,13 +27,10 @@ const Users: React.FC = () => {
     });
   };
 
-  useEffect(() => {
-    dispatch(getUsers(pageSize, currentPage));
-  }, []);
-
-  useEffect(() => {
-    setFetching(false);
-  }, [users.length]);
+  const fetchUsers = () => {
+    setFetching(true);
+    dispatch(getUsers(pageSize, currentPage, searchValue, isFriend));
+  };
 
   useEffect(() => {
     const el = document.scrollingElement as Element;
@@ -38,9 +41,8 @@ const Users: React.FC = () => {
       if (!fetching) {
         if (scrollTop + clientHeight >= scrollHeight - 200) {
           if (totalCount && users.length <= totalCount) {
-            dispatch(getUsers(pageSize, currentPage + 1));
+            fetchUsers();
             setCurrentPage(p => p + 1);
-            setFetching(true);
           }
         }
       }
@@ -50,7 +52,14 @@ const Users: React.FC = () => {
     return () => document.removeEventListener('scroll', listener);
   }, [fetching, currentPage, totalCount, users]);
 
-  if (totalCount === null || users.length === 0) return null;
+  useEffect(() => {
+    setFetching(false);
+  }, [users.length]);
+
+  useEffect(() => {
+    dispatch(setInitialState());
+    fetchUsers();
+  }, [isFriend, searchValue]);
 
   return (
     <div className={styles.users}>
@@ -59,7 +68,7 @@ const Users: React.FC = () => {
           <span>
             Users found:{' '}
             <span className={styles.usersCount}>
-              {totalCount.toLocaleString()}
+              {totalCount && totalCount.toLocaleString()}
             </span>
           </span>
         </div>
@@ -70,6 +79,19 @@ const Users: React.FC = () => {
               <Arrow size='10px' type={arrowType} />
             </div>
           </div>
+          {arrowType === 'up' && (
+            <FilterUsers
+              searchValue={searchValue}
+              onlyFriends={onlyFriends}
+              hideFriends={hideFriends}
+              setSearchValue={setSearchValue}
+              setIsFriend={setIsFriend}
+              setArrowType={setArrowType}
+              setCurrentPage={setCurrentPage}
+              setOnlyFriends={setOnlyFriends}
+              setHideFriends={setHideFriends}
+            />
+          )}
         </div>
       </div>
       <ul className={styles.usersList}>
