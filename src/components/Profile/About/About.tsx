@@ -75,28 +75,28 @@ const About: React.FC<Props> = ({ aboutMe, isOwner, contacts, posts }) => {
             {contactsArr.map(contact => {
               if (contact[0] === 'mainLink') return null;
 
-              let link = '';
-
               if (contact[1]) {
-                link = contact[1].replaceAll(' ', '');
+                let link: string = contact[1].replaceAll(' ', '');
 
                 if (!link.includes('https://') && !link.includes('http://')) {
                   link = `https://${link}`;
                 }
+
+                return (
+                  <li className={styles.item} key={contact[0]}>
+                    <a
+                      href={link}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      className={styles.icon}
+                    >
+                      {icons[contact[0]]}
+                    </a>
+                  </li>
+                );
               }
 
-              return (
-                <li className={styles.item} key={contact[0]}>
-                  <a
-                    href={link}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    className={styles.icon}
-                  >
-                    {icons[contact[0]]}
-                  </a>
-                </li>
-              );
+              return null;
             })}
           </ul>
         </>
