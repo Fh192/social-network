@@ -58,7 +58,7 @@ const Users: React.FC = () => {
 
   useEffect(() => {
     dispatch(setInitialState());
-    fetchUsers(currentPage);
+    fetchUsers(1);
   }, [isFriend, searchValue]);
 
   return (

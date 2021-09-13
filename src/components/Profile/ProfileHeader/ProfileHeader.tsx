@@ -1,12 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './ProfileHeader.module.css';
 import FollowIcon from '../../../svg/FollowIcon';
-import UnfollowIcon from '../../../svg/UnfollowIcon';
 import MessageIcon from '../../../svg/MessageIcon';
 import { NavLink } from 'react-router-dom';
 import { IProfile, IProfileForUpdate } from '../../../types/profile';
 import UserPhoto from './UserPhoto/UserPhoto';
-import EditTextIcon from '../../../svg/EditTextIcon';
 import EditIcon from '../../../svg/EditIcon';
 import CheckMark from '../../../svg/CheckMark';
 import Arrow, { ArrowType } from '../../../svg/Arrow';

@@ -1,11 +1,8 @@
 import React from 'react';
-import Arrow from '../../../svg/Arrow';
-import EmailIcon from '../../../svg/EmailIcon';
 import FacebookIcon from '../../../svg/FacebookIcon';
 import GitHubIcon from '../../../svg/GitHubIcon';
 import InfoIcon from '../../../svg/InfoIcon';
 import InstagramIcon from '../../../svg/InstagramIcon';
-import LinkIcon from '../../../svg/LinkIcon';
 import TwitterIcon from '../../../svg/TwitterIcon';
 import VkIcon from '../../../svg/VkIcon';
 import WebsiteIcon from '../../../svg/WebsiteIcon';
@@ -78,26 +75,28 @@ const About: React.FC<Props> = ({ aboutMe, isOwner, contacts, posts }) => {
             {contactsArr.map(contact => {
               if (contact[0] === 'mainLink') return null;
 
+              let link = '';
+
               if (contact[1]) {
-                let link: string = contact[1].replaceAll(' ', '');
+                link = contact[1].replaceAll(' ', '');
 
                 if (!link.includes('https://') && !link.includes('http://')) {
                   link = `https://${link}`;
                 }
-
-                return (
-                  <li className={styles.item} key={contact[0]}>
-                    <a
-                      href={link}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className={styles.icon}
-                    >
-                      {icons[contact[0]]}
-                    </a>
-                  </li>
-                );
               }
+
+              return (
+                <li className={styles.item} key={contact[0]}>
+                  <a
+                    href={link}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    className={styles.icon}
+                  >
+                    {icons[contact[0]]}
+                  </a>
+                </li>
+              );
             })}
           </ul>
         </>

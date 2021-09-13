@@ -4,11 +4,10 @@ import { Formik, Form, Field } from 'formik';
 import * as yup from 'yup';
 import EmailIcon from '../../../svg/EmailIcon';
 import PasswordIcon from '../../../svg/PasswordIcon';
-import { connect, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { RootState } from '../../../store/store';
 import { login } from '../../../store/reducers/authReducer';
 import { IAuthLogin } from '../../../types/auth';
-import * as actions from '../../../store/actions/auth';
 
 interface MapStateProps {
   captcha: string;
@@ -35,11 +34,8 @@ const LoginValidationSchema = yup.object().shape({
 type Props = MapStateProps & MapDispatchProps;
 
 const LoginForm: React.FC<Props> = ({ captcha, serverErrors, login }) => {
-  const dispatch = useDispatch();
-
   if (serverErrors.length > 0) {
     setTimeout(() => {
-      // dispatch(actions.setAuthErrors([]));
       console.log(serverErrors);
     }, 3000);
   }

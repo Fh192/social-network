@@ -25,7 +25,7 @@ const User: React.FC<IUser> = ({ name, photos, followed, id }) => {
     <li className={styles.user}>
       <div className={styles.photo}>
         <NavLink to={`/profile/${id}`}>
-          <img src={photo || photoPlaceholder} alt='User photo' />
+          <img src={photo || photoPlaceholder} alt='User' />
         </NavLink>
       </div>
       <div className={styles.col}>

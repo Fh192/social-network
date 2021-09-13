@@ -88,7 +88,7 @@ const Post: React.FC<Props> = ({
       </div>
       {imageSrc && (
         <div className={styles.image}>
-          <img src={imageSrc} alt='post image' />
+          <img src={imageSrc} alt='post' />
         </div>
       )}
       <div className={styles.rate}>

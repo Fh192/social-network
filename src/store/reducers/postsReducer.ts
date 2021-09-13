@@ -1,7 +1,6 @@
 import { ThunkAction } from 'redux-thunk';
 import { IPost, IComment } from './../../types/posts';
 import { Actions, RootState } from './../store';
-import { Nullable } from '../../types/common';
 import * as actions from '../actions/posts';
 
 type PostsState = typeof initialState;
@@ -76,7 +75,6 @@ const postsReducer = (
       return state;
   }
 };
-
 
 export const addPost =
   (post: IPost): PostsThunk =>
