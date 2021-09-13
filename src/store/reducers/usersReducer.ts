@@ -44,6 +44,8 @@ const usersReducer = createReducer(initialState, b => {
   b.addCase(actions.addUserToFollowProgress, (state, action) => {
     state.inFollowProgress.push(action.payload.id);
   });
+
+  b.addCase(actions.setInitialState, () => initialState);
 });
 
 export const getUsers =
