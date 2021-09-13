@@ -27,9 +27,9 @@ const Users: React.FC = () => {
     });
   };
 
-  const fetchUsers = () => {
+  const fetchUsers = (page: number) => {
     setFetching(true);
-    dispatch(getUsers(pageSize, currentPage, searchValue, isFriend));
+    dispatch(getUsers(pageSize, page, searchValue, isFriend));
   };
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const Users: React.FC = () => {
       if (!fetching) {
         if (scrollTop + clientHeight >= scrollHeight - 200) {
           if (totalCount && users.length <= totalCount) {
-            fetchUsers();
+            fetchUsers(currentPage + 1);
             setCurrentPage(p => p + 1);
           }
         }
@@ -58,7 +58,7 @@ const Users: React.FC = () => {
 
   useEffect(() => {
     dispatch(setInitialState());
-    fetchUsers();
+    fetchUsers(currentPage);
   }, [isFriend, searchValue]);
 
   return (
