@@ -8,10 +8,11 @@ import ProfileContainer from './Profile/ProfileContainer';
 import { Route, Switch } from 'react-router-dom';
 import Users from './Users/Users';
 import { getAuthState } from '../selectors/authSelectors';
+import { Redirect } from 'react-router';
 
 const App: React.FC = props => {
   const dispatch = useDispatch();
-  const { isAuth } = useSelector(getAuthState);
+  const { isAuth, id } = useSelector(getAuthState);
 
   useEffect(() => {
     dispatch(getUserAuthData());
@@ -27,6 +28,7 @@ const App: React.FC = props => {
             <SideMenu />
             <main className='main'>
               <Switch>
+                <Redirect exact from='/' to={`/profile/${id}`} />
                 <Route
                   path='/profile/:userId'
                   component={() => <ProfileContainer />}
