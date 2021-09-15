@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import styles from './ProfileHeader.module.css';
-import FollowIcon from '../../../svg/FollowIcon';
-import MessageIcon from '../../../svg/MessageIcon';
 import { NavLink } from 'react-router-dom';
 import { IProfile, IProfileForUpdate } from '../../../types/profile';
 import UserPhoto from './UserPhoto/UserPhoto';
@@ -11,6 +9,7 @@ import Arrow, { ArrowType } from '../../../svg/Arrow';
 import LookingForAJob from './LookingForAJob/LookingForAJob';
 import Username from './Username/Username';
 import { IPhotos } from '../../../types/common';
+import FollowButton from '../../FollowButton/FollowButton';
 
 type Props = {
   profile: IProfile;
@@ -35,6 +34,8 @@ const ProfileHeader: React.FC<Props> = ({
   updatePhoto,
 }) => {
   const [arrowType, setArrowType] = useState<ArrowType>('down');
+  const followed = profile.followed;
+  const inFollowProcess = profile.inFollowProcess
 
   const onArrowClick = () => {
     setArrowType(type => {
@@ -108,18 +109,12 @@ const ProfileHeader: React.FC<Props> = ({
             </div>
           </NavLink>
         ) : (
-          <div className={`${styles.follow} ${styles.button}`}>
-            <FollowIcon size='20px' />
-            <button>Follow</button>
-          </div>
+          <FollowButton
+            userId={userId as number}
+            followed={followed}
+            inFollowProcess={inFollowProcess}
+          />
         )}
-
-        <NavLink to={`/messages/${userId}`}>
-          <div className={`${styles.message} ${styles.button}`}>
-            <MessageIcon size='25px' fill='#000' />
-            <button>Message</button>
-          </div>
-        </NavLink>
       </div>
     </div>
   );
