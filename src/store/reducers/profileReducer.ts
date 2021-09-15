@@ -18,6 +18,7 @@ type ProfileThunk = ThunkAction<
 
 const initialState = {
   followed: false as boolean,
+  inFollowProcess: false as boolean,
   aboutMe: '' as Nullable<string>,
   userId: null as Nullable<number>,
   lookingForAJob: false as boolean,
@@ -51,6 +52,18 @@ const profileReducer = createReducer(initialState, b => {
 
   b.addCase(actions.setUserStatus, (state, action) => {
     state.status = action.payload;
+  });
+
+  b.addCase(actions.toggleFollowProcess, (state, action) => {
+    state.inFollowProcess = action.payload;
+  });
+
+  b.addCase(actions.follow, state => {
+    state.followed = true;
+  });
+
+  b.addCase(actions.unfollow, state => {
+    state.followed = false;
   });
 });
 
@@ -104,6 +117,21 @@ export const updateProfile =
     if (data.resultCode === 0) {
       dispatch(getUserProfile(userId));
     }
+  };
+
+export const toggleFollow =
+  (userId: number) => async (dispatch: RootDispatch) => {
+    dispatch(actions.toggleFollowProcess(true));
+    const followed = await followAPI.getFollowed(userId);
+
+    if (followed) {
+      await followAPI.unfollow(userId);
+      dispatch(actions.unfollow());
+    } else {
+      await followAPI.follow(userId);
+      dispatch(actions.follow());
+    }
+    dispatch(actions.toggleFollowProcess(false));
   };
 
 export default profileReducer;

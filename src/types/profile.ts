@@ -2,6 +2,7 @@ import { IPhotos } from './common';
 
 export interface IProfile extends IProfileForUpdate {
   followed: boolean;
+  inFollowProcess: boolean;
   userId: number | null;
   photos: IPhotos;
 }
