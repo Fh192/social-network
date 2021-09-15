@@ -1,9 +1,11 @@
-import { Actions, RootState } from '../store';
+import { createReducer } from '@reduxjs/toolkit';
+import { Actions, RootDispatch, RootState } from '../store';
 import { IPhotos, Nullable } from '../../types/common';
 import * as actions from '../actions/profile';
 import { ThunkAction } from 'redux-thunk';
 import { IContacts, IProfileForUpdate } from '../../types/profile';
 import profileAPI from '../../api/profileAPI';
+import followAPI from '../../api/followAPI';
 
 type ProfileActions = ReturnType<Actions<typeof actions>>;
 type ProfileState = typeof initialState;
@@ -15,6 +17,7 @@ type ProfileThunk = ThunkAction<
 >;
 
 const initialState = {
+  followed: false as boolean,
   aboutMe: '' as Nullable<string>,
   userId: null as Nullable<number>,
   lookingForAJob: false as boolean,
@@ -37,31 +40,27 @@ const initialState = {
   } as IPhotos,
 };
 
-const profileReducer = (
-  state = initialState,
-  action: ProfileActions
-): ProfileState => {
-  switch (action.type) {
-    case 'actions/profile/SET_USER_PROFILE':
-      return { ...state, ...action.payload };
+const profileReducer = createReducer(initialState, b => {
+  b.addCase(actions.setUserProfile, (state, action) => {
+    return { ...state, ...action.payload };
+  });
 
-    case 'actions/profile/UPDATE_PHOTO':
-      return { ...state, photos: { ...state.photos, ...action.payload } };
+  b.addCase(actions.updatePhoto, (state, action) => {
+    state.photos = action.payload;
+  });
 
-    case 'actions/profile/SET_USER_STATUS':
-      return { ...state, status: action.payload };
-
-    default:
-      return state;
-  }
-};
+  b.addCase(actions.setUserStatus, (state, action) => {
+    state.status = action.payload;
+  });
+});
 
 export const getUserProfile =
   (userId: number | null): ProfileThunk =>
   async dispatch => {
     const data = await profileAPI.getUserProfile(userId);
+    const followed = await followAPI.getFollowed(userId as number);
 
-    dispatch(actions.setUserProfile(data));
+    dispatch(actions.setUserProfile({ ...data, followed }));
   };
 
 export const getUserStatus =

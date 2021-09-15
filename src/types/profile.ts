@@ -1,6 +1,7 @@
 import { IPhotos } from './common';
 
 export interface IProfile extends IProfileForUpdate {
+  followed: boolean;
   userId: number | null;
   photos: IPhotos;
 }
