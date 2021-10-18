@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { RootState } from '../../store/store';
 import { logout } from '../../store/reducers/authReducer';
 import profileAPI from '../../api/profileAPI';
+import photoPlaceholder from '../../images/userPhoto.png';
 
 interface MapStateProps {
   username: string;
@@ -22,7 +23,7 @@ interface MapDispatchProps {
 type Props = MapStateProps & MapDispatchProps;
 
 const SideMenu: React.FC<Props> = ({ username, userId, logout }) => {
-  const [photo, setPhoto] = useState('');
+  const [photo, setPhoto] = useState(photoPlaceholder);
 
   useEffect(() => {
     const fetchPhoto = async () => {
