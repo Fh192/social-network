@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios';
 import { IPhotos, ServerData } from '../types/common';
 import { IProfile, IProfileForUpdate } from '../types/profile';
 import instance from './instance';
@@ -16,7 +17,10 @@ const profileAPI = {
   },
 
   updateStatus: async (status: string) => {
-    const response = await instance.put<ServerData>('/profile/status', {
+    const response = await instance.put<
+      { status: string },
+      AxiosResponse<ServerData>
+    >('/profile/status', {
       status,
     });
 
@@ -31,9 +35,13 @@ const profileAPI = {
     const fr = new FormData();
     fr.append('image', image);
 
-    const response = await instance.put<Response>('/profile/photo', fr, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
+    const response = await instance.put<FormData, AxiosResponse<Response>>(
+      '/profile/photo',
+      fr,
+      {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      }
+    );
 
     debugger;
 
@@ -41,10 +49,10 @@ const profileAPI = {
   },
 
   updateProfile: async (profileFormData: IProfileForUpdate) => {
-    const response = await instance.put<ServerData>(
-      '/profile',
-      profileFormData
-    );
+    const response = await instance.put<
+      IProfileForUpdate,
+      AxiosResponse<ServerData>
+    >('/profile', profileFormData);
 
     return response.data;
   },

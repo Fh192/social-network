@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios';
 import { IAuthLogin, IAuthMe } from '../types/auth';
 import { ServerData } from '../types/common';
 import instance from './instance';
@@ -10,7 +11,7 @@ const authAPI = {
   },
 
   login: async (loginFormData: IAuthLogin) => {
-    const response = await instance.post<ServerData>(
+    const response = await instance.post<IAuthLogin, AxiosResponse<ServerData>>(
       'auth/login',
       loginFormData
     );
