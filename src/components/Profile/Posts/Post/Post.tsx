@@ -131,11 +131,7 @@ const Post: React.FC<Props> = ({
         </div>
         <ul className={styles.commentsList}>
           {comments.map(comment => (
-            <Comment
-              {...comment}
-              commentsLength={comments.length}
-              key={comment.commentId}
-            />
+            <Comment {...comment} key={comment.commentId} />
           ))}
         </ul>
       </div>

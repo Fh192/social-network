@@ -3,17 +3,7 @@ import { IComment } from '../../../../types/posts';
 import styles from './Comment.module.css';
 import classNames from 'classnames/bind';
 
-interface Props extends IComment {
-  commentsLength: number;
-}
-
-const Comment: React.FC<Props> = ({
-  addDate,
-  author,
-  commentId,
-  text,
-  commentsLength,
-}) => {
+const Comment: React.FC<IComment> = ({ addDate, author, commentId, text }) => {
   const postDateTime = new Date(addDate).toLocaleString('en-US', {
     hour: 'numeric',
     minute: 'numeric',
@@ -26,7 +16,7 @@ const Comment: React.FC<Props> = ({
     <div
       className={cx({
         comment: true,
-        commentBorder: commentId + 1 !== commentsLength,
+        commentBorder: commentId !== 0,
       })}
     >
       <div className={styles.inner}>
