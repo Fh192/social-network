@@ -11,8 +11,10 @@ import styles from './Users.module.css';
 import { useQuery } from '../../hooks/useQuery';
 import { useDarkMode } from 'usehooks-ts';
 import { ScrollBtn } from '../ScrollBtn/ScrollBtn';
+import classNames from 'classnames/bind';
 
 const Users: React.FC = () => {
+  const cx = classNames.bind(styles);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -20,7 +22,6 @@ const Users: React.FC = () => {
 
   const { totalCount, users } = useSelector(s => s.users);
   const { isDarkMode } = useDarkMode();
-
   const [fetching, setFetching] = useState(false);
   const [queryParams, setQueryParams] = useState<IQueryParams>({
     count: 40,
@@ -52,11 +53,13 @@ const Users: React.FC = () => {
 
       if (!fetching && totalCount) {
         if (scrollTop + clientHeight >= scrollHeight - 500) {
-          if (users.length < totalCount) {
+          const pageCount = Math.ceil(totalCount / queryParams.count);
+          if (queryParams.page < pageCount) {
             setFetching(true);
             setQueryParams(params => {
               return { ...params, page: params.page + 1 };
             });
+            console.log(pageCount);
           }
         }
       }
@@ -64,7 +67,7 @@ const Users: React.FC = () => {
 
     document.addEventListener('scroll', listener);
     return () => document.removeEventListener('scroll', listener);
-  }, [totalCount, users, fetching]);
+  }, [totalCount, fetching, queryParams.page, queryParams.count]);
 
   useEffect(() => {
     setFetching(true);
@@ -82,7 +85,7 @@ const Users: React.FC = () => {
 
   return (
     <div className={styles.users}>
-      <div className={`${styles.header} ${isDarkMode && styles.headerD}`}>
+      <div className={cx({ header: true, headerD: isDarkMode })}>
         <div className={styles.usersFound}>
           <span>Users found: {totalCount?.toLocaleString()}</span>
         </div>
@@ -103,10 +106,24 @@ const Users: React.FC = () => {
             </div>
           )}
         </ul>
-      ) : totalCount === 0 ? (
-        <div className={styles.notFound}>
-          <span>No results for</span>
-          <span className={styles.term}>"{queryParams.term}"</span>
+      ) : (!totalCount || !users.length) && !fetching ? (
+        <div className={cx({ notFound: true, notFoundD: isDarkMode })}>
+          <div className={styles.notFoundText}>
+            {queryParams.friend ? (
+              <>
+                <span>Friend</span>
+                <span className={styles.term}>"{queryParams.term}"</span>
+                <span>on page {queryParams.page}</span>
+                <span>not found.</span>
+              </>
+            ) : (
+              <>
+                <span>No results for</span>
+                <span className={styles.term}>"{queryParams.term}"</span>
+                <span>on page {queryParams.page}.</span>
+              </>
+            )}
+          </div>
         </div>
       ) : (
         <Preloader />
