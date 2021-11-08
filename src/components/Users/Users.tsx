@@ -47,10 +47,8 @@ const Users: React.FC = () => {
 
   useEffect(() => {
     const el = document.scrollingElement as Element;
-
     const listener = () => {
       const { scrollTop, scrollHeight, clientHeight } = el;
-
       if (!fetching && totalCount) {
         if (scrollTop + clientHeight >= scrollHeight - 500) {
           const pageCount = Math.ceil(totalCount / queryParams.count);
@@ -59,7 +57,6 @@ const Users: React.FC = () => {
             setQueryParams(params => {
               return { ...params, page: params.page + 1 };
             });
-            console.log(pageCount);
           }
         }
       }
@@ -67,7 +64,7 @@ const Users: React.FC = () => {
 
     document.addEventListener('scroll', listener);
     return () => document.removeEventListener('scroll', listener);
-  }, [totalCount, fetching, queryParams.page, queryParams.count]);
+  }, [totalCount, fetching, queryParams.count, queryParams.page]);
 
   useEffect(() => {
     setFetching(true);
