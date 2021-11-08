@@ -82,6 +82,7 @@
 }
 
 .noPosts {
+  min-width: 225px;
   height: 100%;
   display: flex;
   flex-direction: column;

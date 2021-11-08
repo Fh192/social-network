@@ -29,6 +29,7 @@
 .username span {
   font-size: 28px;
   font-weight: bold;
+  line-break: anywhere;
 }
 
 .column {
@@ -133,5 +134,12 @@
   }
   .editProfile {
     width: 100%;
+  }
+  .user {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    grid-template-columns: unset;
   }
 }
