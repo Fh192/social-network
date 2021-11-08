@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import styles from './UserPhoto.module.css';
-import userPhoto from '../../../../assets/userPhoto.png';
+import photoPlaceholder from '../../../../assets/userPhoto.png';
+import photoPlaceholderD from '../../../../assets/userPhotoDark.png';
 import { CropPhoto } from './CropPhoto';
 import { useSelector } from '../../../../hooks/useSelector';
 import { selectIsOwner } from '../../../../selectors/profileSelectors';
@@ -86,7 +87,7 @@ export const UserPhoto: React.FC = () => {
         <div className={styles.inner} onClick={handleClickOnAvatar}>
           <img
             className={styles.photo}
-            src={photo || userPhoto}
+            src={photo || (isDarkMode ? photoPlaceholderD : photoPlaceholder)}
             alt='user avatar'
             onLoad={() => setPhotoLoaded(true)}
           />
