@@ -71,12 +71,14 @@ const App: React.FC = () => {
             </main>
           </div>
         ) : (
-          <Suspense fallback={<Preloader />}>
-            <Routes>
-              <Route path='*' element={<Navigate to='/login' />} />
-              <Route path='/login' element={<Login />} />
-            </Routes>
-          </Suspense>
+          <div className='login'>
+            <Suspense fallback={<Preloader />}>
+              <Routes>
+                <Route path='*' element={<Navigate to='/login' />} />
+                <Route path='/login' element={<Login />} />
+              </Routes>
+            </Suspense>
+          </div>
         )
       ) : (
         <div className='preloader'>

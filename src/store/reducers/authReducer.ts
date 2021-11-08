@@ -94,6 +94,10 @@ const authReducer = createReducer(initialState, b => {
     state.loginError = action.payload as string;
   });
 
+  b.addCase(login.fulfilled, (state, action) => {
+    state.loginError = '';
+  });
+
   b.addCase(logout.fulfilled, () => initialState);
 });
 

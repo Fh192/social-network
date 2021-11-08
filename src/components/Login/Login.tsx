@@ -42,7 +42,7 @@ const Login: React.FC = () => {
   };
 
   const submitHandler = async (values: IAuthLogin) => {
-    dispatch(login(values));
+    await dispatch(login(values));
   };
 
   return (
@@ -55,12 +55,13 @@ const Login: React.FC = () => {
         >
           {({
             errors,
-            setFieldValue,
-            setFormikState,
             isValid,
             isSubmitting,
+            setFieldValue,
+            setFormikState,
           }) => (
             <Form className={cx(['form'])}>
+              {console.log(isSubmitting)}
               <div className={cx(['fieldWrap'])}>
                 <label htmlFor='email' className={cx(['label'])}>
                   Email
