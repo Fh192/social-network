@@ -1,35 +1,26 @@
 import { AxiosResponse } from 'axios';
 import { IPhotos, ServerData } from '../types/common';
-import { IProfile, IProfileForUpdate } from '../types/profile';
+import { IContacts, IProfile, IProfileForUpdate } from '../types/profile';
 import instance from './instance';
 
 const profileAPI = {
   getUserProfile: async (userId: number | null) => {
     const response = await instance.get<IProfile>(`profile/${userId}`);
+    const data = response.data;
 
-    return response.data;
-  },
+    //remove unnecessary contacts
+    const contacts = Object.fromEntries(
+      Object.entries(data.contacts).filter(
+        c => c[0] !== 'mainLink' && c[0] !== 'website'
+      )
+    ) as IContacts;
 
-  getStatus: async (userId: number) => {
-    const response = await instance.get<string>(`/profile/status/${userId}`);
-
-    return response.data;
-  },
-
-  updateStatus: async (status: string) => {
-    const response = await instance.put<
-      { status: string },
-      AxiosResponse<ServerData>
-    >('/profile/status', {
-      status,
-    });
-
-    return response.data;
+    return { ...data, contacts };
   },
 
   updatePhoto: async (image: File) => {
     interface Response extends ServerData {
-      data: IPhotos;
+      data: { photos: IPhotos };
     }
 
     const fr = new FormData();
@@ -43,12 +34,10 @@ const profileAPI = {
       }
     );
 
-    debugger;
-
     return response.data;
   },
 
-  updateProfile: async (profileFormData: IProfileForUpdate) => {
+  updateProfile: async (profileFormData: IProfile) => {
     const response = await instance.put<
       IProfileForUpdate,
       AxiosResponse<ServerData>

@@ -6,6 +6,11 @@
   padding: 10px 0;
 }
 
+.postD {
+  box-shadow: 0px 1px 2px rgba(255, 255, 255, 0.2);
+  background-color: #1f222e;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -24,20 +29,11 @@
   padding-left: 10px;
 }
 
-.dots {
-  position: relative;
-  cursor: pointer;
-}
-
 .delete {
-  position: absolute;
   display: flex;
-  width: 150px;
-}
-
-.delete span {
-  padding: 5px 10px;
-  background: rgb(206, 206, 206);
+  align-items: flex-start;
+  justify-content: center;
+  cursor: pointer;
 }
 
 .authorAvatar img {
@@ -119,15 +115,29 @@
 .writeCommentInput {
   display: flex;
   align-items: center;
-  flex: 1 1;
+  width: 100%;
   background: #f1f2f5;
   border-radius: 100px;
   margin-left: 10px;
-  padding: 10px 15px;
+  padding: 7px 13px;
+}
+
+.postD .writeCommentInput {
+  background: #2c2f3b;
 }
 
 .writeCommentInput input {
-  flex: 1 1;
+  width: 100%;
+  font-size: 15px;
+  line-height: 25px;
+}
+
+.postD .writeCommentInput input {
+  color: #fff;
+}
+
+.writeCommentInput input::placeholder {
+  font-size: 14px;
 }
 
 .writeCommentInput button {
@@ -137,9 +147,15 @@
 }
 
 .commentsList {
-  /* border-top: 1px solid rgba(0, 0, 0, 0.151); */
   display: flex;
   flex-direction: column;
   gap: 10px;
   padding: 10px 30px;
+}
+
+@media screen and (max-width: 320px) {
+  .comment span,
+  .like span {
+    display: none;
+  }
 }

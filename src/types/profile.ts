@@ -1,6 +1,11 @@
 import { IPhotos } from './common';
 
-export interface IProfile extends IProfileForUpdate {
+export interface IProfile {
+  aboutMe: string | null;
+  contacts: IContacts;
+  lookingForAJob: boolean;
+  lookingForAJobDescription: string | null;
+  fullName: string;
   followed: boolean;
   inFollowProcess: boolean;
   userId: number | null;
@@ -13,15 +18,13 @@ export interface IContacts {
   facebook: string | null;
   instagram: string | null;
   twitter: string | null;
-  website: string | null;
   youtube: string | null;
-  mainLink: string | null;
 }
 
 export interface IProfileForUpdate {
-  aboutMe: string | null;
-  contacts: IContacts;
-  lookingForAJob: boolean;
-  lookingForAJobDescription: string | null;
-  fullName: string;
+  aboutMe?: string | null;
+  contacts?: IContacts;
+  lookingForAJob?: boolean;
+  lookingForAJobDescription?: string | null;
+  fullName?: string;
 }

@@ -1,45 +1,95 @@
-.searchFilter {
-  position: absolute;
-  top: 50px;
-  right: -7px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 15px;
-  background-color: #ffffff;
-  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+.filterUsers {
+  position: relative;
 }
 
-.inputWrap {
-  display: flex;
-  justify-content: space-between;
-  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.7);
-  border-radius: 8px;
+.arrowD svg {
+  fill: #ffffff;
 }
 
-.inputWrap input {
-  padding: 10px 5px 10px 15px;
-}
-
-.magnifier {
+.title {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.2);
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
-  border-left: 1px solid rgba(0, 0, 0, 0.3);
-  padding: 10px 15px;
+  gap: 10px;
   cursor: pointer;
 }
 
-.checkboxes {
+.popup {
+  position: absolute;
+  bottom: -139px;
+  right: -20px;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  justify-content: space-between;
+  height: 130px;
+  gap: 10px;
+  background-color: #ffffff;
+  box-shadow: 0px 2px 2px rgb(0 0 0 / 20%);
+  border-radius: 0 0 8px 8px;
+  padding: 10px 11.5px;
+  transition: all 0.5s ease;
+  visibility: hidden;
+  opacity: 0;
 }
 
-.checkbox {
+.popupD {
+  background-color: #1f222e;
+  box-shadow: 0px 2px 2px rgb(255, 255, 255, 0.2);
+}
+
+.showPopup {
+  visibility: visible;
+  opacity: 1;
+  transition: all 0.2s ease;
+}
+
+.magnifier,
+.clearInput {
   display: flex;
-  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  fill: #787878;
+  cursor: pointer;
+}
+
+.term {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: #e5e6eb;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.term input {
+  font-size: 14px;
+  line-height: 16px;
+}
+
+.term input::placeholder {
+  font-size: 13px;
+}
+
+.popupD .term {
+  background: #2c2f3b;
+}
+
+.toggles {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toggles label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 375px) {
+  .title span {
+    display: none;
+  }
 }

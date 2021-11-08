@@ -1,35 +1,38 @@
 import React, { useState } from 'react';
+import { useDispatch } from '../../../../hooks/useDispatch';
+import { useSelector } from '../../../../hooks/useSelector';
 import CommentIcon from '../../../../svg/CommentIcon';
-import DotsIcon from '../../../../svg/DotsIcon';
 import LikeIcon from '../../../../svg/LikeIcon';
 import SendIcon from '../../../../svg/SendIcon';
-import { IComment, IPost } from '../../../../types/posts';
+import { IPost } from '../../../../types/posts';
 import Comment from '../Comment/Comment';
 import styles from './Post.module.css';
+import photoPlaceholder from '../../../../assets/userPhoto.png';
+import { createComment } from '../../../../store/reducers/postsReducer';
+import { deletePost, likePost } from '../../../../store/actions/posts';
+import { CrossIcon } from '../../../../svg/CrossIcon';
+import { useDarkMode } from 'usehooks-ts';
+import classNames from 'classnames/bind';
 
 interface Props {
   post: IPost;
-  userId: number | null;
-  likePost: (postId: number, userId: number | null) => void;
-  deletePost: (postId: number) => void;
-  addComment: (comment: IComment, postId: number) => void;
 }
 
-const Post: React.FC<Props> = ({
-  post,
-  userId,
-  deletePost,
-  likePost,
-  addComment,
-}) => {
-  const [dotsOpen, setDotsOpen] = useState(false);
+const Post: React.FC<Props> = ({ post }) => {
+  const dispatch = useDispatch();
+  const cx = classNames.bind(styles);
+
+  const { isDarkMode } = useDarkMode();
   const [newCommentText, setNewCommentText] = useState('');
+  const { id: userId } = useSelector(s => s.auth);
 
-  const { postId, addDate, author, text, imageSrc, comments, likes, whoLiked } =
-    post;
+  const { id, addDate, author, text, imageSrc, comments, likes } = post;
 
-  const postDate = addDate.split('T');
-  const postDateYear = postDate[0].split('-').reverse().join('.');
+  const postDateYear = new Date(addDate).toLocaleString('ru', {
+    month: '2-digit',
+    day: '2-digit',
+    year: 'numeric',
+  });
   const postDateTime = new Date(addDate).toLocaleString('en-US', {
     hour: 'numeric',
     minute: 'numeric',
@@ -37,24 +40,20 @@ const Post: React.FC<Props> = ({
   });
 
   const onSendComment = () => {
-    addComment(
-      {
-        commentId: comments.length,
-        addDate: new Date(),
-        author,
-        text: newCommentText,
-      },
-      postId
-    );
+    dispatch(createComment(newCommentText, id));
     setNewCommentText('');
   };
 
+  const onLikePost = () => {
+    dispatch(likePost(id, userId as number));
+  };
+
   return (
-    <li className={styles.post}>
+    <li className={cx({ post: true, postD: isDarkMode })}>
       <div className={styles.header}>
         <div className={styles.left}>
           <div className={styles.authorAvatar}>
-            <img src={author.avatar} alt='avatar' />
+            <img src={author.photo || photoPlaceholder} alt='avatar' />
           </div>
           <div className={styles.col}>
             <div className={styles.username}>
@@ -65,22 +64,8 @@ const Post: React.FC<Props> = ({
             </div>
           </div>
         </div>
-        <div className={styles.dots}>
-          <div className={styles.dotsIcon} onClick={() => setDotsOpen(e => !e)}>
-            <DotsIcon size='20px' />
-          </div>
-
-          {dotsOpen && (
-            <div
-              className={styles.delete}
-              onClick={() => {
-                deletePost(postId);
-                setDotsOpen(false);
-              }}
-            >
-              <span>Delete post</span>
-            </div>
-          )}
+        <div className={styles.delete} onClick={() => dispatch(deletePost(id))}>
+          <CrossIcon size='20px' />
         </div>
       </div>
       <div className={styles.postText}>
@@ -92,12 +77,16 @@ const Post: React.FC<Props> = ({
         </div>
       )}
       <div className={styles.rate}>
-        <div className={styles.like} onClick={() => likePost(postId, userId)}>
-          <LikeIcon size='20px' liked={whoLiked.includes(userId || -0)} />
-          {likes > 0 ? <span>{likes}</span> : <span>Like</span>}
+        <div className={styles.like} onClick={onLikePost}>
+          <LikeIcon
+            size='20px'
+            liked={likes.includes(userId as number)}
+            color={isDarkMode ? '#99A2AD' : ''}
+          />
+          {!!likes.length ? <span>{likes.length}</span> : <span>Like</span>}
         </div>
         <div className={styles.comment}>
-          <CommentIcon size='20px' />
+          <CommentIcon size='20px' color={isDarkMode ? '#99A2AD' : ''} />
           {comments.length > 0 ? (
             <span>{comments.length}</span>
           ) : (
@@ -108,7 +97,7 @@ const Post: React.FC<Props> = ({
       <div className={styles.comments}>
         <div className={styles.writeComment}>
           <div className={styles.commentAuthorAvatar}>
-            <img src={author.avatar} alt='author avatar' />
+            <img src={author.photo || photoPlaceholder} alt='author avatar' />
           </div>
           <div className={styles.writeCommentInput}>
             <input
@@ -122,18 +111,24 @@ const Post: React.FC<Props> = ({
               type='text'
               placeholder='Write a comment...'
             />
-            {newCommentText.length > 0 && (
+            {!!newCommentText.length && (
               <button onClick={onSendComment}>
-                <SendIcon size='20px' />
+                <SendIcon size='20px' color={isDarkMode ? '#99A2AD' : ''} />
               </button>
             )}
           </div>
         </div>
-        <ul className={styles.commentsList}>
-          {comments.map(comment => (
-            <Comment {...comment} key={comment.commentId} />
-          ))}
-        </ul>
+        {!!comments.length && (
+          <ul className={styles.commentsList}>
+            {comments.map(comment => (
+              <Comment
+                {...comment}
+                isLast={comments.lastIndexOf(comment) !== comments.length - 1}
+                key={comment.id}
+              />
+            ))}
+          </ul>
+        )}
       </div>
     </li>
   );

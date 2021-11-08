@@ -1,8 +1,7 @@
-import { IProfile } from './../types/profile';
-import { RootState } from '../store/store';
+import { RootState as S } from '../store';
 
-export const getProfile = (state: RootState): IProfile => state.profile;
+export const getProfile = (state: S) => state.profile;
 
-export const getIsOwner = (state: RootState): boolean => {
+export const selectIsOwner = (state: S) => {
   return state.profile.userId === state.auth.id;
 };

@@ -1,36 +1,48 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectUsersState } from '../../selectors/usersSelector';
-import { setInitialState } from '../../store/actions/users';
-import { getUsers } from '../../store/reducers/usersReducer';
-import Arrow from '../../svg/Arrow';
-import FilterUsers from './FilterUsers/FilterUsers';
-import User from './User/User';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useDispatch } from '../../hooks/useDispatch';
+import { useSelector } from '../../hooks/useSelector';
+import { getUsers, setInitialState } from '../../store/reducers/usersSlice';
+import { IQueryParams } from '../../types/users';
+import Preloader from '../Preloader/Preloader';
+import { FilterUsers } from './FilterUsers/FilterUsers';
+import { User } from './User/User';
+import { useNavigate } from 'react-router-dom';
 import styles from './Users.module.css';
+import { useQuery } from '../../hooks/useQuery';
+import { useDarkMode } from 'usehooks-ts';
+import { ScrollBtn } from '../ScrollBtn/ScrollBtn';
 
 const Users: React.FC = () => {
   const dispatch = useDispatch();
-  const pageSize = 30;
-  const [currentPage, setCurrentPage] = useState(1);
+  const navigate = useNavigate();
+
+  let query = useQuery();
+
+  const { totalCount, users } = useSelector(s => s.users);
+  const { isDarkMode } = useDarkMode();
+
   const [fetching, setFetching] = useState(false);
-  const [arrowType, setArrowType] = useState<'down' | 'up'>('down');
-  const [searchValue, setSearchValue] = useState<undefined | string>(undefined);
-  const [isFriend, setIsFriend] = useState<undefined | boolean>(undefined);
-  const [onlyFriends, setOnlyFriends] = useState(false);
-  const [hideFriends, setHideFriends] = useState(false);
-  const { users, totalCount } = useSelector(selectUsersState);
+  const [queryParams, setQueryParams] = useState<IQueryParams>({
+    count: 40,
+    page: Number(query.get('page')) || 1,
+    term: query.get('term') || undefined,
+    friend: !!query.get('friend') || undefined,
+  });
 
-  const onArrowTypeChange = () => {
-    setArrowType(t => {
-      if (t === 'down') return 'up';
-      return 'down';
-    });
-  };
+  const setQueryParamsToUrl = useCallback(() => {
+    const { page, friend, term } = queryParams;
 
-  const fetchUsers = (page: number) => {
-    setFetching(true);
-    dispatch(getUsers(pageSize, page, searchValue, isFriend));
-  };
+    const search = Object.entries({ friend, term }).reduce(
+      (acc, [key, val]) => {
+        if (val !== undefined) {
+          return `${acc}&${key}=${val}`;
+        }
+        return acc;
+      },
+      `?page=${page}`
+    );
+    navigate({ search });
+  }, [queryParams, navigate]);
 
   useEffect(() => {
     const el = document.scrollingElement as Element;
@@ -38,11 +50,13 @@ const Users: React.FC = () => {
     const listener = () => {
       const { scrollTop, scrollHeight, clientHeight } = el;
 
-      if (!fetching) {
-        if (scrollTop + clientHeight >= scrollHeight - 200) {
-          if (totalCount && users.length <= totalCount) {
-            fetchUsers(currentPage + 1);
-            setCurrentPage(p => p + 1);
+      if (!fetching && totalCount) {
+        if (scrollTop + clientHeight >= scrollHeight - 500) {
+          if (users.length < totalCount) {
+            setFetching(true);
+            setQueryParams(params => {
+              return { ...params, page: params.page + 1 };
+            });
           }
         }
       }
@@ -50,55 +64,54 @@ const Users: React.FC = () => {
 
     document.addEventListener('scroll', listener);
     return () => document.removeEventListener('scroll', listener);
-  }, [fetching, currentPage, totalCount, users]);
+  }, [totalCount, users, fetching]);
 
   useEffect(() => {
-    setFetching(false);
-  }, [users.length]);
+    setFetching(true);
+    dispatch(getUsers(queryParams)).then(() => {
+      setFetching(false);
+      setQueryParamsToUrl();
+    });
+  }, [dispatch, queryParams, setQueryParamsToUrl]);
 
   useEffect(() => {
-    dispatch(setInitialState());
-    fetchUsers(1);
-  }, [isFriend, searchValue]);
+    return () => {
+      dispatch(setInitialState());
+    };
+  }, [dispatch]);
 
   return (
     <div className={styles.users}>
-      <div className={styles.header}>
-        <div className={styles.title}>
-          <span>
-            Users found:{' '}
-            <span className={styles.usersCount}>
-              {totalCount && totalCount.toLocaleString()}
-            </span>
-          </span>
+      <div className={`${styles.header} ${isDarkMode && styles.headerD}`}>
+        <div className={styles.usersFound}>
+          <span>Users found: {totalCount?.toLocaleString()}</span>
         </div>
-        <div className={styles.filterUsers}>
-          <div className={styles.filterUsersInner} onClick={onArrowTypeChange}>
-            <span>Parameters</span>
-            <div className={styles.arrow}>
-              <Arrow size='10px' type={arrowType} />
-            </div>
-          </div>
-          {arrowType === 'up' && (
-            <FilterUsers
-              searchValue={searchValue}
-              onlyFriends={onlyFriends}
-              hideFriends={hideFriends}
-              setSearchValue={setSearchValue}
-              setIsFriend={setIsFriend}
-              setArrowType={setArrowType}
-              setCurrentPage={setCurrentPage}
-              setOnlyFriends={setOnlyFriends}
-              setHideFriends={setHideFriends}
-            />
-          )}
-        </div>
+        <FilterUsers
+          queryParams={queryParams}
+          setQueryParams={setQueryParams}
+          fetching={fetching}
+        />
       </div>
-      <ul className={styles.usersList}>
-        {users.map(user => (
-          <User {...user} key={user.id} />
-        ))}
-      </ul>
+      {totalCount ? (
+        <ul className={styles.usersList}>
+          {users.map(user => (
+            <User {...user} key={user.id} />
+          ))}
+          {fetching && (
+            <div className={styles.preloader}>
+              <Preloader />
+            </div>
+          )}
+        </ul>
+      ) : totalCount === 0 ? (
+        <div className={styles.notFound}>
+          <span>No results for</span>
+          <span className={styles.term}>"{queryParams.term}"</span>
+        </div>
+      ) : (
+        <Preloader />
+      )}
+      <ScrollBtn />
     </div>
   );
 };

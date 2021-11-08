@@ -1,58 +1,72 @@
-import React, { useState } from 'react';
-import CheckMark from '../../../../svg/CheckMark';
+import React, { useRef, useState } from 'react';
 import LinkIcon from '../../../../svg/LinkIcon';
-import { IPost } from '../../../../types/posts';
 import styles from './CreatePost.module.css';
 import classNames from 'classnames/bind';
+import { useDispatch } from '../../../../hooks/useDispatch';
+import { createPost } from '../../../../store/reducers/postsReducer';
+import { getUserPhoto } from '../../../../common/getUserPhoto';
+import { useSelector } from '../../../../hooks/useSelector';
+import { CrossIcon } from '../../../../svg/CrossIcon';
+import { useDarkMode, useOnClickOutside } from 'usehooks-ts';
 
 interface Props {
-  posts: Array<IPost>;
-  username: string;
-  userAvatar: string;
   setCreatePostMode: React.Dispatch<React.SetStateAction<boolean>>;
-  addPost: (post: IPost) => void;
 }
 
-const CreatePost: React.FC<Props> = ({
-  posts,
-  username,
-  userAvatar,
-  setCreatePostMode,
-  addPost,
-}) => {
+const CreatePost: React.FC<Props> = ({ setCreatePostMode }) => {
+  const dispatch = useDispatch();
   const cx = classNames.bind(styles);
 
+  const ref = useRef<HTMLDivElement>(null);
   const [newPostText, setNewPostText] = useState('');
   const [imageSrc, setImageSrc] = useState('');
+  const createBtnDisabled = !newPostText.trim() && !imageSrc;
+  const { id: userId } = useSelector(s => s.auth);
+  const { isDarkMode } = useDarkMode();
 
   const onImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const file = e.target.files[0];
       const fr = new FileReader();
 
-      console.log(file.size);
-
       fr.onload = () => {
-        if (typeof fr.result === 'string') setImageSrc(fr.result);
+        if (typeof fr.result === 'string') {
+          setImageSrc(fr.result);
+        }
       };
 
       fr.readAsDataURL(file);
     }
   };
 
+  const onAddPost = () => {
+    dispatch(createPost({ text: newPostText, imageSrc }));
+    setCreatePostMode(false);
+  };
+
+  useOnClickOutside(ref, () => {
+    setCreatePostMode(false);
+    console.log(1);
+  });
+
   return (
     <div className={styles.createPostModal}>
-      <div className={styles.createPost}>
-        <div
-          className={styles.close}
-          onClick={() => setCreatePostMode(false)}
-          title='close'
-        >
-          <CheckMark size='25px' type='reject' />
+      <div
+        className={cx({ createPost: true, createPostD: isDarkMode })}
+        ref={ref}
+      >
+        <div className={styles.header}>
+          <div
+            className={styles.close}
+            onClick={() => setCreatePostMode(false)}
+          >
+            <CrossIcon size='20px' />
+          </div>
         </div>
+
         <div className={styles.inner}>
           <div className={styles.userAvatar}>
-            <img src={userAvatar} alt='' />
+            <img src={getUserPhoto(userId as number)} alt='' />
           </div>
           <div className={styles.textarea}>
             <textarea
@@ -65,7 +79,7 @@ const CreatePost: React.FC<Props> = ({
 
         <div className={styles.footer}>
           <div className={styles.addImage}>
-            <LinkIcon size='20px' />
+            <LinkIcon size='20px' color={isDarkMode ? '#99a2ad' : ''} />
             {imageSrc ? (
               <div className={styles.imagePreview}>
                 <img src={imageSrc} alt='' />
@@ -78,30 +92,15 @@ const CreatePost: React.FC<Props> = ({
           <div
             className={cx({
               createButton: true,
-              createButtonDisabled: !newPostText && !imageSrc,
+              createButtonDisabled: createBtnDisabled,
             })}
             title={
-              !newPostText && !imageSrc
+              createBtnDisabled
                 ? 'Write something or add image to create post'
                 : ''
             }
           >
-            <button
-              onClick={() => {
-                addPost({
-                  postId: posts.length,
-                  addDate: new Date().toISOString(),
-                  author: { username, avatar: userAvatar },
-                  text: newPostText,
-                  imageSrc: imageSrc,
-                  comments: [],
-                  likes: 0,
-                  whoLiked: [],
-                });
-                setCreatePostMode(false);
-              }}
-              disabled={!newPostText && !imageSrc}
-            >
+            <button onClick={onAddPost} disabled={createBtnDisabled}>
               Create
             </button>
           </div>

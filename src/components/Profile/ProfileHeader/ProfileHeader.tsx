@@ -1,119 +1,54 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styles from './ProfileHeader.module.css';
-import { NavLink } from 'react-router-dom';
-import { IProfile, IProfileForUpdate } from '../../../types/profile';
-import UserPhoto from './UserPhoto/UserPhoto';
-import EditIcon from '../../../svg/EditIcon';
-import CheckMark from '../../../svg/CheckMark';
-import Arrow, { ArrowType } from '../../../svg/Arrow';
-import LookingForAJob from './LookingForAJob/LookingForAJob';
-import Username from './Username/Username';
-import { IPhotos } from '../../../types/common';
+import { Link } from 'react-router-dom';
+import { UserPhoto } from './UserPhoto/UserPhoto';
 import FollowButton from '../../FollowButton/FollowButton';
+import { useSelector } from '../../../hooks/useSelector';
+import { selectIsOwner } from '../../../selectors/profileSelectors';
+import classNames from 'classnames/bind';
+import { useDarkMode } from 'usehooks-ts';
 
-type Props = {
-  profile: IProfile;
-  userId: number | null;
-  username: string;
-  photos: IPhotos;
-  isOwner: boolean;
-  updateProfile: (
-    profileFormData: IProfileForUpdate,
-    userId: number | null
-  ) => void;
-  updatePhoto: (image: File, userId: number) => void;
-};
+const ProfileHeader: React.FC = () => {
+  const cx = classNames.bind(styles);
 
-const ProfileHeader: React.FC<Props> = ({
-  profile,
-  userId,
-  username,
-  photos,
-  isOwner,
-  updateProfile,
-  updatePhoto,
-}) => {
-  const [arrowType, setArrowType] = useState<ArrowType>('down');
-  const followed = profile.followed;
-  const inFollowProcess = profile.inFollowProcess
-
-  const onArrowClick = () => {
-    setArrowType(type => {
-      if (type === 'down') {
-        return 'up';
-      } else {
-        return 'down';
-      }
-    });
-  };
+  const profile = useSelector(s => s.profile);
+  const isOwner = useSelector(selectIsOwner);
+  const { followed, inFollowProcess, userId, fullName: username } = profile;
+  const { isDarkMode } = useDarkMode();
 
   return (
-    <div className={styles.header}>
-      <div className={styles.user}>
-        <UserPhoto
-          userId={userId}
-          photos={photos}
-          isOwner={isOwner}
-          updatePhoto={updatePhoto}
-        />
-        <div className={styles.column}>
-          <Username
-            profile={profile}
-            userId={userId}
-            username={username}
-            isOwner={isOwner}
-            updateProfile={updateProfile}
-          />
-          <div className={styles.moreInfo}>
-            <div className={styles.LFJ}>
-              <div
-                className={`${styles.isLFJ} ${isOwner && styles.isLFJCursor}`}
-                onClick={() => {
-                  if (isOwner) {
-                    updateProfile(
-                      { ...profile, lookingForAJob: !profile.lookingForAJob },
-                      userId
-                    );
-                  }
-                }}
-              >
-                {profile.lookingForAJob ? (
-                  <CheckMark size='15px' type='resolve' />
-                ) : (
-                  <CheckMark size='15px' type='reject' />
-                )}
-              </div>
-              <span>Looking for a job</span>
-              <div className={styles.arrow} onClick={onArrowClick}>
-                <Arrow size='10px' type={arrowType} />
-              </div>
-              {arrowType === 'up' && (
-                <LookingForAJob
-                  isOwner={isOwner}
-                  profile={profile}
-                  setArrowType={setArrowType}
-                  updateProfile={updateProfile}
-                  userId={userId}
-                />
-              )}
-            </div>
-          </div>
+    <div className={cx({ header: true, headerD: isDarkMode })}>
+      <div className={styles.user}> 
+        <UserPhoto />
+        <div className={styles.username}>
+          <span>{username}</span>
         </div>
       </div>
       <div className={styles.buttons}>
         {isOwner ? (
-          <NavLink to={`/profile/edit`}>
-            <div className={`${styles.editProfile} ${styles.button}`}>
-              <EditIcon size='15px' />
+          <div className={cx(['editProfile', 'button'])}>
+            <Link to={`/profile/edit`}>
               <button>Edit</button>
-            </div>
-          </NavLink>
+            </Link>
+          </div>
         ) : (
-          <FollowButton
-            userId={userId as number}
-            followed={followed}
-            inFollowProcess={inFollowProcess}
-          />
+          <>
+            <div className={styles.button}>
+              <FollowButton
+                userId={userId as number}
+                followed={followed}
+                inFollowProcess={inFollowProcess}
+                padding='10px 30px'
+                fontSize='16px'
+              />
+            </div>
+
+            <div className={cx(['button', 'message'])}>
+              <Link to={`/dialogs/${userId}/messages`}>
+                <button>Message</button>
+              </Link>
+            </div>
+          </>
         )}
       </div>
     </div>

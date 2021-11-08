@@ -1,0 +1,140 @@
+.menu {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 15px;
+  background-color: #ffffff;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  grid-area: menu;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.toggleTheme,
+.mToggleTheme {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: fit-content;
+}
+
+.mToggleTheme {
+  top: unset;
+  left: 0;
+}
+
+.mMenu {
+  position: sticky;
+  bottom: -1px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+  padding: 15px;
+  gap: 10px;
+  z-index: 100;
+  border-radius: 0;
+  box-shadow: 0px -1px 2px 0 rgba(0, 0, 0, 0.2);
+  background-color: #ffffff;
+}
+
+.menuD,
+.mMenuD {
+  background-color: #1f222e;
+  box-shadow: 0px 1px 2px rgba(255, 255, 255, 0.2);
+}
+
+.mMenuD {
+  box-shadow: 0px -1px 2px 0 rgba(255, 255, 255, 0.1);
+}
+
+.mInner {
+  position: relative;
+}
+
+.mList {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.mLogout {
+  position: absolute;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: end;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.item span {
+  padding-left: 10px;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+}
+
+.bottom {
+  position: sticky;
+  bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 10px;
+}
+
+.avatar img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.logout {
+  cursor: pointer;
+}
+
+@media screen and (max-width: 700px) {
+  .menu {
+    position: sticky;
+    bottom: 0;
+    flex-direction: row;
+    box-shadow: 0px -1px 2px rgba(0, 0, 0, 0.2);
+    border-radius: 0;
+    z-index: 100;
+  }
+  .list {
+    flex-direction: row;
+  }
+
+  .menu span {
+    display: none;
+  }
+
+  .bottom {
+    position: static;
+  }
+}

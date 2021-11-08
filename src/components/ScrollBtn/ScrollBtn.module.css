@@ -1,0 +1,41 @@
+.scrollBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  box-shadow: 0 0 5px #1c3177;
+  border-radius: 50%;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.scrollBtnD {
+  background: #1f222e;
+  box-shadow: 0 0 10px #0d1117;
+}
+
+.scrollBtn button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+@media screen and (max-width: 700px) {
+  .scrollBtn {
+    right: 15px;
+    bottom: 60px;
+  }
+  .scrollBtn button {
+    padding: 7px;
+  }
+}

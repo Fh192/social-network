@@ -1,70 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './Profile.module.css';
 import ProfileHeader from './ProfileHeader/ProfileHeader';
-import { ProfileProps } from './ProfileContainer';
-import About from './About/About';
-import Posts from './Posts/Posts';
-import { Route } from 'react-router-dom';
-import EditProfile from './EditProfile/EditProfile';
+import { About } from './About/About';
+import { Posts } from './Posts/Posts';
+import { useParams } from 'react-router';
+import { useDispatch } from '../../hooks/useDispatch';
+import { getUserProfile } from '../../store/reducers/profileReducer';
+import { useSelector } from '../../hooks/useSelector';
+import Preloader from '../Preloader/Preloader';
 
-const Profile: React.FC<ProfileProps> = ({
-  profile,
-  isOwner,
-  posts,
-  updateProfile,
-  updatePhoto,
-  ...props
-}) => {
-  const {
-    userId,
-    fullName: username,
-    photos,
-    aboutMe,
-    contacts,
-  } = profile;
+export const Profile: React.FC = () => {
+  const dispatch = useDispatch();
+  const { userId } = useParams();
+  const { userId: profileId } = useSelector(s => s.profile);
+  const [fetching, setFetching] = useState(false);
+
+  useEffect(() => {
+    if (userId) {
+      if (!fetching && +userId !== profileId) {
+        setFetching(true);
+        dispatch(getUserProfile(+userId)).then(() => setFetching(false));
+      }
+    }
+  }, [dispatch, userId, profileId, fetching]);
+
+  if (fetching) return <Preloader />;
 
   return (
     <div className={styles.profile}>
-      <ProfileHeader
-        profile={profile}
-        userId={userId}
-        username={username}
-        isOwner={isOwner}
-        photos={photos}
-        updateProfile={updateProfile}
-        updatePhoto={updatePhoto}
-      />
-
+      <ProfileHeader />
       <div className={styles.main}>
-        <Route
-          path='/profile/edit'
-          component={() => (
-            <EditProfile profile={profile} updateProfile={updateProfile} />
-          )}
-        />
-        {userId && (
-          <Route
-            path={`/profile/${userId}`}
-            component={() => (
-              <>
-                <About
-                  aboutMe={aboutMe}
-                  isOwner={isOwner}
-                  contacts={contacts}
-                  posts={posts}
-                />
-                <Posts
-                  username={username}
-                  userAvatar={photos.large}
-                  isOwner={isOwner}
-                />
-              </>
-            )}
-          />
-        )}
+        <About />
+        <Posts />
       </div>
     </div>
   );
 };
-
-export default Profile;

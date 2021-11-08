@@ -1,6 +1,9 @@
 import React from 'react';
 
-const LinkIcon: React.FC<{ size: string }> = ({ size }) => {
+const LinkIcon: React.FC<{ size: string; color?: string }> = ({
+  size,
+  color = '#0d1117',
+}) => {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -10,6 +13,7 @@ const LinkIcon: React.FC<{ size: string }> = ({ size }) => {
       xmlSpace='preserve'
       width={size}
       height={size}
+      fill={color}
     >
       <g transform='translate(1 1)'>
         <path d='M211.26,389.24l-60.331,60.331c-25.012,25.012-65.517,25.012-90.508,0.005c-24.996-24.996-24.996-65.505-0.005-90.496     l120.683-120.683c24.991-24.992,65.5-24.992,90.491,0c8.331,8.331,21.839,8.331,30.17,0c8.331-8.331,8.331-21.839,0-30.17     c-41.654-41.654-109.177-41.654-150.831,0L30.247,328.909c-41.654,41.654-41.654,109.177,0,150.831     c41.649,41.676,109.177,41.676,150.853,0l60.331-60.331c8.331-8.331,8.331-21.839,0-30.17S219.591,380.909,211.26,389.24z' />

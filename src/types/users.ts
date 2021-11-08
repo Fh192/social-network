@@ -12,3 +12,17 @@ export interface IUsersResponse {
   items: Array<IUser>;
   totalCount: number;
 }
+
+export interface IGetUsersParams {
+  count: number;
+  page: number;
+  term?: string;
+  friend?: boolean;
+}
+
+export interface IQueryParams {
+  count: number;
+  page: number;
+  term?: string;
+  friend?: boolean;
+}

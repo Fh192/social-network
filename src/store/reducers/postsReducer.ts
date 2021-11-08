@@ -1,103 +1,86 @@
-import { ThunkAction } from 'redux-thunk';
 import { IPost, IComment } from './../../types/posts';
-import { Actions, RootState } from './../store';
-import * as actions from '../actions/posts';
+import { GetState, RootDispatch } from '../';
+import { addPost, deletePost, commentPost, likePost } from '../actions/posts';
+import { getUserPhoto } from '../../common/getUserPhoto';
+import { createReducer } from '@reduxjs/toolkit';
 
-type PostsState = typeof initialState;
-type PostsActions = ReturnType<Actions<typeof actions>>;
-type PostsThunk = ThunkAction<void, RootState, unknown, PostsActions>;
-
-const initialState = JSON.parse(
-  localStorage.getItem('posts') || '[]'
-) as Array<IPost>;
-
-const postsReducer = (
-  state = initialState,
-  action: PostsActions
-): PostsState => {
-  switch (action.type) {
-    case 'actions/posts/ADD_POST':
-      const stateWithNewPost = [action.payload, ...state];
-      localStorage.setItem('posts', JSON.stringify(stateWithNewPost));
-
-      return stateWithNewPost;
-
-    case 'actions/posts/DELETE_POST':
-      const deletePost = () => {
-        return state.filter(post => post.postId !== action.payload);
-      };
-
-      localStorage.setItem('posts', JSON.stringify(deletePost()));
-      return deletePost();
-
-    case 'actions/posts/LIKE_POST':
-      const likePost = () => {
-        return state.map(post => {
-          if (post.postId === action.payload.postId && action.payload.userId) {
-            if (post.whoLiked.some(id => id === action.payload.userId)) {
-              return {
-                ...post,
-                likes: post.likes - 1,
-                whoLiked: post.whoLiked.filter(
-                  userId => userId !== action.payload.userId
-                ),
-              };
-            } else {
-              return {
-                ...post,
-                likes: post.likes + 1,
-                whoLiked: [...post.whoLiked, action.payload.userId],
-              };
-            }
-          } else return post;
-        });
-      };
-
-      localStorage.setItem('posts', JSON.stringify(likePost()));
-      return likePost();
-
-    case 'actions/posts/ADD_COMMENT':
-      const addComment = () => {
-        return state.map(post => {
-          if (post.postId === action.payload.postId) {
-            return {
-              ...post,
-              comments: [action.payload.comment, ...post.comments],
-            };
-          } else return post;
-        });
-      };
-
-      localStorage.setItem('posts', JSON.stringify(addComment()));
-      return addComment();
-
-    default:
-      return state;
-  }
+const initialState = {
+  posts: JSON.parse(localStorage.getItem('posts') || '[]') as Array<IPost>,
 };
 
-export const addPost =
-  (post: IPost): PostsThunk =>
-  dispatch => {
-    dispatch(actions.addPost(post));
+const postsReducer = createReducer(initialState, b => {
+  b.addCase(addPost, (state, action) => {
+    state.posts.unshift(action.payload);
+    localStorage.setItem('posts', JSON.stringify(state.posts));
+  });
+
+  b.addCase(deletePost, (state, action) => {
+    const postId = action.payload;
+
+    state.posts = state.posts.filter(post => post.id !== postId);
+    localStorage.setItem('posts', JSON.stringify(state.posts));
+  });
+
+  b.addCase(likePost, (state, action) => {
+    const postId = action.payload.postId;
+    const userId = action.payload.userId;
+    const postIndex = state.posts.findIndex(post => post.id === postId);
+    const isPostLiked = state.posts[postIndex].likes.some(id => id === userId);
+
+    if (!isPostLiked) {
+      state.posts[postIndex].likes.push(userId);
+    } else {
+      state.posts[postIndex].likes = state.posts[postIndex].likes.filter(
+        id => id !== userId
+      );
+    }
+    localStorage.setItem('posts', JSON.stringify(state.posts));
+  });
+
+  b.addCase(commentPost, (state, action) => {
+    const comment = action.payload.comment;
+    const postId = action.payload.postId;
+    const postIndex = state.posts.findIndex(post => post.id === postId);
+
+    state.posts[postIndex].comments.unshift(comment);
+    localStorage.setItem('posts', JSON.stringify(state.posts));
+  });
+});
+
+export const createPost =
+  (content: { text?: string; imageSrc?: string }) =>
+  (dispatch: RootDispatch, getState: GetState) => {
+    const { login: username, id } = getState().auth;
+    const photo = getUserPhoto(id as number);
+
+    const post = {
+      ...content,
+      id: Date.now(),
+      addDate: +new Date(),
+      author: { username, photo },
+      comments: [],
+      likes: [],
+    } as IPost;
+
+    dispatch(addPost(post));
   };
 
-export const deletePost =
-  (postId: number): PostsThunk =>
-  dispatch => {
-    dispatch(actions.deletePost(postId));
-  };
+export const createComment =
+  (text: string, postId: number) =>
+  (dispatch: RootDispatch, getState: GetState) => {
+    const { login: username, id } = getState().auth;
+    const photo = getUserPhoto(id as number);
+    const author = { username, photo };
 
-export const likePost =
-  (postId: number, userId: number | null): PostsThunk =>
-  dispatch => {
-    dispatch(actions.likePost(postId, userId));
-  };
+    const comment = {
+      id: Date.now(),
+      addDate: +new Date(),
+      author,
+      text,
+      userId: id,
+    } as IComment;
 
-export const addComment =
-  (comment: IComment, postId: number): PostsThunk =>
-  dispatch => {
-    dispatch(actions.addComment(comment, postId));
+    dispatch(commentPost(comment, postId));
   };
 
 export default postsReducer;

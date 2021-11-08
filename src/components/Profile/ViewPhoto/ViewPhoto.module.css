@@ -1,0 +1,110 @@
+.viewPhotoWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+}
+
+.viewPhoto {
+  max-width: 400px;
+  height: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+  background-color: #ffffff;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+  border-radius: 0 0 8px 8px;
+}
+
+.viewPhotoD {
+  box-shadow: 0px 1px 2px rgba(255, 255, 255, 0.2);
+  background-color: #1f222e;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 15px;
+  box-shadow: 0px -2px 0px 0px #fff;
+  z-index: 1;
+}
+
+.viewPhotoD .header {
+  box-shadow: 0px -2px 0px 0px #1f222e;
+}
+
+.close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 13px;
+}
+
+.username {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.photo {
+  position: relative;
+  max-width: 400px;
+  max-height: 400px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #e5e6eb;
+}
+
+.photo img {
+  object-fit: contain;
+  max-width: 402px;
+  width: calc(100% - 5px);
+  max-height: 402px;
+}
+
+.photo::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 1);
+}
+
+.viewPhotoD .photo {
+  background-color: #1f222e;
+}
+
+.viewPhotoD .photo::before {
+  box-shadow: inset 0 0 0 5px #1f222e;
+}
+
+.preloader {
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

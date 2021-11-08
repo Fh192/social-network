@@ -2,30 +2,45 @@ import React from 'react';
 import { IComment } from '../../../../types/posts';
 import styles from './Comment.module.css';
 import classNames from 'classnames/bind';
+import { Link } from 'react-router-dom';
 
-const Comment: React.FC<IComment> = ({ addDate, author, commentId, text }) => {
-  const postDateTime = new Date(addDate).toLocaleString('en-US', {
+interface Props extends IComment {
+  isLast: boolean;
+}
+
+const Comment: React.FC<Props> = ({
+  addDate,
+  author,
+  isLast,
+  text,
+  userId,
+}) => {
+  const cx = classNames.bind(styles);
+
+  const time = new Date(addDate).toLocaleString('en-US', {
     hour: 'numeric',
     minute: 'numeric',
     hour12: true,
   });
 
-  const cx = classNames.bind(styles);
-
   return (
     <div
       className={cx({
         comment: true,
-        commentBorder: commentId !== 0,
+        commentBorder: isLast,
       })}
     >
       <div className={styles.inner}>
         <div className={styles.authorAvatar}>
-          <img src={author.avatar} alt='' />
+          <Link to={`/profile/${userId}`}>
+            <img src={author.photo} alt='' />
+          </Link>
         </div>
         <div className={styles.col}>
           <div className={styles.username}>
-            <span>{author.username}</span>
+            <Link to={`/profile/${userId}`}>
+              <span>{author.username}</span>
+            </Link>
           </div>
           <div className={styles.text}>
             <p>{text}</p>
@@ -34,7 +49,7 @@ const Comment: React.FC<IComment> = ({ addDate, author, commentId, text }) => {
       </div>
 
       <div className={styles.addDate}>
-        <span>{postDateTime}</span>
+        <span>{time}</span>
       </div>
     </div>
   );

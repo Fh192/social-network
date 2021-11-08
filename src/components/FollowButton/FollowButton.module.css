@@ -6,16 +6,21 @@
   border-radius: 4px;
 }
 
-.followed button {
+.followed {
   background: #e5ebf1;
   color: #55677d;
 }
 
-.disabled button {
+.disabled {
   cursor: default;
 }
 
-.big button {
-  padding: 10px 30px;
-  font-size: 16px;
+.followBtnD button {
+  background-color: #1c3177;
+  color: #8ea6f4;
+}
+
+.followBtnD .followed {
+  background-color: #8ea6f4;
+  color: #1c3177;
 }

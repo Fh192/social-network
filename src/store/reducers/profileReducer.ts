@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { Actions, RootDispatch, RootState } from '../store';
+import { Actions, RootDispatch, RootState } from '..';
 import { IPhotos, Nullable } from '../../types/common';
 import * as actions from '../actions/profile';
 import { ThunkAction } from 'redux-thunk';
@@ -8,7 +8,6 @@ import profileAPI from '../../api/profileAPI';
 import followAPI from '../../api/followAPI';
 
 type ProfileActions = ReturnType<Actions<typeof actions>>;
-type ProfileState = typeof initialState;
 type ProfileThunk = ThunkAction<
   Promise<void>,
   RootState,
@@ -31,9 +30,7 @@ const initialState = {
     facebook: null as Nullable<string>,
     instagram: null as Nullable<string>,
     twitter: null as Nullable<string>,
-    website: null as Nullable<string>,
     youtube: null as Nullable<string>,
-    mainLink: null as Nullable<string>,
   } as IContacts,
   photos: {
     small: null as Nullable<string>,
@@ -46,77 +43,51 @@ const profileReducer = createReducer(initialState, b => {
     return { ...state, ...action.payload };
   });
 
-  b.addCase(actions.updatePhoto, (state, action) => {
+  b.addCase(actions.setUserPhoto, (state, action) => {
     state.photos = action.payload;
-  });
-
-  b.addCase(actions.setUserStatus, (state, action) => {
-    state.status = action.payload;
   });
 
   b.addCase(actions.toggleFollowProcess, (state, action) => {
     state.inFollowProcess = action.payload;
   });
 
-  b.addCase(actions.follow, state => {
-    state.followed = true;
-  });
-
-  b.addCase(actions.unfollow, state => {
-    state.followed = false;
+  b.addCase(actions.toggleFollow, (state, action) => {
+    state.followed = action.payload;
+    state.inFollowProcess = false;
   });
 });
 
 export const getUserProfile =
-  (userId: number | null): ProfileThunk =>
-  async dispatch => {
+  (userId: number): ProfileThunk =>
+  async (dispatch, getState) => {
+    const { id: ownerId } = getState().auth;
+    dispatch(actions.setUserProfile(initialState));
+
     const data = await profileAPI.getUserProfile(userId);
-    const followed = await followAPI.getFollowed(userId as number);
+    const followed =
+      ownerId !== userId ? await followAPI.getFollowed(userId) : false;
 
     dispatch(actions.setUserProfile({ ...data, followed }));
   };
 
-export const getUserStatus =
-  (userId: number): ProfileThunk =>
-  async dispatch => {
-    const status = await profileAPI.getStatus(userId);
-
-    dispatch(actions.setUserStatus(status));
-  };
-
-export const updateStatus =
-  (status: string): ProfileThunk =>
-  async dispatch => {
-    const data = await profileAPI.updateStatus(status);
-
-    if (data.resultCode === 0) {
-      dispatch(actions.setUserStatus(status));
-    }
-  };
-
 export const updatePhoto =
-  (image: File, userId: number): ProfileThunk =>
+  (image: File): ProfileThunk =>
   async dispatch => {
     const data = await profileAPI.updatePhoto(image);
 
     if (data.resultCode === 0) {
-      const photos = data.data;
-      dispatch(actions.updatePhoto(photos));
-      dispatch(getUserProfile(userId));
+      const photos = data.data.photos;
+      dispatch(actions.setUserPhoto(photos));
     }
   };
 
 export const updateProfile =
-  (
-    profileFormData: IProfileForUpdate,
-    userId: Nullable<number>
-  ): ProfileThunk =>
-  async dispatch => {
-    const data = await profileAPI.updateProfile(profileFormData);
+  (updates: IProfileForUpdate): ProfileThunk =>
+  async (_, getState) => {
+    const { profile } = getState();
 
-    if (data.resultCode === 0) {
-      dispatch(getUserProfile(userId));
-    }
+    const profileForUpdate = { ...profile, ...updates };
+    await profileAPI.updateProfile(profileForUpdate);
   };
 
 export const toggleFollow =
@@ -126,12 +97,11 @@ export const toggleFollow =
 
     if (followed) {
       await followAPI.unfollow(userId);
-      dispatch(actions.unfollow());
     } else {
       await followAPI.follow(userId);
-      dispatch(actions.follow());
     }
-    dispatch(actions.toggleFollowProcess(false));
+
+    dispatch(actions.toggleFollow(!followed));
   };
 
 export default profileReducer;

@@ -1,0 +1,90 @@
+.contact {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-radius: 8px;
+  padding: 10px 20px;
+  color: #fff;
+  font-size: 18px;
+  line-height: 18px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 1s ease;
+  width: 100%;
+}
+
+.contactD {
+  opacity: 0.7;
+}
+
+.contact span:first-letter {
+  text-transform: capitalize;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contact input {
+  color: #fff;
+  caret-color: #fff;
+  font-size: 13px;
+  width: 0;
+  transition: all 1s ease;
+  opacity: 0;
+}
+
+.inputShown {
+  position: relative;
+  gap: 8px;
+}
+
+.inputShown input {
+  width: 100%;
+  opacity: 1;
+}
+
+.site {
+  transition: all 0.2s ease;
+}
+
+.inputShown .site {
+  transition: translateX 1s ease;
+  position: absolute;
+  top: -1000px;
+  opacity: 0;
+  width: 0;
+}
+
+.vk {
+  order: 1;
+  background: #0077ff;
+}
+
+.instagram {
+  order: 2;
+  background: linear-gradient(225deg, #1400c8 0%, #b900b4 50.52%, #f50000 100%);
+}
+
+.facebook {
+  order: 3;
+  background: #1877f2;
+}
+
+.youtube {
+  order: 4;
+  background: #fe0000;
+}
+
+.twitter {
+  order: 5;
+  background: #1da1f2;
+}
+
+.github {
+  order: 6;
+  background: #14191e;
+}

@@ -1,120 +1,150 @@
+import classNames from 'classnames/bind';
 import React, { useEffect, useRef, useState } from 'react';
-import useOnClickOutside from '../../../hooks/useOnClickOutside';
+import { useDispatch } from 'react-redux';
+import { useDarkMode, useOnClickOutside } from 'usehooks-ts';
+import { useSelector } from '../../../hooks/useSelector';
+import { setInitialState } from '../../../store/reducers/usersSlice';
+import Arrow from '../../../svg/Arrow';
+import { CrossIcon } from '../../../svg/CrossIcon';
 import MagnifierIcon from '../../../svg/MagnifierIcon';
+import { IQueryParams } from '../../../types/users';
+import { Toggle } from '../../Toggle/Toggle';
 import styles from './FilterUsers.module.css';
 
 interface Props {
-  searchValue: undefined | string;
-  onlyFriends: boolean;
-  hideFriends: boolean;
-  setSearchValue: React.Dispatch<React.SetStateAction<undefined | string>>;
-  setIsFriend: React.Dispatch<React.SetStateAction<boolean | undefined>>;
-  setArrowType: React.Dispatch<React.SetStateAction<'down' | 'up'>>;
-  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
-  setOnlyFriends: React.Dispatch<React.SetStateAction<boolean>>;
-  setHideFriends: React.Dispatch<React.SetStateAction<boolean>>;
+  fetching: boolean;
+  queryParams: IQueryParams;
+  setQueryParams: React.Dispatch<React.SetStateAction<IQueryParams>>;
 }
 
-const FilterUsers: React.FC<Props> = ({
-  searchValue,
-  onlyFriends,
-  hideFriends,
-  setSearchValue,
-  setIsFriend,
-  setArrowType,
-  setCurrentPage,
-  setOnlyFriends,
-  setHideFriends,
+export const FilterUsers: React.FC<Props> = ({
+  fetching,
+  queryParams,
+  setQueryParams,
 }) => {
+  const dispatch = useDispatch();
+  const cx = classNames.bind(styles);
   const ref = useRef<HTMLDivElement>(null);
-  const [term, setTerm] = useState(searchValue || '');
+  const { isDarkMode } = useDarkMode();
+  const { totalCount } = useSelector(s => s.users);
+  const [arrowType, setArrowType] = useState<'down' | 'up'>('down');
+  const [onlyFriends, setOnlyFriends] = useState(queryParams.friend === true);
+  const [hideFriends, setHideFriends] = useState(queryParams.friend === false);
+  const [term, setTerm] = useState(queryParams.term || '');
+
+  const toggleArrowType = () => {
+    setArrowType(type => (type === 'down' ? 'up' : 'down'));
+  };
+
+  const termSubmitHandler = (e?: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!e || e.key === 'Enter') {
+      setQueryParams(params => {
+        if (!!term && term !== params.term) {
+          dispatch(setInitialState());
+          return { ...params, term, page: 1 };
+        }
+        return params;
+      });
+    }
+  };
+
+  const toggleHideFriends = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (onlyFriends) setOnlyFriends(false);
+    setHideFriends(e.currentTarget.checked);
+  };
+
+  const toggleOnlyFriends = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (hideFriends) setHideFriends(false);
+    setOnlyFriends(e.currentTarget.checked);
+  };
+
+  const clearTerm = () => {
+    setTerm('');
+    if (!totalCount) {
+      dispatch(setInitialState());
+      setQueryParams(params => {
+        return { ...params, term: undefined };
+      });
+    }
+  };
+
+  useEffect(() => {
+    const wheelListener = (e: WheelEvent) => {
+      if (e.deltaY > 0) setArrowType('down');
+    };
+
+    document.addEventListener('wheel', wheelListener);
+    return () => document.removeEventListener('wheel', wheelListener);
+  }, []);
+
+  useEffect(() => {
+    const friend = onlyFriends ? true : hideFriends ? false : undefined;
+
+    setQueryParams(params => {
+      if (friend !== params.friend) {
+        dispatch(setInitialState());
+        return { ...params, friend, term: term || undefined, page: 1 };
+      }
+      return params;
+    });
+  }, [onlyFriends, hideFriends, term, dispatch, setQueryParams]);
 
   useOnClickOutside(ref, () => {
     setArrowType('down');
   });
 
-  const onFriendsCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const checked = e.currentTarget.checked;
-    const id = (e.target.id as 'hideFriends') || 'onlyFriends';
-
-    if (hideFriends) {
-      setHideFriends(false);
-    } else if (onlyFriends) {
-      setOnlyFriends(false);
-    }
-
-    if (id === 'hideFriends') {
-      setHideFriends(checked);
-    } else if (id === 'onlyFriends') {
-      setOnlyFriends(checked);
-    }
-  };
-
-  const onSearchInputSubmit = (e?: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e) {
-      if (e.key === 'Enter') setSearchValue(term);
-    } else setSearchValue(term);
-  };
-
-  useEffect(() => {
-    if (onlyFriends) {
-      setIsFriend(true);
-    } else if (hideFriends) {
-      setIsFriend(false);
-    } else {
-      setIsFriend(undefined);
-    }
-
-    setCurrentPage(1);
-  }, [onlyFriends, hideFriends]);
-
-  useEffect(() => {
-    const delay = setTimeout(() => {
-      if (term.length === 0) setSearchValue(undefined);
-      clearTimeout(delay);
-    }, 1000);
-
-    return () => clearTimeout(delay);
-  }, [term]);
-
   return (
-    <div className={styles.searchFilter} ref={ref}>
-      <div className={styles.inputWrap}>
-        <input
-          type='text'
-          placeholder='Search...'
-          autoComplete='off'
-          value={term}
-          onChange={e => setTerm(e.currentTarget.value)}
-          onKeyDown={onSearchInputSubmit}
-        />
-        <div className={styles.magnifier} onClick={() => onSearchInputSubmit()}>
-          <MagnifierIcon size='15px' />
+    <div className={styles.filterUsers} ref={ref}>
+      <div className={styles.title} onClick={toggleArrowType}>
+        <span>Parameters</span>
+        <div className={cx({ arrow: true, arrowD: isDarkMode })}>
+          <Arrow size='10px' type={arrowType} color='#8ea6f4' />
         </div>
       </div>
-      <ul className={styles.checkboxes}>
-        <li className={styles.checkbox}>
+      <div
+        className={cx({
+          popup: true,
+          popupD: isDarkMode,
+          showPopup: arrowType === 'up',
+        })}
+      >
+        <div className={styles.term}>
+          <div className={styles.magnifier} onClick={() => termSubmitHandler()}>
+            <MagnifierIcon size='15px' />
+          </div>
           <input
-            type='checkbox'
-            id='onlyFriends'
-            checked={onlyFriends}
-            onChange={onFriendsCheckboxChange}
+            type='text'
+            id='term'
+            placeholder='Search'
+            autoComplete='off'
+            value={term}
+            disabled={fetching}
+            onChange={e => setTerm(e.currentTarget.value)}
+            onKeyDown={termSubmitHandler}
           />
-          <label htmlFor='onlyFriends'>Only friends</label>
-        </li>
-
-        <li className={styles.checkbox}>
-          <input
-            type='checkbox'
-            id='hideFriends'
-            checked={hideFriends}
-            onChange={onFriendsCheckboxChange}
-          />
-          <label htmlFor='hideFriends'>Hide friends</label>
-        </li>
-      </ul>
+          <div className={styles.clearInput} onClick={clearTerm}>
+            <CrossIcon size='15px' />
+          </div>
+        </div>
+        <div className={styles.toggles}>
+          <label>
+            <Toggle
+              onChange={toggleOnlyFriends}
+              checked={onlyFriends}
+              disabled={fetching}
+            />
+            <span>Only friends</span>
+          </label>
+          <label>
+            <Toggle
+              onChange={toggleHideFriends}
+              checked={hideFriends}
+              disabled={fetching}
+            />
+            <span>Hide friends</span>
+          </label>
+        </div>
+      </div>
     </div>
   );
 };
-
-export default FilterUsers;

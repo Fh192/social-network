@@ -1,11 +1,13 @@
 import { ServerData } from './common';
 
 export interface IAuthMe extends ServerData {
-  data: {
-    id: number;
-    email: string;
-    login: string;
-  };
+  data: UserData;
+}
+
+export interface UserData {
+  id: number;
+  email: string;
+  login: string;
 }
 
 export interface IAuthLogin {
