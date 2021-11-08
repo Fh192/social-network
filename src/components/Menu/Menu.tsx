@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react';
+import React, { BaseSyntheticEvent, useLayoutEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import styles from './Menu.module.css';
 import UsersIcon from '../../svg/UsersIcon';
@@ -8,6 +8,7 @@ import LogoutIcon from '../../svg/LogoutIcon';
 import { useDispatch } from '../../hooks/useDispatch';
 import { logout } from '../../store/reducers/authReducer';
 import photoPlaceholder from '../../assets/userPhoto.png';
+import photoPlaceholderD from '../../assets/userPhotoDark.png';
 import { useSelector } from '../../hooks/useSelector';
 import { getUserPhoto } from '../../common/getUserPhoto';
 import { useDarkMode } from 'usehooks-ts';
@@ -55,7 +56,13 @@ export const Menu: React.FC = () => {
             <div className={styles.avatar}>
               <NavLink to={`/profile/${userId}`}>
                 <img
-                  src={getUserPhoto(userId as number) || photoPlaceholder}
+                  src={getUserPhoto(userId as number)}
+                  onError={(e: BaseSyntheticEvent) => {
+                    e.target.onerror = null;
+                    e.target.src = isDarkMode
+                      ? photoPlaceholderD
+                      : photoPlaceholder;
+                  }}
                   alt={'user'}
                 />
               </NavLink>
@@ -104,7 +111,13 @@ export const Menu: React.FC = () => {
             <div className={styles.user}>
               <div className={styles.avatar}>
                 <img
-                  src={getUserPhoto(userId as number) || photoPlaceholder}
+                  src={getUserPhoto(userId as number)}
+                  onError={(e: BaseSyntheticEvent) => {
+                    e.target.onerror = null;
+                    e.target.src = isDarkMode
+                      ? photoPlaceholderD
+                      : photoPlaceholder;
+                  }}
                   alt={'user'}
                 />
               </div>

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { BaseSyntheticEvent, useRef, useState } from 'react';
 import LinkIcon from '../../../../svg/LinkIcon';
 import styles from './CreatePost.module.css';
 import classNames from 'classnames/bind';
@@ -8,6 +8,8 @@ import { getUserPhoto } from '../../../../common/getUserPhoto';
 import { useSelector } from '../../../../hooks/useSelector';
 import { CrossIcon } from '../../../../svg/CrossIcon';
 import { useDarkMode, useOnClickOutside } from 'usehooks-ts';
+import photoPlaceholderD from '../../../../assets/userPhotoDark.png';
+import photoPlaceholder from '../../../../assets/userPhoto.png';
 
 interface Props {
   setCreatePostMode: React.Dispatch<React.SetStateAction<boolean>>;
@@ -66,7 +68,16 @@ const CreatePost: React.FC<Props> = ({ setCreatePostMode }) => {
 
         <div className={styles.inner}>
           <div className={styles.userAvatar}>
-            <img src={getUserPhoto(userId as number)} alt='' />
+            <img
+              src={getUserPhoto(userId as number)}
+              onError={(e: BaseSyntheticEvent) => {
+                e.target.onerror = null;
+                e.target.src = isDarkMode
+                  ? photoPlaceholderD
+                  : photoPlaceholder;
+              }}
+              alt=''
+            />
           </div>
           <div className={styles.textarea}>
             <textarea

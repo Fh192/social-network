@@ -49,12 +49,10 @@ export const UserPhoto: React.FC = () => {
   };
 
   const handleClickOnAvatar = () => {
-    if (photo) {
-      if (!isOwner) {
-        setPhotoViewMode(true);
-      } else {
-        setTooltipVisible(v => !v);
-      }
+    if (isOwner) {
+      setTooltipVisible(v => !v);
+    } else {
+      setPhotoViewMode(true);
     }
   };
 
@@ -114,7 +112,7 @@ export const UserPhoto: React.FC = () => {
                 hidden
               />
             </span>
-            <span onClick={handleViewPhotoSelected}>View photo</span>
+            {photo && <span onClick={handleViewPhotoSelected}>View photo</span>}
           </div>
         )}
       </div>

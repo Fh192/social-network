@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { BaseSyntheticEvent, useState } from 'react';
 import CreatePost from './CreatePost/CreatePost';
 import styles from './Posts.module.css';
 import Post from './Post/Post';
@@ -7,6 +7,7 @@ import { useSelector } from '../../../hooks/useSelector';
 import { selectIsOwner } from '../../../selectors/profileSelectors';
 import { getUserPhoto } from '../../../common/getUserPhoto';
 import photoPlaceholder from '../../../assets/userPhoto.png';
+import photoPlaceholderD from '../../../assets/userPhotoDark.png';
 import { useDarkMode } from 'usehooks-ts';
 import classNames from 'classnames/bind';
 
@@ -25,7 +26,13 @@ export const Posts: React.FC = () => {
         <div className={cx({ createPost: true, createPostD: isDarkMode })}>
           <div className={styles.userAvatar}>
             <img
-              src={getUserPhoto(userId as number) || photoPlaceholder}
+              src={getUserPhoto(userId as number)}
+              onError={(e: BaseSyntheticEvent) => {
+                e.target.onerror = null;
+                e.target.src = isDarkMode
+                  ? photoPlaceholderD
+                  : photoPlaceholder;
+              }}
               alt='user avatar'
             />
           </div>

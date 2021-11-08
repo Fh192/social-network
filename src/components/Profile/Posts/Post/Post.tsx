@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { BaseSyntheticEvent, useState } from 'react';
 import { useDispatch } from '../../../../hooks/useDispatch';
 import { useSelector } from '../../../../hooks/useSelector';
 import CommentIcon from '../../../../svg/CommentIcon';
@@ -8,6 +8,7 @@ import { IPost } from '../../../../types/posts';
 import Comment from '../Comment/Comment';
 import styles from './Post.module.css';
 import photoPlaceholder from '../../../../assets/userPhoto.png';
+import photoPlaceholderD from '../../../../assets/userPhotoDark.png';
 import { createComment } from '../../../../store/reducers/postsReducer';
 import { deletePost, likePost } from '../../../../store/actions/posts';
 import { CrossIcon } from '../../../../svg/CrossIcon';
@@ -53,7 +54,16 @@ const Post: React.FC<Props> = ({ post }) => {
       <div className={styles.header}>
         <div className={styles.left}>
           <div className={styles.authorAvatar}>
-            <img src={author.photo || photoPlaceholder} alt='avatar' />
+            <img
+              src={author.photo || photoPlaceholder}
+              onError={(e: BaseSyntheticEvent) => {
+                e.target.onerror = null;
+                e.target.src = isDarkMode
+                  ? photoPlaceholderD
+                  : photoPlaceholder;
+              }}
+              alt='avatar'
+            />
           </div>
           <div className={styles.col}>
             <div className={styles.username}>
@@ -97,7 +107,16 @@ const Post: React.FC<Props> = ({ post }) => {
       <div className={styles.comments}>
         <div className={styles.writeComment}>
           <div className={styles.commentAuthorAvatar}>
-            <img src={author.photo || photoPlaceholder} alt='author avatar' />
+            <img
+              src={author.photo}
+              onError={(e: BaseSyntheticEvent) => {
+                e.target.onerror = null;
+                e.target.src = isDarkMode
+                  ? photoPlaceholderD
+                  : photoPlaceholder;
+              }}
+              alt='author avatar'
+            />
           </div>
           <div className={styles.writeCommentInput}>
             <input

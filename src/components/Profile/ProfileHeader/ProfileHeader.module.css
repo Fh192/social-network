@@ -14,16 +14,21 @@
 }
 
 .user {
-  display: flex;
+  display: grid;
+  grid-template-columns: 130px 1fr;
   align-items: center;
   gap: 20px;
 }
 
 .username {
-  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.username span {
   font-size: 28px;
-  transition: all 0.2s ease;
-  white-space: nowrap;
+  font-weight: bold;
 }
 
 .column {
@@ -128,11 +133,5 @@
   }
   .editProfile {
     width: 100%;
-  }
-}
-
-@media screen and (max-width: 380px) {
-  .user {
-    flex-direction: column;
   }
 }
