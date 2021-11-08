@@ -48,7 +48,7 @@ export const Menu: React.FC = () => {
         </div>
         <ul className={styles.mList}>
           <li className={styles.mItem}>
-            <NavLink className={styles.link} to='/users'>
+            <NavLink className={styles.link} to='/users?page=1'>
               <UsersIcon size='25px' />
             </NavLink>
           </li>
@@ -94,7 +94,7 @@ export const Menu: React.FC = () => {
           </li>
 
           <li className={styles.item}>
-            <NavLink className={styles.link} to='/users'>
+            <NavLink className={styles.link} to='/users?page=1'>
               <UsersIcon size='25px' />
               <span>Users</span>
             </NavLink>
