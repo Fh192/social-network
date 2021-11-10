@@ -40,6 +40,8 @@
 }
 
 .notFound {
+  width: 100%;
+  height: calc(100vh - 100%);
   grid-area: usersList;
   display: flex;
   flex-direction: column;
@@ -51,15 +53,46 @@
   font-weight: 500;
 }
 
-.notFoundText {
+.notFound button {
+  font-weight: 100;
+  font-size: 20px;
+  line-height: 27px;
+  padding: 5px 25px;
+  border: 1px solid #becdfc;
+  box-sizing: border-box;
+  border-radius: 5px;
+  transition: all 0.2s ease;
+  color: #8ea6f4;
+}
+
+.notFound button:hover {
+  background: #e1ecff;
+}
+
+.notFoundD .text {
+  text-align: center;
+  color: #8ea6f4;
+}
+
+.notFoundD .term {
+  line-break: anywhere;
+}
+
+.notFoundD button {
+  border: 1px solid #1c3177;
+  box-shadow: 0 0 4px #1c3177;
+}
+.notFoundD button:hover {
+  background: rgba(28, 49, 119, 0.3);
+}
+
+.preloader {
+  width: 100%;
+  height: calc(100vh - 100%);
+  grid-area: usersList;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-}
-
-.term {
-  font-family: monospace;
 }
 
 @media screen and (max-width: 700px) {

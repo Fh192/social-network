@@ -54,15 +54,6 @@ export const FilterUsers: React.FC<Props> = ({
     }
   };
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      submitTerm();
-      clearTimeout(timer);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [submitTerm]);
-
   const toggleHideFriends = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onlyFriends) setOnlyFriends(false);
     setHideFriends(e.currentTarget.checked);
@@ -78,6 +69,17 @@ export const FilterUsers: React.FC<Props> = ({
     if (val <= pageCount) {
       setPage(val);
     }
+  };
+
+  const clearTerm = () => {
+    setTerm('');
+    setQueryParams(p => {
+      if (p.term !== undefined) {
+        dispatch(setInitialState());
+        return { ...p, term: undefined, page: 1 };
+      }
+      return p;
+    });
   };
 
   useEffect(() => {
@@ -101,17 +103,6 @@ export const FilterUsers: React.FC<Props> = ({
     });
   }, [onlyFriends, hideFriends, term, dispatch, setQueryParams]);
 
-  const clearTerm = () => {
-    setTerm('');
-    setQueryParams(p => {
-      if (p.term !== undefined) {
-        dispatch(setInitialState());
-        return { ...p, term: undefined, page: 1 };
-      }
-      return p;
-    });
-  };
-
   useEffect(() => {
     const timer = setTimeout(() => {
       setQueryParams(params => {
@@ -121,7 +112,6 @@ export const FilterUsers: React.FC<Props> = ({
           } else {
             dispatch(setInitialState());
             if (page <= 0) {
-              setPage(1);
               return { ...params, page: 1 };
             } else {
               return { ...params, page };
@@ -137,8 +127,28 @@ export const FilterUsers: React.FC<Props> = ({
   }, [page, setQueryParams, dispatch]);
 
   useEffect(() => {
+    if (queryParams.friend === undefined) {
+      setOnlyFriends(false);
+      setHideFriends(false);
+    } else if (!queryParams.friend) {
+      setOnlyFriends(false);
+      setHideFriends(true);
+    } else {
+      setOnlyFriends(true);
+      setHideFriends(false);
+    }
     setPage(queryParams.page);
-  }, [queryParams.page]);
+    setTerm(queryParams.term || '');
+  }, [queryParams]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      submitTerm();
+      clearTimeout(timer);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [submitTerm]);
 
   useOnClickOutside(ref, () => {
     setArrowType('down');

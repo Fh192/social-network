@@ -47,11 +47,22 @@ const Users: React.FC = () => {
     navigate({ search });
   }, [queryParams, navigate]);
 
+  const resetParams = () => {
+    dispatch(setInitialState());
+    setQueryParams(params => ({
+      ...params,
+      page: 1,
+      term: undefined,
+      friend: undefined,
+    }));
+  };
+
   useEffect(() => {
     const el = document.scrollingElement as Element;
-    
+
     const listener = () => {
       const { scrollTop, scrollHeight, clientHeight } = el;
+
       if (!fetching && totalCount) {
         if (scrollTop + clientHeight >= scrollHeight - 500) {
           if (queryParams.page < pageCount) {
@@ -95,7 +106,11 @@ const Users: React.FC = () => {
           pageCount={pageCount}
         />
       </div>
-      {totalCount ? (
+      {totalCount === null ? (
+        <div className={styles.preloader}>
+          <Preloader />
+        </div>
+      ) : !!totalCount && !!users.length ? (
         <ul className={styles.usersList}>
           {users.map(user => (
             <User {...user} key={user.id} />
@@ -106,28 +121,28 @@ const Users: React.FC = () => {
             </div>
           )}
         </ul>
-      ) : (!totalCount || !users.length) && !fetching ? (
+      ) : (
         <div className={cx({ notFound: true, notFoundD: isDarkMode })}>
-          <div className={styles.notFoundText}>
+          <div className={styles.text}>
             {queryParams.friend ? (
-              <>
-                <span>Friend</span>
-                <span className={styles.term}>"{queryParams.term}"</span>
-                <span>on page {queryParams.page}</span>
-                <span>not found.</span>
-              </>
+              <span>
+                Friend
+                <span className={styles.term}>{` "${queryParams.term}" `}</span>
+                not found
+              </span>
             ) : (
-              <>
-                <span>No results for</span>
-                <span className={styles.term}>"{queryParams.term}"</span>
-                <span>on page {queryParams.page}.</span>
-              </>
+              <span>
+                No results for
+                <span className={styles.term}>{` "${queryParams.term}" `}</span>
+              </span>
             )}
           </div>
+          <button type='reset' onClick={resetParams}>
+            Reset params
+          </button>
         </div>
-      ) : (
-        <Preloader />
       )}
+
       <ScrollBtn />
     </div>
   );
