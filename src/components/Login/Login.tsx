@@ -59,7 +59,7 @@ const Login: React.FC = () => {
             isValid,
             isSubmitting,
             setFieldValue,
-            setFormikState,
+            setValues,
           }) => (
             <Form className={cx(['form'])}>
               {console.log(isSubmitting)}
@@ -172,15 +172,12 @@ const Login: React.FC = () => {
               </button>
               <div className={cx(['templateAcc'])}>
                 <button
-                  type='submit'
+                  type='button'
                   onClick={() => {
-                    setFormikState(prevState => ({
-                      ...prevState,
-                      values: {
-                        ...prevState.values,
-                        email: 'free@samuraijs.com',
-                        password: 'free',
-                      },
+                    setValues(prev => ({
+                      ...prev,
+                      email: 'free@samuraijs.com',
+                      password: 'free',
                     }));
                   }}
                 >
