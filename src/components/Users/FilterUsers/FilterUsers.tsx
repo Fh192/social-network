@@ -209,7 +209,7 @@ export const FilterUsers: React.FC<Props> = ({
             <span>Hide friends</span>
           </label>
         </div>
-        <div className={styles.page}>
+        <div className={cx({ page: true, pageD: isDarkMode })}>
           <input
             type='text'
             inputMode='numeric'

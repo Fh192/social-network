@@ -108,9 +108,13 @@
 .page input {
   width: 40px;
   height: 25px;
-  background: #2c2f3b;
+  background: #e5e6eb;
   border-radius: 8px;
   text-align: center;
+}
+
+.pageD input {
+  background: #2c2f3b;
 }
 
 .maxPage {

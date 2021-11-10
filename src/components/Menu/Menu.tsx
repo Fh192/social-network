@@ -1,4 +1,9 @@
-import React, { BaseSyntheticEvent, useLayoutEffect, useState } from 'react';
+import React, {
+  BaseSyntheticEvent,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from 'react';
 import styles from './Menu.module.css';
 import UsersIcon from '../../svg/UsersIcon';
 import MessageIcon from '../../svg/MessageIcon';
@@ -22,6 +27,8 @@ export const Menu: React.FC = () => {
   const { id: userId, login: username } = useSelector(s => s.auth);
   const { isDarkMode } = useDarkMode(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 700);
+  const [photo, setPhoto] = useState(getUserPhoto(userId as number));
+  const [photoLoadErr, setPhotoLoadErr] = useState(false);
 
   const onLogout = () => {
     dispatch(logout());
@@ -40,6 +47,16 @@ export const Menu: React.FC = () => {
     return () => window.removeEventListener('resize', listener);
   }, []);
 
+  useEffect(() => {
+    if (photoLoadErr) {
+      if (isDarkMode) {
+        setPhoto(photoPlaceholderD);
+      } else {
+        setPhoto(photoPlaceholder);
+      }
+    }
+  }, [photoLoadErr, isDarkMode]);
+
   if (isMobile) {
     return (
       <nav className={cx({ mMenu: true, mMenuD: isDarkMode })}>
@@ -56,12 +73,10 @@ export const Menu: React.FC = () => {
             <div className={styles.avatar}>
               <Link to={`/profile/${userId}`}>
                 <img
-                  src={getUserPhoto(userId as number)}
+                  src={photo}
                   onError={(e: BaseSyntheticEvent) => {
                     e.target.onerror = null;
-                    e.target.src = isDarkMode
-                      ? photoPlaceholderD
-                      : photoPlaceholder;
+                    setPhotoLoadErr(true);
                   }}
                   alt={'user'}
                 />
@@ -111,12 +126,10 @@ export const Menu: React.FC = () => {
             <div className={styles.user}>
               <div className={styles.avatar}>
                 <img
-                  src={getUserPhoto(userId as number)}
+                  src={photo}
                   onError={(e: BaseSyntheticEvent) => {
                     e.target.onerror = null;
-                    e.target.src = isDarkMode
-                      ? photoPlaceholderD
-                      : photoPlaceholder;
+                    setPhotoLoadErr(true);
                   }}
                   alt={'user'}
                 />

@@ -62,7 +62,6 @@ const Login: React.FC = () => {
             setValues,
           }) => (
             <Form className={cx(['form'])}>
-              {console.log(isSubmitting)}
               <div className={cx(['fieldWrap'])}>
                 <label htmlFor='email' className={cx(['label'])}>
                   Email

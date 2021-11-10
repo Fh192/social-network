@@ -1,4 +1,4 @@
-import React, { BaseSyntheticEvent, useRef, useState } from 'react';
+import React, { BaseSyntheticEvent, useEffect, useRef, useState } from 'react';
 import LinkIcon from '../../../../svg/LinkIcon';
 import styles from './CreatePost.module.css';
 import classNames from 'classnames/bind';
@@ -25,6 +25,8 @@ const CreatePost: React.FC<Props> = ({ setCreatePostMode }) => {
   const createBtnDisabled = !newPostText.trim() && !imageSrc;
   const { id: userId } = useSelector(s => s.auth);
   const { isDarkMode } = useDarkMode();
+  const [photo, setPhoto] = useState(getUserPhoto(userId as number));
+  const [photoLoadErr, setPhotoLoadErr] = useState(false);
 
   const onImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -51,6 +53,16 @@ const CreatePost: React.FC<Props> = ({ setCreatePostMode }) => {
     console.log(1);
   });
 
+  useEffect(() => {
+    if (photoLoadErr) {
+      if (isDarkMode) {
+        setPhoto(photoPlaceholderD);
+      } else {
+        setPhoto(photoPlaceholder);
+      }
+    }
+  }, [photoLoadErr, isDarkMode]);
+
   return (
     <div className={styles.createPostModal}>
       <div
@@ -69,12 +81,10 @@ const CreatePost: React.FC<Props> = ({ setCreatePostMode }) => {
         <div className={styles.inner}>
           <div className={styles.userAvatar}>
             <img
-              src={getUserPhoto(userId as number)}
+              src={photo}
               onError={(e: BaseSyntheticEvent) => {
                 e.target.onerror = null;
-                e.target.src = isDarkMode
-                  ? photoPlaceholderD
-                  : photoPlaceholder;
+                setPhotoLoadErr(true);
               }}
               alt=''
             />

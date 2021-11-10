@@ -52,7 +52,7 @@ export const UserPhoto: React.FC = () => {
   const handleClickOnAvatar = () => {
     if (isOwner) {
       setTooltipVisible(v => !v);
-    } else {
+    } else if (!!photo) {
       setPhotoViewMode(true);
     }
   };

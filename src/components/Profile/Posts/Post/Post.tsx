@@ -1,4 +1,4 @@
-import React, { BaseSyntheticEvent, useState } from 'react';
+import React, { BaseSyntheticEvent, useEffect, useState } from 'react';
 import { useDispatch } from '../../../../hooks/useDispatch';
 import { useSelector } from '../../../../hooks/useSelector';
 import CommentIcon from '../../../../svg/CommentIcon';
@@ -24,10 +24,11 @@ const Post: React.FC<Props> = ({ post }) => {
   const cx = classNames.bind(styles);
 
   const { isDarkMode } = useDarkMode();
-  const [newCommentText, setNewCommentText] = useState('');
   const { id: userId } = useSelector(s => s.auth);
-
   const { id, addDate, author, text, imageSrc, comments, likes } = post;
+  const [newCommentText, setNewCommentText] = useState('');
+  const [photo, setPhoto] = useState(author.photo);
+  const [photoLoadErr, setPhotoLoadErr] = useState(false);
 
   const postDateYear = new Date(addDate).toLocaleString('ru', {
     month: '2-digit',
@@ -49,18 +50,26 @@ const Post: React.FC<Props> = ({ post }) => {
     dispatch(likePost(id, userId as number));
   };
 
+  useEffect(() => {
+    if (photoLoadErr) {
+      if (isDarkMode) {
+        setPhoto(photoPlaceholderD);
+      } else {
+        setPhoto(photoPlaceholder);
+      }
+    }
+  }, [photoLoadErr, isDarkMode]);
+
   return (
     <li className={cx({ post: true, postD: isDarkMode })}>
       <div className={styles.header}>
         <div className={styles.left}>
           <div className={styles.authorAvatar}>
             <img
-              src={author.photo || photoPlaceholder}
+              src={photo}
               onError={(e: BaseSyntheticEvent) => {
                 e.target.onerror = null;
-                e.target.src = isDarkMode
-                  ? photoPlaceholderD
-                  : photoPlaceholder;
+                setPhotoLoadErr(true);
               }}
               alt='avatar'
             />
@@ -108,12 +117,10 @@ const Post: React.FC<Props> = ({ post }) => {
         <div className={styles.writeComment}>
           <div className={styles.commentAuthorAvatar}>
             <img
-              src={author.photo}
+              src={photo}
               onError={(e: BaseSyntheticEvent) => {
                 e.target.onerror = null;
-                e.target.src = isDarkMode
-                  ? photoPlaceholderD
-                  : photoPlaceholder;
+                setPhotoLoadErr(true);
               }}
               alt='author avatar'
             />

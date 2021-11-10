@@ -1,4 +1,4 @@
-import React, { BaseSyntheticEvent, useState } from 'react';
+import React, { BaseSyntheticEvent, useEffect, useState } from 'react';
 import CreatePost from './CreatePost/CreatePost';
 import styles from './Posts.module.css';
 import Post from './Post/Post';
@@ -19,6 +19,18 @@ export const Posts: React.FC = () => {
   const userId = useSelector(s => s.auth.id);
 
   const [createPostMode, setCreatePostMode] = useState(false);
+  const [photo, setPhoto] = useState(getUserPhoto(userId as number));
+  const [photoLoadErr, setPhotoLoadErr] = useState(false);
+
+  useEffect(() => {
+    if (photoLoadErr) {
+      if (isDarkMode) {
+        setPhoto(photoPlaceholderD);
+      } else {
+        setPhoto(photoPlaceholder);
+      }
+    }
+  }, [photoLoadErr, isDarkMode]);
 
   return (
     <div className={styles.postsWrapper}>
@@ -26,12 +38,10 @@ export const Posts: React.FC = () => {
         <div className={cx({ createPost: true, createPostD: isDarkMode })}>
           <div className={styles.userAvatar}>
             <img
-              src={getUserPhoto(userId as number)}
+              src={photo}
               onError={(e: BaseSyntheticEvent) => {
                 e.target.onerror = null;
-                e.target.src = isDarkMode
-                  ? photoPlaceholderD
-                  : photoPlaceholder;
+                setPhotoLoadErr(true);
               }}
               alt='user avatar'
             />

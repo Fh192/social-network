@@ -1,4 +1,4 @@
-import React, { BaseSyntheticEvent } from 'react';
+import React, { BaseSyntheticEvent, useEffect, useState } from 'react';
 import { IComment } from '../../../../types/posts';
 import styles from './Comment.module.css';
 import classNames from 'classnames/bind';
@@ -18,13 +18,26 @@ const Comment: React.FC<Props> = ({
   userId,
 }) => {
   const cx = classNames.bind(styles);
+
   const { isDarkMode } = useDarkMode();
+  const [photo, setPhoto] = useState(author.photo);
+  const [photoLoadErr, setPhotoLoadErr] = useState(false);
 
   const time = new Date(addDate).toLocaleString('en-US', {
     hour: 'numeric',
     minute: 'numeric',
     hour12: true,
   });
+
+  useEffect(() => {
+    if (photoLoadErr) {
+      if (isDarkMode) {
+        setPhoto(photoPlaceholderD);
+      } else {
+        setPhoto(photoPlaceholder);
+      }
+    }
+  }, [photoLoadErr, isDarkMode]);
 
   return (
     <div
@@ -37,12 +50,10 @@ const Comment: React.FC<Props> = ({
         <div className={styles.authorAvatar}>
           <Link to={`/profile/${userId}`}>
             <img
-              src={author.photo}
+              src={photo}
               onError={(e: BaseSyntheticEvent) => {
                 e.target.onerror = null;
-                e.target.src = isDarkMode
-                  ? photoPlaceholderD
-                  : photoPlaceholder;
+                setPhotoLoadErr(true);
               }}
               alt=''
             />
