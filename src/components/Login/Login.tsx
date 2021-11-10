@@ -55,6 +55,7 @@ const Login: React.FC = () => {
         >
           {({
             errors,
+            touched,
             isValid,
             isSubmitting,
             setFieldValue,
@@ -67,7 +68,7 @@ const Login: React.FC = () => {
                   Email
                 </label>
                 <div className={cx(['field'])}>
-                  {errors.email && (
+                  {touched.email && errors.email && (
                     <div className={cx(['error'])}>
                       <span>{errors.email}</span>
                     </div>
@@ -89,7 +90,7 @@ const Login: React.FC = () => {
                   Password
                 </label>
                 <div className={cx(['field'])}>
-                  {errors.password && (
+                  {touched.password && errors.password && (
                     <div className={cx(['error'])}>
                       <span>{errors.password}</span>
                     </div>
@@ -134,7 +135,7 @@ const Login: React.FC = () => {
                     </button>
                   </div>
                   <div className={cx(['field'])}>
-                    {errors.captcha && (
+                    {touched.captcha && errors.captcha && (
                       <div className={cx(['error'])}>
                         <span>{errors.captcha}</span>
                       </div>
@@ -171,7 +172,7 @@ const Login: React.FC = () => {
               </button>
               <div className={cx(['templateAcc'])}>
                 <button
-                  type='button'
+                  type='submit'
                   onClick={() => {
                     setFormikState(prevState => ({
                       ...prevState,
