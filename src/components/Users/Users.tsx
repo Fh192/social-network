@@ -29,6 +29,7 @@ const Users: React.FC = () => {
     term: query.get('term') || undefined,
     friend: !!query.get('friend') || undefined,
   });
+  const pageCount = Math.ceil((totalCount || 1) / queryParams.count);
 
   const setQueryParamsToUrl = useCallback(() => {
     const { page, friend, term } = queryParams;
@@ -42,16 +43,17 @@ const Users: React.FC = () => {
       },
       `?page=${page}`
     );
+
     navigate({ search });
   }, [queryParams, navigate]);
 
   useEffect(() => {
     const el = document.scrollingElement as Element;
+    
     const listener = () => {
       const { scrollTop, scrollHeight, clientHeight } = el;
       if (!fetching && totalCount) {
         if (scrollTop + clientHeight >= scrollHeight - 500) {
-          const pageCount = Math.ceil(totalCount / queryParams.count);
           if (queryParams.page < pageCount) {
             setFetching(true);
             setQueryParams(params => {
@@ -64,7 +66,7 @@ const Users: React.FC = () => {
 
     document.addEventListener('scroll', listener);
     return () => document.removeEventListener('scroll', listener);
-  }, [totalCount, fetching, queryParams.count, queryParams.page]);
+  }, [totalCount, fetching, pageCount, queryParams.page]);
 
   useEffect(() => {
     setFetching(true);
@@ -90,6 +92,7 @@ const Users: React.FC = () => {
           queryParams={queryParams}
           setQueryParams={setQueryParams}
           fetching={fetching}
+          pageCount={pageCount}
         />
       </div>
       {totalCount ? (

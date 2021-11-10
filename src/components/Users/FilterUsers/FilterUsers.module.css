@@ -16,12 +16,12 @@
 
 .popup {
   position: absolute;
-  bottom: -139px;
+  bottom: -173px;
   right: -20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 130px;
+  height: 162px;
   gap: 10px;
   background-color: #ffffff;
   box-shadow: 0px 2px 2px rgb(0 0 0 / 20%);
@@ -44,12 +44,23 @@
 }
 
 .magnifier,
-.clearInput {
+.clearTerm {
   display: flex;
   align-items: center;
   justify-content: center;
   fill: #787878;
   cursor: pointer;
+}
+
+.clearTerm {
+  visibility: hidden;
+  transition: all 0.2s ease;
+  opacity: 0;
+}
+
+.clearTermVisible {
+  visibility: visible;
+  opacity: 1;
 }
 
 .term {
@@ -86,6 +97,25 @@
   align-items: center;
   gap: 10px;
   cursor: pointer;
+}
+
+.page {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.page input {
+  width: 40px;
+  height: 25px;
+  background: #2c2f3b;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.maxPage {
+  font-size: 10px;
+  font-weight: 100;
 }
 
 @media screen and (max-width: 375px) {

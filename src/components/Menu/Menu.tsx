@@ -1,5 +1,4 @@
 import React, { BaseSyntheticEvent, useLayoutEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
 import styles from './Menu.module.css';
 import UsersIcon from '../../svg/UsersIcon';
 import MessageIcon from '../../svg/MessageIcon';
@@ -14,6 +13,7 @@ import { getUserPhoto } from '../../common/getUserPhoto';
 import { useDarkMode } from 'usehooks-ts';
 import classNames from 'classnames/bind';
 import { ToggleTheme } from '../TogleTheme/ToggleTheme';
+import { Link } from 'react-router-dom';
 
 export const Menu: React.FC = () => {
   const dispatch = useDispatch();
@@ -48,13 +48,13 @@ export const Menu: React.FC = () => {
         </div>
         <ul className={styles.mList}>
           <li className={styles.mItem}>
-            <NavLink className={styles.link} to='/users?page=1'>
+            <Link className={styles.link} to='/users?page=1'>
               <UsersIcon size='25px' />
-            </NavLink>
+            </Link>
           </li>
           <li className={styles.mItem}>
             <div className={styles.avatar}>
-              <NavLink to={`/profile/${userId}`}>
+              <Link to={`/profile/${userId}`}>
                 <img
                   src={getUserPhoto(userId as number)}
                   onError={(e: BaseSyntheticEvent) => {
@@ -65,13 +65,13 @@ export const Menu: React.FC = () => {
                   }}
                   alt={'user'}
                 />
-              </NavLink>
+              </Link>
             </div>
           </li>
           <li className={styles.mItem}>
-            <NavLink className={styles.link} to='/dialogs'>
+            <Link className={styles.link} to='/dialogs'>
               <MessageIcon size='25px' fill='#99A2AD' />
-            </NavLink>
+            </Link>
           </li>
         </ul>
         <div className={styles.mLogout} onClick={onLogout}>
@@ -87,27 +87,27 @@ export const Menu: React.FC = () => {
         </div>
         <ul className={styles.list}>
           <li className={styles.item}>
-            <NavLink className={styles.link} to={`/profile/${userId}`}>
+            <Link className={styles.link} to={`/profile/${userId}`}>
               <ProfileIcon size='25px' />
               <span>Profile</span>
-            </NavLink>
+            </Link>
           </li>
 
           <li className={styles.item}>
-            <NavLink className={styles.link} to='/users?page=1'>
+            <Link className={styles.link} to='/users?page=1'>
               <UsersIcon size='25px' />
               <span>Users</span>
-            </NavLink>
+            </Link>
           </li>
           <li className={styles.item}>
-            <NavLink className={styles.link} to='/dialogs'>
+            <Link className={styles.link} to='/dialogs'>
               <MessageIcon size='25px' fill='#99A2AD' />
               <span>Dialogs</span>
-            </NavLink>
+            </Link>
           </li>
         </ul>
         <div className={styles.bottom}>
-          <NavLink to={`/profile/${userId}`}>
+          <Link to={`/profile/${userId}`}>
             <div className={styles.user}>
               <div className={styles.avatar}>
                 <img
@@ -123,7 +123,7 @@ export const Menu: React.FC = () => {
               </div>
               <div className={styles.username}>{username}</div>
             </div>
-          </NavLink>
+          </Link>
 
           <div className={styles.logout} onClick={onLogout}>
             <LogoutIcon size='15px' />

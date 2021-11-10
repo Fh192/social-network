@@ -1,8 +1,7 @@
 import classNames from 'classnames/bind';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useDarkMode, useOnClickOutside } from 'usehooks-ts';
-import { useSelector } from '../../../hooks/useSelector';
 import { setInitialState } from '../../../store/reducers/usersSlice';
 import Arrow from '../../../svg/Arrow';
 import { CrossIcon } from '../../../svg/CrossIcon';
@@ -14,39 +13,55 @@ import styles from './FilterUsers.module.css';
 interface Props {
   fetching: boolean;
   queryParams: IQueryParams;
+  pageCount: number;
   setQueryParams: React.Dispatch<React.SetStateAction<IQueryParams>>;
 }
 
 export const FilterUsers: React.FC<Props> = ({
   fetching,
   queryParams,
+  pageCount,
   setQueryParams,
 }) => {
   const dispatch = useDispatch();
   const cx = classNames.bind(styles);
+
   const ref = useRef<HTMLDivElement>(null);
   const { isDarkMode } = useDarkMode();
-  const { totalCount } = useSelector(s => s.users);
   const [arrowType, setArrowType] = useState<'down' | 'up'>('down');
   const [onlyFriends, setOnlyFriends] = useState(queryParams.friend === true);
   const [hideFriends, setHideFriends] = useState(queryParams.friend === false);
   const [term, setTerm] = useState(queryParams.term || '');
+  const [page, setPage] = useState(queryParams.page);
 
   const toggleArrowType = () => {
     setArrowType(type => (type === 'down' ? 'up' : 'down'));
   };
 
+  const submitTerm = useCallback(() => {
+    setQueryParams(params => {
+      if (!!term.trim() && term.trim() !== params.term) {
+        dispatch(setInitialState());
+        return { ...params, term, page: 1 };
+      }
+      return params;
+    });
+  }, [term, setQueryParams, dispatch]);
+
   const termSubmitHandler = (e?: React.KeyboardEvent<HTMLInputElement>) => {
     if (!e || e.key === 'Enter') {
-      setQueryParams(params => {
-        if (!!term && term !== params.term) {
-          dispatch(setInitialState());
-          return { ...params, term, page: 1 };
-        }
-        return params;
-      });
+      submitTerm();
     }
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      submitTerm();
+      clearTimeout(timer);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [submitTerm]);
 
   const toggleHideFriends = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onlyFriends) setOnlyFriends(false);
@@ -58,13 +73,10 @@ export const FilterUsers: React.FC<Props> = ({
     setOnlyFriends(e.currentTarget.checked);
   };
 
-  const clearTerm = () => {
-    setTerm('');
-    if (!totalCount) {
-      dispatch(setInitialState());
-      setQueryParams(params => {
-        return { ...params, term: undefined };
-      });
+  const pageChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = +e.target.value;
+    if (val <= pageCount) {
+      setPage(val);
     }
   };
 
@@ -88,6 +100,45 @@ export const FilterUsers: React.FC<Props> = ({
       return params;
     });
   }, [onlyFriends, hideFriends, term, dispatch, setQueryParams]);
+
+  const clearTerm = () => {
+    setTerm('');
+    setQueryParams(p => {
+      if (p.term !== undefined) {
+        dispatch(setInitialState());
+        return { ...p, term: undefined, page: 1 };
+      }
+      return p;
+    });
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setQueryParams(params => {
+        if (page !== params.page) {
+          if (params.page === 1 && page < 1) {
+            setPage(1);
+          } else {
+            dispatch(setInitialState());
+            if (page <= 0) {
+              setPage(1);
+              return { ...params, page: 1 };
+            } else {
+              return { ...params, page };
+            }
+          }
+        }
+        return params;
+      });
+      clearTimeout(timer);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [page, setQueryParams, dispatch]);
+
+  useEffect(() => {
+    setPage(queryParams.page);
+  }, [queryParams.page]);
 
   useOnClickOutside(ref, () => {
     setArrowType('down');
@@ -122,7 +173,11 @@ export const FilterUsers: React.FC<Props> = ({
             onChange={e => setTerm(e.currentTarget.value)}
             onKeyDown={termSubmitHandler}
           />
-          <div className={styles.clearInput} onClick={clearTerm}>
+
+          <div
+            className={cx({ clearTerm: true, clearTermVisible: !!term.trim() })}
+            onClick={clearTerm}
+          >
             <CrossIcon size='15px' />
           </div>
         </div>
@@ -142,6 +197,19 @@ export const FilterUsers: React.FC<Props> = ({
               disabled={fetching}
             />
             <span>Hide friends</span>
+          </label>
+        </div>
+        <div className={styles.page}>
+          <input
+            type='text'
+            inputMode='numeric'
+            id='page'
+            value={page}
+            autoComplete='off'
+            onChange={pageChangeHandler}
+          />
+          <label htmlFor='page'>
+            Page <sup className={styles.maxPage}>max: {pageCount}</sup>
           </label>
         </div>
       </div>
