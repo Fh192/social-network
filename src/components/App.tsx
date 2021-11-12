@@ -15,6 +15,7 @@ import { getAuthState } from '../selectors/authSelectors';
 import Preloader from './Preloader/Preloader';
 import { Profile } from './Profile/Profile';
 import { useDarkMode } from 'usehooks-ts';
+import Chat from './Chat/Chat';
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
@@ -69,6 +70,7 @@ const App: React.FC = () => {
                 </Routes>
               </Suspense>
             </main>
+            <Chat />
           </div>
         ) : (
           <div className='login'>

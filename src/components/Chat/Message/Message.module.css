@@ -1,0 +1,36 @@
+.message {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.photo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 50%;
+  object-fit: contain;
+}
+
+.photo img {
+  transform: scale(1.1);
+  width: 35px;
+  height: 35px;
+}
+
+.username {
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.text {
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}

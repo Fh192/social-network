@@ -142,8 +142,9 @@ const Users: React.FC = () => {
           </button>
         </div>
       )}
-
-      <ScrollBtn />
+      <div className={styles.scrollBtn}>
+        <ScrollBtn />
+      </div>
     </div>
   );
 };
