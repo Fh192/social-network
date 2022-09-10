@@ -7,6 +7,7 @@ import { useDarkMode } from 'usehooks-ts';
 const Dialogs: React.FC = () => {
   const [imgLoaded, setImgLoaded] = useState(false);
   const { isDarkMode } = useDarkMode();
+  
   return (
     <div className={`${styles.dialogs} ${isDarkMode ? styles.dialogsD : ''}`}>
       <div className={styles.comingSoon}>

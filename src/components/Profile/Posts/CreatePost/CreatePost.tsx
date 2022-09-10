@@ -1,15 +1,14 @@
-import React, { BaseSyntheticEvent, useEffect, useRef, useState } from 'react';
+import classNames from 'classnames/bind';
+import React, { useRef, useState } from 'react';
+import { useDarkMode, useOnClickOutside } from 'usehooks-ts';
+import { getUserPhoto } from '../../../../common/getUserPhoto';
+import { useDispatch } from '../../../../hooks/useDispatch';
+import { useUserPhoto } from '../../../../hooks/useUserPhoto';
+import { useSelector } from '../../../../hooks/useSelector';
+import { createPost } from '../../../../store/reducers/postsReducer';
+import { CrossIcon } from '../../../../svg/CrossIcon';
 import LinkIcon from '../../../../svg/LinkIcon';
 import styles from './CreatePost.module.css';
-import classNames from 'classnames/bind';
-import { useDispatch } from '../../../../hooks/useDispatch';
-import { createPost } from '../../../../store/reducers/postsReducer';
-import { getUserPhoto } from '../../../../common/getUserPhoto';
-import { useSelector } from '../../../../hooks/useSelector';
-import { CrossIcon } from '../../../../svg/CrossIcon';
-import { useDarkMode, useOnClickOutside } from 'usehooks-ts';
-import photoPlaceholderD from '../../../../assets/userPhotoDark.png';
-import photoPlaceholder from '../../../../assets/userPhoto.png';
 
 interface Props {
   setCreatePostMode: React.Dispatch<React.SetStateAction<boolean>>;
@@ -25,8 +24,9 @@ const CreatePost: React.FC<Props> = ({ setCreatePostMode }) => {
   const createBtnDisabled = !newPostText.trim() && !imageSrc;
   const { id: userId } = useSelector(s => s.auth);
   const { isDarkMode } = useDarkMode();
-  const [photo, setPhoto] = useState(getUserPhoto(userId as number));
-  const [photoLoadErr, setPhotoLoadErr] = useState(false);
+  const { photo, photoErrorHandler } = useUserPhoto(
+    getUserPhoto(userId as number)
+  );
 
   const onImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -53,16 +53,6 @@ const CreatePost: React.FC<Props> = ({ setCreatePostMode }) => {
     console.log(1);
   });
 
-  useEffect(() => {
-    if (photoLoadErr) {
-      if (isDarkMode) {
-        setPhoto(photoPlaceholderD);
-      } else {
-        setPhoto(photoPlaceholder);
-      }
-    }
-  }, [photoLoadErr, isDarkMode]);
-
   return (
     <div className={styles.createPostModal}>
       <div
@@ -74,41 +64,34 @@ const CreatePost: React.FC<Props> = ({ setCreatePostMode }) => {
             className={styles.close}
             onClick={() => setCreatePostMode(false)}
           >
-            <CrossIcon size='20px' />
+            <CrossIcon size="20px" />
           </div>
         </div>
 
         <div className={styles.inner}>
           <div className={styles.userAvatar}>
-            <img
-              src={photo}
-              onError={(e: BaseSyntheticEvent) => {
-                e.target.onerror = null;
-                setPhotoLoadErr(true);
-              }}
-              alt=''
-            />
+            <img src={photo} alt="" onError={photoErrorHandler} />
           </div>
           <div className={styles.textarea}>
             <textarea
               value={newPostText}
               onChange={e => setNewPostText(e.target.value)}
-              placeholder='Post text...'
+              placeholder="Post text..."
             ></textarea>
           </div>
         </div>
 
         <div className={styles.footer}>
           <div className={styles.addImage}>
-            <LinkIcon size='20px' color={isDarkMode ? '#99a2ad' : ''} />
+            <LinkIcon size="20px" color={isDarkMode ? '#99a2ad' : ''} />
             {imageSrc ? (
               <div className={styles.imagePreview}>
-                <img src={imageSrc} alt='' />
+                <img src={imageSrc} alt="" />
               </div>
             ) : (
               <button>Add image</button>
             )}
-            <input type='file' accept='image/*' onChange={onImageSelect} />
+            <input type="file" accept="image/*" onChange={onImageSelect} />
           </div>
           <div
             className={cx({

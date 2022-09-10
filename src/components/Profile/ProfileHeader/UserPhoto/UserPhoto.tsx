@@ -75,7 +75,7 @@ export const UserPhoto: React.FC = () => {
       >
         {isHover && isOwner && (
           <div className={styles.hoverPhoto} onClick={handleClickOnAvatar}>
-            <CameraIcon size='50px' />
+            <CameraIcon size="50px" />
           </div>
         )}
 
@@ -88,13 +88,13 @@ export const UserPhoto: React.FC = () => {
           <img
             className={styles.photo}
             src={photo || (isDarkMode ? photoPlaceholderD : photoPlaceholder)}
-            alt='user avatar'
+            alt="user avatar"
             onLoad={() => setPhotoLoaded(true)}
           />
 
           {lookingForAJob && (
             <div className={styles.lookingForAJob}>
-              <img src={openToWorkImg} alt='looking for a job' />
+              <img src={openToWorkImg} alt="looking for a job" />
             </div>
           )}
         </div>
@@ -104,13 +104,13 @@ export const UserPhoto: React.FC = () => {
             ref={tooltipRef}
           >
             <span className={styles.uploadPhoto}>
-              <label htmlFor='uploadPhoto'>Upload photo</label>
+              <label htmlFor="uploadPhoto">Upload photo</label>
               <input
-                type='file'
-                accept='.jpg, .jpeg, .png'
-                onChange={handleFileInput}
-                id='uploadPhoto'
+                type="file"
+                accept=".jpg, .jpeg, .png"
+                id="uploadPhoto"
                 hidden
+                onChange={handleFileInput}
               />
             </span>
             {photo && <span onClick={handleViewPhotoSelected}>View photo</span>}

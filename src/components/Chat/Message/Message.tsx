@@ -17,7 +17,7 @@ const Message: React.FC<Props> = ({
   setIsChatOpen,
   ...props
 }) => {
-  const [photo, setPhoto] = useState(props.photo || photoPlaceholder);
+  const [photo, setPhoto] = useState(props.photo ?? photoPlaceholder);
   const { isDarkMode } = useDarkMode();
 
   useEffect(() => {

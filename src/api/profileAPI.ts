@@ -4,46 +4,40 @@ import { IContacts, IProfile, IProfileForUpdate } from '../types/profile';
 import instance from './instance';
 
 const profileAPI = {
-  getUserProfile: async (userId: number | null) => {
-    const response = await instance.get<IProfile>(`profile/${userId}`);
-    const data = response.data;
+  getUserProfile: async (userId: number): Promise<IProfile> => {
+    const { data } = await instance.get<IProfile>(`profile/${userId}`);
 
-    //remove unnecessary contacts
+    // remove unnecessary contacts
     const contacts = Object.fromEntries(
-      Object.entries(data.contacts).filter(
-        c => c[0] !== 'mainLink' && c[0] !== 'website'
-      )
+      Object.entries(data.contacts).filter(([name]) => {
+        return name !== 'mainLink' && name !== 'website';
+      })
     ) as IContacts;
 
     return { ...data, contacts };
   },
-
-  updatePhoto: async (image: File) => {
-    interface Response extends ServerData {
-      data: { photos: IPhotos };
-    }
-
+  updatePhoto: async (
+    image: File
+  ): Promise<ServerData<{ photos: IPhotos }>> => {
     const fr = new FormData();
     fr.append('image', image);
 
-    const response = await instance.put<FormData, AxiosResponse<Response>>(
-      '/profile/photo',
-      fr,
-      {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      }
-    );
+    const { data } = await instance.put<
+      FormData,
+      AxiosResponse<ServerData<{ photos: IPhotos }>>
+    >('profile/photo', fr, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
 
-    return response.data;
+    return data;
   },
-
-  updateProfile: async (profileFormData: IProfile) => {
-    const response = await instance.put<
+  updateProfile: async (profileFormData: IProfile): Promise<ServerData> => {
+    const { data } = await instance.put<
       IProfileForUpdate,
       AxiosResponse<ServerData>
-    >('/profile', profileFormData);
+    >('profile', profileFormData);
 
-    return response.data;
+    return data;
   },
 };
 

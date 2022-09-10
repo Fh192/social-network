@@ -1,11 +1,11 @@
-import React from 'react';
-import styles from './NotFound.module.css';
-import notFoundIcon from '../../assets/404.svg';
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from '../../hooks/useSelector';
-import { useDarkMode } from 'usehooks-ts';
 import classNames from 'classnames/bind';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDarkMode } from 'usehooks-ts';
+import notFoundIcon from '../../assets/404.svg';
+import { useSelector } from '../../hooks/useSelector';
 import { ToggleTheme } from '../TogleTheme/ToggleTheme';
+import styles from './NotFound.module.css';
 
 const NotFound: React.FC = () => {
   const cx = classNames.bind(styles);
@@ -19,7 +19,7 @@ const NotFound: React.FC = () => {
         <ToggleTheme />
       </div>
       <div className={styles.image}>
-        <img src={notFoundIcon} alt='404' />
+        <img src={notFoundIcon} alt="404" />
       </div>
       <div className={styles.text}>
         <span>OOPS!</span>

@@ -1,11 +1,9 @@
-import React, { BaseSyntheticEvent, useEffect, useState } from 'react';
+import classNames from 'classnames/bind';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useUserPhoto } from '../../../../hooks/useUserPhoto';
 import { IComment } from '../../../../types/posts';
 import styles from './Comment.module.css';
-import classNames from 'classnames/bind';
-import { Link } from 'react-router-dom';
-import photoPlaceholderD from '../../../../assets/userPhotoDark.png';
-import photoPlaceholder from '../../../../assets/userPhoto.png';
-import { useDarkMode } from 'usehooks-ts';
 interface Props extends IComment {
   isLast: boolean;
 }
@@ -18,26 +16,13 @@ const Comment: React.FC<Props> = ({
   userId,
 }) => {
   const cx = classNames.bind(styles);
-
-  const { isDarkMode } = useDarkMode();
-  const [photo, setPhoto] = useState(author.photo);
-  const [photoLoadErr, setPhotoLoadErr] = useState(false);
+  const { photo, photoErrorHandler } = useUserPhoto(author.photo);
 
   const time = new Date(addDate).toLocaleString('en-US', {
     hour: 'numeric',
     minute: 'numeric',
     hour12: true,
   });
-
-  useEffect(() => {
-    if (photoLoadErr) {
-      if (isDarkMode) {
-        setPhoto(photoPlaceholderD);
-      } else {
-        setPhoto(photoPlaceholder);
-      }
-    }
-  }, [photoLoadErr, isDarkMode]);
 
   return (
     <div
@@ -49,14 +34,7 @@ const Comment: React.FC<Props> = ({
       <div className={styles.inner}>
         <div className={styles.authorAvatar}>
           <Link to={`/profile/${userId}`}>
-            <img
-              src={photo}
-              onError={(e: BaseSyntheticEvent) => {
-                e.target.onerror = null;
-                setPhotoLoadErr(true);
-              }}
-              alt=''
-            />
+            <img src={photo} alt="" onError={photoErrorHandler} />
           </Link>
         </div>
         <div className={styles.col}>
@@ -70,7 +48,6 @@ const Comment: React.FC<Props> = ({
           </div>
         </div>
       </div>
-
       <div className={styles.addDate}>
         <span>{time}</span>
       </div>

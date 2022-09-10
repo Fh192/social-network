@@ -1,24 +1,18 @@
-import React, {
-  BaseSyntheticEvent,
-  useEffect,
-  useLayoutEffect,
-  useState,
-} from 'react';
-import styles from './Menu.module.css';
-import UsersIcon from '../../svg/UsersIcon';
+import classNames from 'classnames/bind';
+import React, { useLayoutEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useDarkMode } from 'usehooks-ts';
+import { getUserPhoto } from '../../common/getUserPhoto';
+import { useDispatch } from '../../hooks/useDispatch';
+import { useUserPhoto } from '../../hooks/useUserPhoto';
+import { useSelector } from '../../hooks/useSelector';
+import { logout } from '../../store/reducers/authReducer';
+import LogoutIcon from '../../svg/LogoutIcon';
 import MessageIcon from '../../svg/MessageIcon';
 import ProfileIcon from '../../svg/ProfileIcon';
-import LogoutIcon from '../../svg/LogoutIcon';
-import { useDispatch } from '../../hooks/useDispatch';
-import { logout } from '../../store/reducers/authReducer';
-import photoPlaceholder from '../../assets/userPhoto.png';
-import photoPlaceholderD from '../../assets/userPhotoDark.png';
-import { useSelector } from '../../hooks/useSelector';
-import { getUserPhoto } from '../../common/getUserPhoto';
-import { useDarkMode } from 'usehooks-ts';
-import classNames from 'classnames/bind';
+import UsersIcon from '../../svg/UsersIcon';
 import { ToggleTheme } from '../TogleTheme/ToggleTheme';
-import { Link } from 'react-router-dom';
+import styles from './Menu.module.css';
 
 export const Menu: React.FC = () => {
   const dispatch = useDispatch();
@@ -27,8 +21,9 @@ export const Menu: React.FC = () => {
   const { id: userId, login: username } = useSelector(s => s.auth);
   const { isDarkMode } = useDarkMode(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 700);
-  const [photo, setPhoto] = useState(getUserPhoto(userId as number));
-  const [photoLoadErr, setPhotoLoadErr] = useState(false);
+  const { photo, photoErrorHandler } = useUserPhoto(
+    getUserPhoto(userId as number)
+  );
 
   const onLogout = () => {
     dispatch(logout());
@@ -47,16 +42,6 @@ export const Menu: React.FC = () => {
     return () => window.removeEventListener('resize', listener);
   }, []);
 
-  useEffect(() => {
-    if (photoLoadErr) {
-      if (isDarkMode) {
-        setPhoto(photoPlaceholderD);
-      } else {
-        setPhoto(photoPlaceholder);
-      }
-    }
-  }, [photoLoadErr, isDarkMode]);
-
   if (isMobile) {
     return (
       <nav className={cx({ mMenu: true, mMenuD: isDarkMode })}>
@@ -65,32 +50,25 @@ export const Menu: React.FC = () => {
         </div>
         <ul className={styles.mList}>
           <li className={styles.mItem}>
-            <Link className={styles.link} to='/users?page=1'>
-              <UsersIcon size='25px' />
+            <Link className={styles.link} to="/users?page=1">
+              <UsersIcon size="25px" />
             </Link>
           </li>
           <li className={styles.mItem}>
             <div className={styles.avatar}>
               <Link to={`/profile/${userId}`}>
-                <img
-                  src={photo}
-                  onError={(e: BaseSyntheticEvent) => {
-                    e.target.onerror = null;
-                    setPhotoLoadErr(true);
-                  }}
-                  alt={'user'}
-                />
+                <img src={photo} alt={'user'} onError={photoErrorHandler} />
               </Link>
             </div>
           </li>
           <li className={styles.mItem}>
-            <Link className={styles.link} to='/dialogs'>
-              <MessageIcon size='25px' fill='#99A2AD' />
+            <Link className={styles.link} to="/dialogs">
+              <MessageIcon size="25px" fill="#99A2AD" />
             </Link>
           </li>
         </ul>
         <div className={styles.mLogout} onClick={onLogout}>
-          <LogoutIcon size='15px' />
+          <LogoutIcon size="15px" />
         </div>
       </nav>
     );
@@ -103,20 +81,20 @@ export const Menu: React.FC = () => {
         <ul className={styles.list}>
           <li className={styles.item}>
             <Link className={styles.link} to={`/profile/${userId}`}>
-              <ProfileIcon size='25px' />
+              <ProfileIcon size="25px" />
               <span>Profile</span>
             </Link>
           </li>
 
           <li className={styles.item}>
-            <Link className={styles.link} to='/users?page=1'>
-              <UsersIcon size='25px' />
+            <Link className={styles.link} to="/users?page=1">
+              <UsersIcon size="25px" />
               <span>Users</span>
             </Link>
           </li>
           <li className={styles.item}>
-            <Link className={styles.link} to='/dialogs'>
-              <MessageIcon size='25px' fill='#99A2AD' />
+            <Link className={styles.link} to="/dialogs">
+              <MessageIcon size="25px" fill="#99A2AD" />
               <span>Dialogs</span>
             </Link>
           </li>
@@ -125,21 +103,14 @@ export const Menu: React.FC = () => {
           <Link to={`/profile/${userId}`}>
             <div className={styles.user}>
               <div className={styles.avatar}>
-                <img
-                  src={photo}
-                  onError={(e: BaseSyntheticEvent) => {
-                    e.target.onerror = null;
-                    setPhotoLoadErr(true);
-                  }}
-                  alt={'user'}
-                />
+                <img src={photo} alt={'user'} onError={photoErrorHandler} />
               </div>
               <div className={styles.username}>{username}</div>
             </div>
           </Link>
 
           <div className={styles.logout} onClick={onLogout}>
-            <LogoutIcon size='15px' />
+            <LogoutIcon size="15px" />
           </div>
         </div>
       </nav>

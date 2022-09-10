@@ -1,9 +1,9 @@
-import { UserData } from './../../types/auth';
-import { createReducer, createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk, createReducer } from '@reduxjs/toolkit';
 import authAPI from '../../api/authAPI';
 import securityAPI from '../../api/securityAPI';
 import { IAuthLogin } from '../../types/auth';
 import { Nullable } from '../../types/common';
+import { UserData } from './../../types/auth';
 
 export type AuthState = typeof initialState;
 
@@ -64,9 +64,7 @@ export const login = createAsyncThunk<void, IAuthLogin>(
       if (resultCode === 0) {
         dispatch(getUserAuthData());
       } else {
-        if (resultCode === 10) {
-          dispatch(getCaptcha());
-        }
+        if (resultCode === 10) dispatch(getCaptcha());
         throw new Error(data.messages[0]);
       }
     } catch (err) {
@@ -86,7 +84,7 @@ const authReducer = createReducer(initialState, b => {
     state.captchaFetching = false;
   });
 
-  b.addCase(getCaptcha.pending, (state, action) => {
+  b.addCase(getCaptcha.pending, state => {
     state.captchaFetching = true;
   });
 
@@ -94,7 +92,7 @@ const authReducer = createReducer(initialState, b => {
     state.loginError = action.payload as string;
   });
 
-  b.addCase(login.fulfilled, (state, action) => {
+  b.addCase(login.fulfilled, state => {
     state.loginError = '';
   });
 

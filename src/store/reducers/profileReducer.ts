@@ -1,11 +1,11 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { Actions, RootDispatch, RootState } from '..';
-import { IPhotos, Nullable } from '../../types/common';
-import * as actions from '../actions/profile';
 import { ThunkAction } from 'redux-thunk';
-import { IContacts, IProfileForUpdate } from '../../types/profile';
-import profileAPI from '../../api/profileAPI';
+import { Actions, RootDispatch, RootState } from '..';
 import followAPI from '../../api/followAPI';
+import profileAPI from '../../api/profileAPI';
+import { IPhotos, Nullable } from '../../types/common';
+import { IContacts, IProfile } from '../../types/profile';
+import * as actions from '../actions/profile';
 
 type ProfileActions = ReturnType<Actions<typeof actions>>;
 type ProfileThunk = ThunkAction<
@@ -73,21 +73,19 @@ export const getUserProfile =
 export const updatePhoto =
   (image: File): ProfileThunk =>
   async dispatch => {
-    const data = await profileAPI.updatePhoto(image);
+    const { data, resultCode } = await profileAPI.updatePhoto(image);
 
-    if (data.resultCode === 0) {
-      const photos = data.data.photos;
+    if (resultCode === 0) {
+      const photos = data.photos;
       dispatch(actions.setUserPhoto(photos));
     }
   };
 
 export const updateProfile =
-  (updates: IProfileForUpdate): ProfileThunk =>
+  (updates: Partial<IProfile>): ProfileThunk =>
   async (_, getState) => {
     const { profile } = getState();
-
-    const profileForUpdate = { ...profile, ...updates };
-    await profileAPI.updateProfile(profileForUpdate);
+    await profileAPI.updateProfile({ ...profile, ...updates });
   };
 
 export const toggleFollow =

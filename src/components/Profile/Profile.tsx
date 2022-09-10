@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import styles from './Profile.module.css';
-import ProfileHeader from './ProfileHeader/ProfileHeader';
-import { About } from './About/About';
-import { Posts } from './Posts/Posts';
 import { useParams } from 'react-router';
 import { useDispatch } from '../../hooks/useDispatch';
-import { getUserProfile } from '../../store/reducers/profileReducer';
 import { useSelector } from '../../hooks/useSelector';
+import { getUserProfile } from '../../store/reducers/profileReducer';
 import Preloader from '../Preloader/Preloader';
+import { About } from './About/About';
+import { Posts } from './Posts/Posts';
+import styles from './Profile.module.css';
+import ProfileHeader from './ProfileHeader/ProfileHeader';
 
 export const Profile: React.FC = () => {
   const dispatch = useDispatch();
@@ -16,11 +16,11 @@ export const Profile: React.FC = () => {
   const [fetching, setFetching] = useState(false);
 
   useEffect(() => {
-    if (userId) {
-      if (!fetching && +userId !== profileId) {
-        setFetching(true);
-        dispatch(getUserProfile(+userId)).then(() => setFetching(false));
-      }
+    if (!userId || fetching) return undefined;
+
+    if (+userId !== profileId) {
+      setFetching(true);
+      dispatch(getUserProfile(+userId)).then(() => setFetching(false));
     }
   }, [dispatch, userId, profileId, fetching]);
 

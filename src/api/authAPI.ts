@@ -4,22 +4,22 @@ import { ServerData } from '../types/common';
 import instance from './instance';
 
 const authAPI = {
-  me: async () => {
-    const response = await instance.get<IAuthMe>('auth/me');
+  me: async (): Promise<IAuthMe> => {
+    const { data } = await instance.get<IAuthMe>('auth/me');
 
-    return response.data;
+    return data;
   },
 
-  login: async (loginFormData: IAuthLogin) => {
-    const response = await instance.post<IAuthLogin, AxiosResponse<ServerData>>(
+  login: async (loginFormData: IAuthLogin): Promise<ServerData> => {
+    const { data } = await instance.post<IAuthLogin, AxiosResponse<ServerData>>(
       'auth/login',
       loginFormData
     );
 
-    return response.data;
+    return data;
   },
 
-  logout: async () => {
+  logout: async (): Promise<void> => {
     await instance.delete('auth/login');
   },
 };

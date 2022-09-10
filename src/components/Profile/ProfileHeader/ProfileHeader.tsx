@@ -1,12 +1,12 @@
+import classNames from 'classnames/bind';
 import React from 'react';
-import styles from './ProfileHeader.module.css';
 import { Link } from 'react-router-dom';
-import { UserPhoto } from './UserPhoto/UserPhoto';
-import FollowButton from '../../FollowButton/FollowButton';
+import { useDarkMode } from 'usehooks-ts';
 import { useSelector } from '../../../hooks/useSelector';
 import { selectIsOwner } from '../../../selectors/profileSelectors';
-import classNames from 'classnames/bind';
-import { useDarkMode } from 'usehooks-ts';
+import FollowButton from '../../FollowButton/FollowButton';
+import styles from './ProfileHeader.module.css';
+import { UserPhoto } from './UserPhoto/UserPhoto';
 
 const ProfileHeader: React.FC = () => {
   const cx = classNames.bind(styles);
@@ -18,7 +18,7 @@ const ProfileHeader: React.FC = () => {
 
   return (
     <div className={cx({ header: true, headerD: isDarkMode })}>
-      <div className={styles.user}> 
+      <div className={styles.user}>
         <UserPhoto />
         <div className={styles.username}>
           <span>{username}</span>
@@ -38,11 +38,10 @@ const ProfileHeader: React.FC = () => {
                 userId={userId as number}
                 followed={followed}
                 inFollowProcess={inFollowProcess}
-                padding='10px 30px'
-                fontSize='16px'
+                padding="10px 30px"
+                fontSize="16px"
               />
             </div>
-
             <div className={cx(['button', 'message'])}>
               <Link to={`/dialogs/${userId}/messages`}>
                 <button>Message</button>

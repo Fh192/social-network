@@ -1,17 +1,17 @@
+import classNames from 'classnames/bind';
 import React, { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDarkMode } from 'usehooks-ts';
 import { useDispatch } from '../../hooks/useDispatch';
+import { useQuery } from '../../hooks/useQuery';
 import { useSelector } from '../../hooks/useSelector';
 import { getUsers, setInitialState } from '../../store/reducers/usersSlice';
 import { IQueryParams } from '../../types/users';
 import Preloader from '../Preloader/Preloader';
+import { ScrollBtn } from '../ScrollBtn/ScrollBtn';
 import { FilterUsers } from './FilterUsers/FilterUsers';
 import { User } from './User/User';
-import { useNavigate } from 'react-router-dom';
 import styles from './Users.module.css';
-import { useQuery } from '../../hooks/useQuery';
-import { useDarkMode } from 'usehooks-ts';
-import { ScrollBtn } from '../ScrollBtn/ScrollBtn';
-import classNames from 'classnames/bind';
 
 const Users: React.FC = () => {
   const cx = classNames.bind(styles);
@@ -29,16 +29,14 @@ const Users: React.FC = () => {
     term: query.get('term') || undefined,
     friend: !!query.get('friend') || undefined,
   });
-  const pageCount = Math.ceil((totalCount || 1) / queryParams.count);
+  const pageCount = Math.ceil((totalCount ?? 1) / queryParams.count);
 
   const setQueryParamsToUrl = useCallback(() => {
     const { page, friend, term } = queryParams;
 
     const search = Object.entries({ friend, term }).reduce(
       (acc, [key, val]) => {
-        if (val !== undefined) {
-          return `${acc}&${key}=${val}`;
-        }
+        if (val !== undefined) acc += `&${key}=${val}`;
         return acc;
       },
       `?page=${page}`
@@ -81,6 +79,7 @@ const Users: React.FC = () => {
 
   useEffect(() => {
     setFetching(true);
+
     dispatch(getUsers(queryParams)).then(() => {
       setFetching(false);
       setQueryParamsToUrl();
@@ -137,7 +136,7 @@ const Users: React.FC = () => {
               </span>
             )}
           </div>
-          <button type='reset' onClick={resetParams}>
+          <button type="reset" onClick={resetParams}>
             Reset params
           </button>
         </div>

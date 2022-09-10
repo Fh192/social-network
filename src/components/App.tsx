@@ -45,37 +45,37 @@ const App: React.FC = () => {
     <div className={`App ${isDarkMode ? 'AppD' : ''}`}>
       {appInitialized ? (
         isAuth ? (
-          <div className='container'>
+          <div className="container">
             <Menu />
-            <main className='main'>
+            <main className="main">
               <Suspense fallback={<Preloader />}>
                 <Routes>
-                  <Route path='/' element={<Navigate to={`/profile/${id}`} />}>
-                    <Route path='login' element={<Outlet />} />
-                    <Route path='profile' element={<Outlet />} />
+                  <Route path="/" element={<Navigate to={`/profile/${id}`} />}>
+                    <Route path="login" element={<Outlet />} />
+                    <Route path="profile" element={<Outlet />} />
                   </Route>
-                  <Route path='/profile/:userId' element={<Profile />} />
-                  <Route path='/profile/edit' element={<EditProfile />} />
-                  <Route path='/users' element={<Users />} />
-                  <Route path='/dialogs' element={<Dialogs />} />
-                  <Route path='*' element={<NotFound />} />
+                  <Route path="/profile/:userId" element={<Profile />} />
+                  <Route path="/profile/edit" element={<EditProfile />} />
+                  <Route path="/users" element={<Users />} />
+                  <Route path="/dialogs" element={<Dialogs />} />
+                  <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
             </main>
             <Chat />
           </div>
         ) : (
-          <div className='login'>
+          <div className="login">
             <Suspense fallback={<Preloader />}>
               <Routes>
-                <Route path='*' element={<Navigate to='/login' />} />
-                <Route path='/login' element={<Login />} />
+                <Route path="*" element={<Navigate to="/login" />} />
+                <Route path="/login" element={<Login />} />
               </Routes>
             </Suspense>
           </div>
         )
       ) : (
-        <div className='preloader'>
+        <div className="preloader">
           <Preloader />
         </div>
       )}

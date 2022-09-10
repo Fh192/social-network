@@ -1,12 +1,12 @@
-import React from 'react';
-import { useDispatch } from '../../hooks/useDispatch';
-import Preloader from '../Preloader/Preloader';
 import classNames from 'classnames/bind';
-import styles from './FollowButton.module.css';
-import { toggleFollow as usersToggleFollow } from '../../store/reducers/usersSlice';
-import { toggleFollow as profileToggleFollow } from '../../store/reducers/profileReducer';
+import React from 'react';
 import { useLocation } from 'react-router';
 import { useDarkMode } from 'usehooks-ts';
+import { useDispatch } from '../../hooks/useDispatch';
+import { toggleFollow as profileToggleFollow } from '../../store/reducers/profileReducer';
+import { toggleFollow as usersToggleFollow } from '../../store/reducers/usersSlice';
+import Preloader from '../Preloader/Preloader';
+import styles from './FollowButton.module.css';
 
 interface Props {
   userId: number;
@@ -50,7 +50,7 @@ const FollowButton: React.FC<Props> = ({
         style={{ padding, fontSize }}
       >
         {inFollowProcess ? (
-          <Preloader size='15' color={followed ? '#000' : '#fff'} />
+          <Preloader size="15" color={followed ? '#000' : '#fff'} />
         ) : followed ? (
           'Unfollow'
         ) : (

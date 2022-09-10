@@ -1,4 +1,8 @@
+import classNames from 'classnames/bind';
+import { Field, Form, Formik } from 'formik';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDarkMode } from 'usehooks-ts';
 import { useDispatch } from '../../../hooks/useDispatch';
 import { useSelector } from '../../../hooks/useSelector';
 import {
@@ -6,13 +10,9 @@ import {
   updateProfile,
 } from '../../../store/reducers/profileReducer';
 import { IContacts } from '../../../types/profile';
+import Preloader from '../../Preloader/Preloader';
 import { Contact } from './Contact/Contact';
 import styles from './EditProfile.module.css';
-import { Formik, Field, Form } from 'formik';
-import Preloader from '../../Preloader/Preloader';
-import { useNavigate } from 'react-router-dom';
-import classNames from 'classnames/bind';
-import { useDarkMode } from 'usehooks-ts';
 
 const EditProfile: React.FC = () => {
   const cx = classNames.bind(styles);
@@ -31,15 +31,15 @@ const EditProfile: React.FC = () => {
     userId: profileId,
   } = useSelector(s => s.profile);
 
-  const contactsAsArr = Object.entries(contacts).map(c => {
-    return [c[0], c[1] || ''];
+  const contactsAsArr = Object.entries(contacts).map(([name, value]) => {
+    return [name, value ?? ''];
   }) as Array<[keyof IContacts, string]>;
 
   const initialFormValues = {
     lookingForAJob,
-    lookingForAJobDescription: lookingForAJobDescription || '',
+    lookingForAJobDescription: lookingForAJobDescription ?? '',
     fullName,
-    aboutMe: aboutMe || '',
+    aboutMe: aboutMe ?? '',
     contacts: Object.fromEntries(contactsAsArr) as {
       [k in keyof IContacts]: string;
     },
@@ -51,10 +51,12 @@ const EditProfile: React.FC = () => {
     const hasChanges =
       JSON.stringify(initialFormValues) !== JSON.stringify(values);
 
-    if (hasChanges) {
+    if (hasChanges && userId) {
       setSubmitting(true);
+
       await dispatch(updateProfile(values));
-      await dispatch(getUserProfile(userId as number));
+      await dispatch(getUserProfile(userId));
+
       setSubmitting(false);
     }
     navigate(`/profile/${userId}`);
@@ -74,7 +76,7 @@ const EditProfile: React.FC = () => {
     <div className={cx({ editProfile: true, editProfileD: isDarkMode })}>
       <h2 className={styles.title}>Basic Information</h2>
       <Formik onSubmit={submitHandler} initialValues={initialFormValues}>
-        {({ values, errors, setFieldValue, initialValues }) => (
+        {({ values, setFieldValue, initialValues }) => (
           <Form>
             <div className={styles.basicInformation}>
               <div className={styles.row}>
@@ -82,11 +84,11 @@ const EditProfile: React.FC = () => {
                   <legend>
                     Username<sup>*</sup>
                   </legend>
-                  <Field type='text' name='fullName' required={true} />
+                  <Field type="text" name="fullName" required />
                 </fieldset>
                 <fieldset className={styles.about}>
                   <legend>About</legend>
-                  <Field type='text' name='aboutMe' />
+                  <Field type="text" name="aboutMe" />
                 </fieldset>
               </div>
               <div className={`${styles.row} ${styles.job}`}>
@@ -108,10 +110,10 @@ const EditProfile: React.FC = () => {
                 </div>
                 <div className={styles.lookingForAJobDescription}>
                   <Field
-                    as='textarea'
-                    wrap='hard'
-                    name='lookingForAJobDescription'
-                    placeholder='Describe your skills, work experience...'
+                    as="textarea"
+                    wrap="hard"
+                    name="lookingForAJobDescription"
+                    placeholder="Describe your skills, work experience..."
                   />
                 </div>
               </div>
@@ -120,23 +122,21 @@ const EditProfile: React.FC = () => {
             <div className={styles.contacts}>
               <h2 className={styles.title}>Contacts</h2>
               <ul className={styles.contactsList}>
-                {contactsAsArr.map(contact => (
-                  <Contact site={contact[0]} key={contact[0]} />
+                {contactsAsArr.map(([name]) => (
+                  <Contact site={name} key={name} />
                 ))}
               </ul>
             </div>
             <div className={styles.buttons}>
-              <button type='submit' disabled={submitting}>
-                {submitting ? <Preloader size='20px' /> : 'Save'}
+              <button type="submit" disabled={submitting}>
+                {submitting ? <Preloader size="20px" /> : 'Save'}
               </button>
               <button
-                type='reset'
-                onClick={() => {
-                  if (values === initialValues) {
-                    navigate(`/profile/${userId}`);
-                  }
-                }}
+                type="reset"
                 disabled={submitting}
+                onClick={() => {
+                  if (values === initialValues) navigate(`/profile/${userId}`);
+                }}
               >
                 Cancel
               </button>

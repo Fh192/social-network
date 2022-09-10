@@ -1,57 +1,39 @@
-import React, { BaseSyntheticEvent, useEffect, useState } from 'react';
-import CreatePost from './CreatePost/CreatePost';
-import styles from './Posts.module.css';
-import Post from './Post/Post';
-import NoDataIcon from '../../../svg/NoDataIcon';
+import classNames from 'classnames/bind';
+import React, { useState } from 'react';
+import { useDarkMode } from 'usehooks-ts';
+import { getUserPhoto } from '../../../common/getUserPhoto';
+import { useUserPhoto } from '../../../hooks/useUserPhoto';
 import { useSelector } from '../../../hooks/useSelector';
 import { selectIsOwner } from '../../../selectors/profileSelectors';
-import { getUserPhoto } from '../../../common/getUserPhoto';
-import photoPlaceholder from '../../../assets/userPhoto.png';
-import photoPlaceholderD from '../../../assets/userPhotoDark.png';
-import { useDarkMode } from 'usehooks-ts';
-import classNames from 'classnames/bind';
+import NoDataIcon from '../../../svg/NoDataIcon';
+import CreatePost from './CreatePost/CreatePost';
+import Post from './Post/Post';
+import styles from './Posts.module.css';
 
 export const Posts: React.FC = () => {
   const cx = classNames.bind(styles);
-  const { isDarkMode } = useDarkMode();
-  const { posts } = useSelector(s => s.posts);
+
   const isOwner = useSelector(selectIsOwner);
   const userId = useSelector(s => s.auth.id);
-
   const [createPostMode, setCreatePostMode] = useState(false);
-  const [photo, setPhoto] = useState(getUserPhoto(userId as number));
-  const [photoLoadErr, setPhotoLoadErr] = useState(false);
-
-  useEffect(() => {
-    if (photoLoadErr) {
-      if (isDarkMode) {
-        setPhoto(photoPlaceholderD);
-      } else {
-        setPhoto(photoPlaceholder);
-      }
-    }
-  }, [photoLoadErr, isDarkMode]);
+  const { isDarkMode } = useDarkMode();
+  const { posts } = useSelector(s => s.posts);
+  const { photo, photoErrorHandler } = useUserPhoto(
+    getUserPhoto(userId as number)
+  );
 
   return (
     <div className={styles.postsWrapper}>
       {isOwner && (
         <div className={cx({ createPost: true, createPostD: isDarkMode })}>
           <div className={styles.userAvatar}>
-            <img
-              src={photo}
-              onError={(e: BaseSyntheticEvent) => {
-                e.target.onerror = null;
-                setPhotoLoadErr(true);
-              }}
-              alt='user avatar'
-            />
+            <img src={photo} alt="user avatar" onError={photoErrorHandler} />
           </div>
           <div className={styles.createPostButton}>
             <button onClick={() => setCreatePostMode(true)}>Create post</button>
           </div>
         </div>
       )}
-
       {posts.length > 0 && isOwner ? (
         <div className={styles.main}>
           <div className={styles.title}>
@@ -69,7 +51,7 @@ export const Posts: React.FC = () => {
             <span>Posts</span>
           </div>
           <div className={styles.noPostsInner}>
-            <NoDataIcon size='100px' />
+            <NoDataIcon size="100px" />
             <span>No posts yet</span>
           </div>
         </div>

@@ -38,7 +38,7 @@ export const CropPhoto: React.FC<Props> = ({
     height: 0,
   });
 
-  const onCropComplete = useCallback((_, croppedAreaPixels: Area) => {
+  const onCropComplete = useCallback((_: Area, croppedAreaPixels: Area) => {
     setCroppedArea(croppedAreaPixels);
   }, []);
 

@@ -1,8 +1,8 @@
-import { IPost, IComment } from './../../types/posts';
-import { GetState, RootDispatch } from '../';
-import { addPost, deletePost, commentPost, likePost } from '../actions/posts';
-import { getUserPhoto } from '../../common/getUserPhoto';
 import { createReducer } from '@reduxjs/toolkit';
+import { GetState, RootDispatch } from '../';
+import { getUserPhoto } from '../../common/getUserPhoto';
+import { addPost, commentPost, deletePost, likePost } from '../actions/posts';
+import { IComment, IPost } from './../../types/posts';
 
 const initialState = {
   posts: JSON.parse(localStorage.getItem('posts') || '[]') as Array<IPost>,
@@ -22,8 +22,7 @@ const postsReducer = createReducer(initialState, b => {
   });
 
   b.addCase(likePost, (state, action) => {
-    const postId = action.payload.postId;
-    const userId = action.payload.userId;
+    const { postId, userId } = action.payload;
     const postIndex = state.posts.findIndex(post => post.id === postId);
     const isPostLiked = state.posts[postIndex].likes.some(id => id === userId);
 
@@ -38,8 +37,7 @@ const postsReducer = createReducer(initialState, b => {
   });
 
   b.addCase(commentPost, (state, action) => {
-    const comment = action.payload.comment;
-    const postId = action.payload.postId;
+    const { postId, comment } = action.payload;
     const postIndex = state.posts.findIndex(post => post.id === postId);
 
     state.posts[postIndex].comments.unshift(comment);
@@ -72,13 +70,13 @@ export const createComment =
     const photo = getUserPhoto(id as number);
     const author = { username, photo };
 
-    const comment = {
+    const comment: IComment = {
       id: Date.now(),
       addDate: +new Date(),
       author,
       text,
-      userId: id,
-    } as IComment;
+      userId: Number(id),
+    };
 
     dispatch(commentPost(comment, postId));
   };

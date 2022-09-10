@@ -82,5 +82,4 @@ const usersReducer = createSlice({
 });
 
 export const { setInitialState } = usersReducer.actions;
-
 export default usersReducer.reducer;

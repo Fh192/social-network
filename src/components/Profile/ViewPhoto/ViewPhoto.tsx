@@ -42,14 +42,14 @@ export const ViewPhoto: React.FC<Props> = ({ setPhotoViewMode }) => {
             <span>profile photo</span>
           </div>
           <div className={styles.close} onClick={close}>
-            <CrossIcon size='20px' />
+            <CrossIcon size="20px" />
           </div>
         </div>
         <div className={styles.photo}>
           <img
+            alt="profile"
             src={photo}
             style={{ display: !photoLoaded ? 'none' : 'unset' }}
-            alt='profile'
             onLoad={() => setPhotoLoaded(true)}
           />
           {!photoLoaded && (

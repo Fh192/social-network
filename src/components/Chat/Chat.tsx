@@ -84,7 +84,7 @@ const Chat: React.FC = () => {
         <div className={styles.messages} ref={messagesRef}>
           {ws ? (
             messages.map((m, i) => {
-              return <Message {...m} setIsChatOpen={setIsChatOpen} key={i} />;
+              return <Message {...m} key={i} setIsChatOpen={setIsChatOpen} />;
             })
           ) : (
             <Preloader />

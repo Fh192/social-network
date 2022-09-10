@@ -49,9 +49,7 @@ export const FilterUsers: React.FC<Props> = ({
   }, [term, setQueryParams, dispatch]);
 
   const termSubmitHandler = (e?: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!e || e.key === 'Enter') {
-      submitTerm();
-    }
+    if (!e || e.key === 'Enter') submitTerm();
   };
 
   const toggleHideFriends = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,9 +64,7 @@ export const FilterUsers: React.FC<Props> = ({
 
   const pageChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = +e.target.value;
-    if (val <= pageCount) {
-      setPage(val);
-    }
+    if (val <= pageCount) setPage(val);
   };
 
   const clearTerm = () => {
@@ -111,11 +107,7 @@ export const FilterUsers: React.FC<Props> = ({
             setPage(1);
           } else {
             dispatch(setInitialState());
-            if (page <= 0) {
-              return { ...params, page: 1 };
-            } else {
-              return { ...params, page };
-            }
+            return { ...params, page: Math.max(1, page) };
           }
         }
         return params;
@@ -138,7 +130,7 @@ export const FilterUsers: React.FC<Props> = ({
       setHideFriends(false);
     }
     setPage(queryParams.page);
-    setTerm(queryParams.term || '');
+    setTerm(queryParams.term ?? '');
   }, [queryParams]);
 
   useEffect(() => {
@@ -159,7 +151,7 @@ export const FilterUsers: React.FC<Props> = ({
       <div className={styles.title} onClick={toggleArrowType}>
         <span>Parameters</span>
         <div className={cx({ arrow: true, arrowD: isDarkMode })}>
-          <Arrow size='10px' type={arrowType} color='#8ea6f4' />
+          <Arrow size="10px" type={arrowType} color="#8ea6f4" />
         </div>
       </div>
       <div
@@ -171,13 +163,13 @@ export const FilterUsers: React.FC<Props> = ({
       >
         <div className={styles.term}>
           <div className={styles.magnifier} onClick={() => termSubmitHandler()}>
-            <MagnifierIcon size='15px' />
+            <MagnifierIcon size="15px" />
           </div>
           <input
-            type='text'
-            id='term'
-            placeholder='Search'
-            autoComplete='off'
+            type="text"
+            id="term"
+            placeholder="Search"
+            autoComplete="off"
             value={term}
             disabled={fetching}
             onChange={e => setTerm(e.currentTarget.value)}
@@ -188,37 +180,37 @@ export const FilterUsers: React.FC<Props> = ({
             className={cx({ clearTerm: true, clearTermVisible: !!term.trim() })}
             onClick={clearTerm}
           >
-            <CrossIcon size='15px' />
+            <CrossIcon size="15px" />
           </div>
         </div>
         <div className={styles.toggles}>
           <label>
             <Toggle
-              onChange={toggleOnlyFriends}
               checked={onlyFriends}
               disabled={fetching}
+              onChange={toggleOnlyFriends}
             />
             <span>Only friends</span>
           </label>
           <label>
             <Toggle
-              onChange={toggleHideFriends}
               checked={hideFriends}
               disabled={fetching}
+              onChange={toggleHideFriends}
             />
             <span>Hide friends</span>
           </label>
         </div>
         <div className={cx({ page: true, pageD: isDarkMode })}>
           <input
-            type='text'
-            inputMode='numeric'
-            id='page'
+            type="text"
+            inputMode="numeric"
+            id="page"
             value={page}
-            autoComplete='off'
+            autoComplete="off"
             onChange={pageChangeHandler}
           />
-          <label htmlFor='page'>
+          <label htmlFor="page">
             Page <sup className={styles.maxPage}>max: {pageCount}</sup>
           </label>
         </div>

@@ -1,14 +1,14 @@
+import classNames from 'classnames/bind';
 import React, { useState } from 'react';
-import { IUser } from '../../../types/users';
-import styles from './User.module.css';
+import { Link } from 'react-router-dom';
+import { useDarkMode } from 'usehooks-ts';
 import photoPlaceholder from '../../../assets/userPhoto.png';
 import photoPlaceholderD from '../../../assets/userPhotoDark.png';
-import Preloader from '../../Preloader/Preloader';
-import FollowButton from '../../FollowButton/FollowButton';
 import { useSelector } from '../../../hooks/useSelector';
-import { Link } from 'react-router-dom';
-import classNames from 'classnames/bind';
-import { useDarkMode } from 'usehooks-ts';
+import { IUser } from '../../../types/users';
+import FollowButton from '../../FollowButton/FollowButton';
+import Preloader from '../../Preloader/Preloader';
+import styles from './User.module.css';
 
 export const User: React.FC<IUser> = ({
   photos: { large: photo },
@@ -30,9 +30,9 @@ export const User: React.FC<IUser> = ({
         <Link to={`/profile/${userId}`}>
           <img
             src={photo || (isDarkMode ? photoPlaceholderD : photoPlaceholder)}
+            loading="lazy"
+            alt="user"
             onLoad={() => setPhotoLoaded(true)}
-            loading='lazy'
-            alt='user'
           />
         </Link>
         {!photoLoaded && (
