@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useDarkMode } from 'usehooks-ts';
 import { useSelector } from '../../../hooks/useSelector';
-import { selectIsOwner } from '../../../selectors/profileSelectors';
+import { selectIsOwner } from '../../../store/selectors/profileSelectors';
 import FollowButton from '../../FollowButton/FollowButton';
 import styles from './ProfileHeader.module.css';
 import { UserPhoto } from './UserPhoto/UserPhoto';

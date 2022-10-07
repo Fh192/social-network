@@ -67,7 +67,7 @@ export const CropPhoto: React.FC<Props> = ({
           if (typeof fr.result === 'string') {
             setUpdating(true);
             dispatch(updatePhoto(image)).then(() => setUpdating(false));
-            dispatch(createPost({ text: 'Update photo', imageSrc: fr.result }));
+            dispatch(createPost('Update photo', fr.result));
           }
         };
 
@@ -96,12 +96,12 @@ export const CropPhoto: React.FC<Props> = ({
             <span>Your profile photo</span>
           </div>
           <div className={styles.close} onClick={onClose}>
-            <CrossIcon size='20px' />
+            <CrossIcon size="20px" />
           </div>
         </div>
         <div className={styles.cropContainer}>
           <Cropper
-            cropShape='round'
+            cropShape="round"
             image={imageSrc}
             crop={crop}
             zoom={zoom}
@@ -109,7 +109,7 @@ export const CropPhoto: React.FC<Props> = ({
             onCropChange={setCrop}
             onCropComplete={onCropComplete}
             onZoomChange={setZoom}
-            objectFit='contain'
+            objectFit="contain"
           />
         </div>
 

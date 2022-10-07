@@ -31,7 +31,7 @@ export const FilterUsers: React.FC<Props> = ({
   const [arrowType, setArrowType] = useState<'down' | 'up'>('down');
   const [onlyFriends, setOnlyFriends] = useState(queryParams.friend === true);
   const [hideFriends, setHideFriends] = useState(queryParams.friend === false);
-  const [term, setTerm] = useState(queryParams.term || '');
+  const [term, setTerm] = useState(queryParams.term ?? '');
   const [page, setPage] = useState(queryParams.page);
 
   const toggleArrowType = () => {

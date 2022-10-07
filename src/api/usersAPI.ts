@@ -1,29 +1,18 @@
-import { IUsersResponse } from './../types/users';
-import instance from './instance';
+import api from '.';
+import { IGetUsersParams, IUsersResponse } from './../types/users';
 
 const usersAPI = {
-  getUsers: async (
-    count?: number,
-    page?: number,
-    term?: string,
-    friend?: boolean
-  ) => {
-    const props = { count, page, term, friend };
-    let url = 'users?';
+  getUsers: async (payload: IGetUsersParams): Promise<IUsersResponse> => {
+    const params = new URLSearchParams();
+    const entries = Object.entries(payload);
 
-    Object.entries(props).forEach(prop => {
-      if (prop[1] !== undefined) {
-        url = `${url}&${prop[0]}=${prop[1]}`;
-      }
+    entries.forEach(([key, value]) => {
+      if (value !== undefined) params.set(key, value.toString());
     });
 
-    if (url[url.indexOf('?') + 1] === '&') {
-      url = url.replace(url[url.indexOf('?') + 1], '');
-    }
+    const { data } = await api.get<IUsersResponse>(`users?${params}`);
 
-    const response = await instance.get<IUsersResponse>(url);
-
-    return response.data;
+    return data;
   },
 };
 

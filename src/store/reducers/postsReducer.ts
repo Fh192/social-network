@@ -4,8 +4,12 @@ import { getUserPhoto } from '../../common/getUserPhoto';
 import { addPost, commentPost, deletePost, likePost } from '../actions/posts';
 import { IComment, IPost } from './../../types/posts';
 
-const initialState = {
-  posts: JSON.parse(localStorage.getItem('posts') || '[]') as Array<IPost>,
+export interface PostsState {
+  posts: Array<IPost>;
+}
+
+const initialState: PostsState = {
+  posts: JSON.parse(localStorage.getItem('posts') || '[]'),
 };
 
 const postsReducer = createReducer(initialState, b => {
@@ -17,22 +21,22 @@ const postsReducer = createReducer(initialState, b => {
   b.addCase(deletePost, (state, action) => {
     const postId = action.payload;
 
-    state.posts = state.posts.filter(post => post.id !== postId);
+    state.posts = state.posts.filter(({ id }) => id !== postId);
     localStorage.setItem('posts', JSON.stringify(state.posts));
   });
 
   b.addCase(likePost, (state, action) => {
     const { postId, userId } = action.payload;
     const postIndex = state.posts.findIndex(post => post.id === postId);
-    const isPostLiked = state.posts[postIndex].likes.some(id => id === userId);
+    const postLikes = state.posts[postIndex].likes;
+    const isPostLiked = postLikes.some(id => id === userId);
 
-    if (!isPostLiked) {
-      state.posts[postIndex].likes.push(userId);
+    if (isPostLiked) {
+      state.posts[postIndex].likes = postLikes.filter(id => id !== userId);
     } else {
-      state.posts[postIndex].likes = state.posts[postIndex].likes.filter(
-        id => id !== userId
-      );
+      state.posts[postIndex].likes.push(userId);
     }
+
     localStorage.setItem('posts', JSON.stringify(state.posts));
   });
 
@@ -46,19 +50,20 @@ const postsReducer = createReducer(initialState, b => {
 });
 
 export const createPost =
-  (content: { text?: string; imageSrc?: string }) =>
+  (text = '', imageSrc = '') =>
   (dispatch: RootDispatch, getState: GetState) => {
     const { login: username, id } = getState().auth;
     const photo = getUserPhoto(id as number);
 
-    const post = {
-      ...content,
+    const post: IPost = {
+      text,
+      imageSrc,
       id: Date.now(),
       addDate: +new Date(),
       author: { username, photo },
       comments: [],
       likes: [],
-    } as IPost;
+    };
 
     dispatch(addPost(post));
   };

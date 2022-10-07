@@ -1,12 +1,12 @@
-import instance from './instance';
+import api from '.';
 
 const securityAPI = {
-  captcha: async () => {
-    const response = await instance.get<{ url: string }>(
-      'security/get-captcha-url'
-    );
+  captcha: async (): Promise<string> => {
+    const {
+      data: { url },
+    } = await api.get<{ url: string }>('security/get-captcha-url');
 
-    return response.data.url;
+    return url;
   },
 };
 

@@ -229,7 +229,7 @@
 .field input:-webkit-autofill:hover,
 .field input:-webkit-autofill:focus {
   -webkit-text-fill-color: #282c52;
-  box-shadow: 0 0 0px 1000px #fff inset;
+  box-shadow: 0 0 0 1000px #fff inset;
   transition: background-color 9999s ease-in-out 0s;
 }
 

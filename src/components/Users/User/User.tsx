@@ -5,6 +5,7 @@ import { useDarkMode } from 'usehooks-ts';
 import photoPlaceholder from '../../../assets/userPhoto.png';
 import photoPlaceholderD from '../../../assets/userPhotoDark.png';
 import { useSelector } from '../../../hooks/useSelector';
+import { selectIsUserInFollowingProgress } from '../../../store/selectors/usersSelector';
 import { IUser } from '../../../types/users';
 import FollowButton from '../../FollowButton/FollowButton';
 import Preloader from '../../Preloader/Preloader';
@@ -20,7 +21,7 @@ export const User: React.FC<IUser> = ({
   const [photoLoaded, setPhotoLoaded] = useState(false);
   const { isDarkMode } = useDarkMode();
   const inFollowProcess = useSelector(s =>
-    s.users.inFollowProgress.some(id => id === userId)
+    selectIsUserInFollowingProgress(s, userId)
   );
 
   return (

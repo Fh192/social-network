@@ -24,7 +24,7 @@
   height: 162px;
   gap: 10px;
   background-color: #ffffff;
-  box-shadow: 0px 2px 2px rgb(0 0 0 / 20%);
+  box-shadow: 0 2px 2px rgb(0 0 0 / 20%);
   border-radius: 0 0 8px 8px;
   padding: 10px 11.5px;
   transition: all 0.5s ease;
@@ -34,7 +34,7 @@
 
 .popupD {
   background-color: #1f222e;
-  box-shadow: 0px 2px 2px rgb(255, 255, 255, 0.2);
+  box-shadow: 0 2px 2px rgb(255, 255, 255, 0.2);
 }
 
 .showPopup {

@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDarkMode } from 'usehooks-ts';
 import { useDispatch } from '../../hooks/useDispatch';
@@ -20,6 +20,7 @@ const Users: React.FC = () => {
 
   let query = useQuery();
 
+  const usersListObserverRef = useRef<HTMLDivElement>(null);
   const { totalCount, users } = useSelector(s => s.users);
   const { isDarkMode } = useDarkMode();
   const [fetching, setFetching] = useState(false);
@@ -56,26 +57,24 @@ const Users: React.FC = () => {
   };
 
   useEffect(() => {
-    const el = document.scrollingElement as Element;
-
-    const listener = () => {
-      const { scrollTop, scrollHeight, clientHeight } = el;
-
-      if (!fetching && totalCount) {
-        if (scrollTop + clientHeight >= scrollHeight - 500) {
-          if (queryParams.page < pageCount) {
-            setFetching(true);
-            setQueryParams(params => {
-              return { ...params, page: params.page + 1 };
-            });
-          }
+    const element = usersListObserverRef.current;
+    const observer = new IntersectionObserver(([{ isIntersecting }]) => {
+      if (isIntersecting && !fetching && totalCount) {
+        if (queryParams.page < pageCount) {
+          setFetching(true);
+          setQueryParams(params => {
+            return { ...params, page: params.page + 1 };
+          });
         }
       }
-    };
+    });
 
-    document.addEventListener('scroll', listener);
-    return () => document.removeEventListener('scroll', listener);
-  }, [totalCount, fetching, pageCount, queryParams.page]);
+    if (element) observer.observe(element);
+
+    return () => {
+      if (element) observer.unobserve(element);
+    };
+  }, [totalCount, fetching, pageCount, queryParams.page, usersListObserverRef]);
 
   useEffect(() => {
     setFetching(true);
@@ -93,7 +92,7 @@ const Users: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <div className={styles.users}>
+    <section className={styles.users}>
       <div className={cx({ header: true, headerD: isDarkMode })}>
         <div className={styles.usersFound}>
           <span>Users found: {totalCount?.toLocaleString()}</span>
@@ -119,6 +118,7 @@ const Users: React.FC = () => {
               <Preloader />
             </div>
           )}
+          <div ref={usersListObserverRef} />
         </ul>
       ) : (
         <div className={cx({ notFound: true, notFoundD: isDarkMode })}>
@@ -144,7 +144,7 @@ const Users: React.FC = () => {
       <div className={styles.scrollBtn}>
         <ScrollBtn />
       </div>
-    </div>
+    </section>
   );
 };
 

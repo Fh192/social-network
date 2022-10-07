@@ -4,7 +4,7 @@ import photoPlaceholder from '../../../../assets/userPhoto.png';
 import photoPlaceholderD from '../../../../assets/userPhotoDark.png';
 import { CropPhoto } from './CropPhoto';
 import { useSelector } from '../../../../hooks/useSelector';
-import { selectIsOwner } from '../../../../selectors/profileSelectors';
+import { selectIsOwner } from '../../../../store/selectors/profileSelectors';
 import openToWorkImg from '../../../../assets/openToWork.png';
 import { CameraIcon } from '../../../../svg/CameraIcon';
 import Preloader from '../../../Preloader/Preloader';

@@ -9,7 +9,7 @@ import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import { useDarkMode } from 'usehooks-ts';
 import { useDispatch } from '../hooks/useDispatch';
 import { useSelector } from '../hooks/useSelector';
-import { getAuthState } from '../selectors/authSelectors';
+import { getAuthState } from '../store/selectors/authSelectors';
 import { getUserAuthData } from '../store/reducers/authReducer';
 import './App.css';
 import Chat from './Chat/Chat';

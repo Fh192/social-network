@@ -1,11 +1,11 @@
 import { AxiosResponse } from 'axios';
+import api from '.';
 import { IPhotos, ServerData } from '../types/common';
 import { IContacts, IProfile, IProfileForUpdate } from '../types/profile';
-import instance from './instance';
 
 const profileAPI = {
   getUserProfile: async (userId: number): Promise<IProfile> => {
-    const { data } = await instance.get<IProfile>(`profile/${userId}`);
+    const { data } = await api.get<IProfile>(`profile/${userId}`);
 
     // remove unnecessary contacts
     const contacts = Object.fromEntries(
@@ -22,7 +22,7 @@ const profileAPI = {
     const fr = new FormData();
     fr.append('image', image);
 
-    const { data } = await instance.put<
+    const { data } = await api.put<
       FormData,
       AxiosResponse<ServerData<{ photos: IPhotos }>>
     >('profile/photo', fr, {
@@ -32,7 +32,7 @@ const profileAPI = {
     return data;
   },
   updateProfile: async (profileFormData: IProfile): Promise<ServerData> => {
-    const { data } = await instance.put<
+    const { data } = await api.put<
       IProfileForUpdate,
       AxiosResponse<ServerData>
     >('profile', profileFormData);

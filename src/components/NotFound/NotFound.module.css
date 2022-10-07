@@ -64,7 +64,7 @@
   gap: 20px;
 }
 
-.buttons button {
+.buttons a {
   font-weight: 100;
   font-size: 20px;
   line-height: 27px;
@@ -76,7 +76,7 @@
   color: #8ea6f4;
 }
 
-.buttons button:hover {
+.buttons a:hover {
   background: #e1ecff;
 }
 
@@ -84,11 +84,11 @@
   color: #8ea6f4;
 }
 
-.notFoundD .buttons button {
+.notFoundD .buttons a {
   border: 1px solid #1c3177;
   box-shadow: 0 0 4px #1c3177;
 }
-.notFoundD .buttons button:hover {
+.notFoundD .buttons a:hover {
   background: rgba(28, 49, 119, 0.3);
 }
 

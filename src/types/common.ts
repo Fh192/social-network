@@ -7,8 +7,8 @@ export interface ServerData<T = {}> {
 }
 
 export interface IPhotos {
-  small: string;
-  large: string;
+  small: Nullable<string>;
+  large: Nullable<string>;
 }
 
 export type Nullable<T> = null | T;

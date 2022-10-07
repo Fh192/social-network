@@ -23,8 +23,8 @@ export const About: React.FC = () => {
     lookingForAJobDescription
   );
 
-  const validateLink = (link: string): boolean => {
-    return link.includes('https://');
+  const validateLink = (link: IContacts[keyof IContacts]): boolean => {
+    return link ? link.includes('https://') : false;
   };
 
   return (

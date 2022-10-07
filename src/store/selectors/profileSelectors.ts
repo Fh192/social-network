@@ -1,4 +1,4 @@
-import { RootState as S } from '../store';
+import { RootState as S } from '..';
 
 export const getProfile = (state: S): S['profile'] => state.profile;
 

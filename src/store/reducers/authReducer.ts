@@ -5,15 +5,23 @@ import { IAuthLogin } from '../../types/auth';
 import { Nullable } from '../../types/common';
 import { UserData } from './../../types/auth';
 
-export type AuthState = typeof initialState;
+export interface AuthState {
+  id: Nullable<number>;
+  email: string;
+  login: string;
+  captcha: string;
+  isAuth: boolean;
+  loginError: string;
+  captchaFetching: boolean;
+}
 
-const initialState = {
-  id: null as Nullable<number>,
-  email: '' as string,
-  login: '' as string,
-  captcha: '' as string,
-  isAuth: false as boolean,
-  loginError: '' as string,
+export const initialState: AuthState = {
+  id: null,
+  email: '',
+  login: '',
+  captcha: '',
+  isAuth: false,
+  loginError: '',
   captchaFetching: false,
 };
 
@@ -42,14 +50,15 @@ export const logout = createAsyncThunk(
 
 export const getUserAuthData = createAsyncThunk<UserData, void>(
   'auth/getUserAuthData',
-  async () => {
-    const data = await authAPI.me();
-    const userData = data.data;
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data: userData, resultCode, messages } = await authAPI.me();
 
-    if (data.resultCode === 0) {
+      if (resultCode !== 0) throw new Error(...messages);
+
       return userData;
-    } else {
-      throw new Error(...data.messages);
+    } catch (e) {
+      return rejectWithValue(e);
     }
   }
 );

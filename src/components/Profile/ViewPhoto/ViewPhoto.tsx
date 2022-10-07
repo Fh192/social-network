@@ -2,6 +2,7 @@ import classNames from 'classnames/bind';
 import React, { useRef, useState } from 'react';
 import { useDarkMode, useOnClickOutside } from 'usehooks-ts';
 import { useSelector } from '../../../hooks/useSelector';
+import { useUserPhoto } from '../../../hooks/useUserPhoto';
 import { CrossIcon } from '../../../svg/CrossIcon';
 import Preloader from '../../Preloader/Preloader';
 import styles from './ViewPhoto.module.css';
@@ -17,14 +18,10 @@ export const ViewPhoto: React.FC<Props> = ({ setPhotoViewMode }) => {
   const [photoLoaded, setPhotoLoaded] = useState(false);
   const { isDarkMode } = useDarkMode();
 
-  const {
-    fullName: username,
-    photos: { large: photo },
-  } = useSelector(s => s.profile);
+  const { fullName: username, photos } = useSelector(s => s.profile);
+  const { photo, photoErrorHandler } = useUserPhoto(photos.large ?? '');
 
-  const close = () => {
-    setPhotoViewMode(false);
-  };
+  const close = () => setPhotoViewMode(false);
 
   useOnClickOutside(ref, close);
 
@@ -50,6 +47,7 @@ export const ViewPhoto: React.FC<Props> = ({ setPhotoViewMode }) => {
             alt="profile"
             src={photo}
             style={{ display: !photoLoaded ? 'none' : 'unset' }}
+            onError={photoErrorHandler}
             onLoad={() => setPhotoLoaded(true)}
           />
           {!photoLoaded && (

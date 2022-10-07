@@ -16,14 +16,14 @@
   justify-content: space-between;
   align-items: center;
   background-color: #ffffff;
-  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   padding: 10px 20px;
   z-index: 10;
   transition: all 0.2s ease;
 }
 
 .headerD {
-  box-shadow: 0px 1px 2px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 1px 2px rgba(255, 255, 255, 0.2);
   background-color: #1f222e;
 }
 
@@ -36,7 +36,7 @@
 
 .scrollBtn {
   position: fixed;
-  bottom: 0px;
+  bottom: 0;
   right: 100px;
   z-index: 2;
 }

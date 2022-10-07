@@ -3,8 +3,8 @@ import React, { useRef, useState } from 'react';
 import { useDarkMode, useOnClickOutside } from 'usehooks-ts';
 import { getUserPhoto } from '../../../../common/getUserPhoto';
 import { useDispatch } from '../../../../hooks/useDispatch';
-import { useUserPhoto } from '../../../../hooks/useUserPhoto';
 import { useSelector } from '../../../../hooks/useSelector';
+import { useUserPhoto } from '../../../../hooks/useUserPhoto';
 import { createPost } from '../../../../store/reducers/postsReducer';
 import { CrossIcon } from '../../../../svg/CrossIcon';
 import LinkIcon from '../../../../svg/LinkIcon';
@@ -44,14 +44,11 @@ const CreatePost: React.FC<Props> = ({ setCreatePostMode }) => {
   };
 
   const onAddPost = () => {
-    dispatch(createPost({ text: newPostText, imageSrc }));
+    dispatch(createPost(newPostText, imageSrc));
     setCreatePostMode(false);
   };
 
-  useOnClickOutside(ref, () => {
-    setCreatePostMode(false);
-    console.log(1);
-  });
+  useOnClickOutside(ref, () => setCreatePostMode(false));
 
   return (
     <div className={styles.createPostModal}>
@@ -70,7 +67,7 @@ const CreatePost: React.FC<Props> = ({ setCreatePostMode }) => {
 
         <div className={styles.inner}>
           <div className={styles.userAvatar}>
-            <img src={photo} alt="" onError={photoErrorHandler} />
+            <img src={photo} alt="avatar" onError={photoErrorHandler} />
           </div>
           <div className={styles.textarea}>
             <textarea

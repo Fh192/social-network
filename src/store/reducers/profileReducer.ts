@@ -15,27 +15,40 @@ type ProfileThunk = ThunkAction<
   ProfileActions
 >;
 
-const initialState = {
-  followed: false as boolean,
-  inFollowProcess: false as boolean,
-  aboutMe: '' as Nullable<string>,
-  userId: null as Nullable<number>,
-  lookingForAJob: false as boolean,
-  lookingForAJobDescription: null as Nullable<string>,
-  fullName: '' as string,
-  status: '' as string,
+export interface ProfileState {
+  followed: boolean;
+  inFollowProcess: boolean;
+  aboutMe: Nullable<string>;
+  userId: Nullable<number>;
+  lookingForAJob: boolean;
+  lookingForAJobDescription: Nullable<string>;
+  fullName: string;
+  status: string;
+  contacts: IContacts;
+  photos: IPhotos;
+}
+
+const initialState: ProfileState = {
+  followed: false,
+  inFollowProcess: false,
+  aboutMe: '',
+  userId: null,
+  lookingForAJob: false,
+  lookingForAJobDescription: null,
+  fullName: '',
+  status: '',
   contacts: {
-    github: null as Nullable<string>,
-    vk: null as Nullable<string>,
-    facebook: null as Nullable<string>,
-    instagram: null as Nullable<string>,
-    twitter: null as Nullable<string>,
-    youtube: null as Nullable<string>,
-  } as IContacts,
+    github: null,
+    vk: null,
+    facebook: null,
+    instagram: null,
+    twitter: null,
+    youtube: null,
+  },
   photos: {
-    small: null as Nullable<string>,
-    large: null as Nullable<string>,
-  } as IPhotos,
+    small: null,
+    large: null,
+  },
 };
 
 const profileReducer = createReducer(initialState, b => {
@@ -63,11 +76,14 @@ export const getUserProfile =
     const { id: ownerId } = getState().auth;
     dispatch(actions.setUserProfile(initialState));
 
-    const data = await profileAPI.getUserProfile(userId);
-    const followed =
-      ownerId !== userId ? await followAPI.getFollowed(userId) : false;
+    const profile = await profileAPI.getUserProfile(userId);
+    let followed = false;
 
-    dispatch(actions.setUserProfile({ ...data, followed }));
+    if (ownerId !== userId) {
+      followed = await followAPI.getFollowed(userId);
+    }
+
+    dispatch(actions.setUserProfile({ ...profile, followed }));
   };
 
 export const updatePhoto =
@@ -76,8 +92,7 @@ export const updatePhoto =
     const { data, resultCode } = await profileAPI.updatePhoto(image);
 
     if (resultCode === 0) {
-      const photos = data.photos;
-      dispatch(actions.setUserPhoto(photos));
+      dispatch(actions.setUserPhoto(data.photos));
     }
   };
 

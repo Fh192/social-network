@@ -20,12 +20,12 @@ const Login: React.FC = () => {
   const { captcha, loginError, captchaFetching } = useSelector(s => s.auth);
   const [animateReRequestCaptcha, setAnimateReRequestCaptcha] = useState(false);
 
-  const initialFormValues = {
+  const initialFormValues: IAuthLogin = {
     email: '',
     password: '',
     captcha: '',
     rememberMe: true,
-  } as IAuthLogin;
+  };
 
   const validationSchema = yup.object().shape({
     email: yup.string().email('Incorrect email').required('Email is required'),

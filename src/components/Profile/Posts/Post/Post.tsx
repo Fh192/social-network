@@ -56,7 +56,7 @@ const Post: React.FC<Props> = ({ post }) => {
     }
   };
 
-  const checkIsLatComment = (comment: IComment): boolean => {
+  const checkIsLastComment = (comment: IComment): boolean => {
     return comments.lastIndexOf(comment) !== comments.length - 1;
   };
 
@@ -131,7 +131,7 @@ const Post: React.FC<Props> = ({ post }) => {
             {comments.map(comment => (
               <Comment
                 {...comment}
-                isLast={checkIsLatComment(comment)}
+                isLast={checkIsLastComment(comment)}
                 key={comment.id}
               />
             ))}

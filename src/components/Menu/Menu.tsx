@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import { useDarkMode } from 'usehooks-ts';
 import { getUserPhoto } from '../../common/getUserPhoto';
 import { useDispatch } from '../../hooks/useDispatch';
-import { useUserPhoto } from '../../hooks/useUserPhoto';
 import { useSelector } from '../../hooks/useSelector';
+import { useUserPhoto } from '../../hooks/useUserPhoto';
 import { logout } from '../../store/reducers/authReducer';
 import LogoutIcon from '../../svg/LogoutIcon';
 import MessageIcon from '../../svg/MessageIcon';
@@ -31,11 +31,7 @@ export const Menu: React.FC = () => {
 
   useLayoutEffect(() => {
     const listener = () => {
-      if (window.innerWidth <= 700) {
-        setIsMobile(true);
-      } else {
-        setIsMobile(false);
-      }
+      setIsMobile(window.innerWidth <= 700);
     };
 
     window.addEventListener('resize', listener);
@@ -85,7 +81,6 @@ export const Menu: React.FC = () => {
               <span>Profile</span>
             </Link>
           </li>
-
           <li className={styles.item}>
             <Link className={styles.link} to="/users?page=1">
               <UsersIcon size="25px" />

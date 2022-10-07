@@ -1,13 +1,23 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import followAPI from '../../api/followAPI';
 import usersAPI from '../../api/usersAPI';
 import { Nullable } from '../../types/common';
 import { IGetUsersParams, IUser } from '../../types/users';
-import followAPI from '../../api/followAPI';
 
-const initialState = {
-  users: [] as Array<IUser>,
-  totalCount: null as Nullable<number>,
-  inFollowProgress: [] as number[],
+export interface UsersState {
+  users: Array<IUser>;
+  totalCount: Nullable<number>;
+  inFollowProgress: number[];
+  errors: {
+    follow: boolean;
+    users: boolean;
+  };
+}
+
+export const initialState: UsersState = {
+  users: [],
+  totalCount: null,
+  inFollowProgress: [],
   errors: {
     follow: false,
     users: false,
@@ -17,9 +27,9 @@ const initialState = {
 export const getUsers = createAsyncThunk<
   { users: IUser[]; totalCount: number },
   IGetUsersParams
->('getUsers', async ({ count, page, term, friend }, { rejectWithValue }) => {
+>('getUsers', async (params, { rejectWithValue }) => {
   try {
-    const data = await usersAPI.getUsers(count, page, term, friend);
+    const data = await usersAPI.getUsers(params);
     const { items: users, totalCount } = data;
 
     return { users, totalCount };
@@ -53,7 +63,6 @@ const usersReducer = createSlice({
   reducers: {
     setInitialState: () => initialState,
   },
-
   extraReducers: b => {
     b.addCase(getUsers.fulfilled, (state, action) => {
       const { users, totalCount } = action.payload;
@@ -61,7 +70,6 @@ const usersReducer = createSlice({
       state.totalCount = totalCount;
       state.errors.users = false;
     });
-
     b.addCase(toggleFollow.fulfilled, (state, action) => {
       const userId = action.payload;
       const userIndex = state.users.findIndex(user => user.id === userId);

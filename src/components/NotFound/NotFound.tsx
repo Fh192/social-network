@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDarkMode } from 'usehooks-ts';
 import notFoundIcon from '../../assets/404.svg';
 import { useSelector } from '../../hooks/useSelector';
@@ -26,8 +26,10 @@ const NotFound: React.FC = () => {
         <span>PAGE NOT FOUND</span>
       </div>
       <div className={styles.buttons}>
-        <button onClick={() => navigate(`/profile/${userId}`)}>GO HOME</button>
-        <button onClick={() => navigate(-1)}>GO BACK</button>
+        <Link to={`/profile/${userId}`}>GO HOME</Link>
+        <Link to={'/'} aria-label="go back" onClick={() => navigate(-1)}>
+          GO BACK
+        </Link>
       </div>
     </div>
   );
